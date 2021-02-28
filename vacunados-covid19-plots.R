@@ -12,6 +12,9 @@ df <- readRDS("datos/vacunas_covid.rds") %>%
 
 max_date <- max(df$FECHA_VACUNACION, na.rm = TRUE)
 
+
+# Por dia -----------------------------------------------------------------
+
 p1 <- ggplot(
   df,
   aes(x = FECHA_VACUNACION, y = n, group = rango_edad,
@@ -43,6 +46,9 @@ ggsave(
   height = 9
 )
 
+
+# Acumulativo -------------------------------------------------------------
+
 p2 <- ggplot(
   df %>% filter(!is.na(rango_edad)),
   aes(x = FECHA_VACUNACION, y = csum,
@@ -72,7 +78,6 @@ p2 <- ggplot(
     plot.title.position = "plot",
     plot.caption = element_text(family = "Inconsolata", size = 14)
   )
-p2
 
 ggsave(
   plot = p2,
