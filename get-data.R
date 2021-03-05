@@ -35,7 +35,8 @@ vacunas <- vroom(
                        "40-59",
                        "60-79",
                        "80+"
-                     )
+                     ),
+                     ordered_result = TRUE
                  ),
     SEXO = replace_na(SEXO, "No registrado")
   )
