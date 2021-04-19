@@ -3,12 +3,13 @@ library(vroom)
 
 download.file(
   url = "https://cloud.minsa.gob.pe/s/ZgXoXqK2KLjRLxD/download",
-  destfile = "datos/vacunas_covid.csv"
+  destfile = "datos/orig/vacunas_covid.csv"
 )
-R.utils::gzip("datos/vacunas_covid.csv", overwrite = TRUE, remove = TRUE)
+R.utils::gzip("datos/orig/vacunas_covid.csv",
+              overwrite = TRUE, remove = TRUE)
 
 vacunas <- vroom(
-  "datos/vacunas_covid.csv.gz",
+  "datos/orig/vacunas_covid.csv.gz",
   col_types = cols(
     FECHA_CORTE = col_date(format = "%Y%m%d"),
     UUID = col_character(),
@@ -57,10 +58,50 @@ vacunas <- vroom(
                       ordered_result = TRUE
     ),
     rango_edad2 = fct_explicit_na(rango_edad2, "Desconocido"),
-    SEXO = replace_na(SEXO, "No registrado")
-  )
+    SEXO = replace_na(SEXO, "No registrado"),
+    epi_week = lubridate::epiweek(FECHA_VACUNACION),
+    epi_year = lubridate::epiyear(FECHA_VACUNACION)
+  ) %>%
+  janitor::clean_names()
 
 saveRDS(
   vacunas,
-  file = "datos/vacunas_covid.rds"
+  file = "datos/vacunas_covid_aumentada.rds"
 )
+
+write_csv(
+  vacunas,
+  file = "datos/vacunas_covid_aumentada.csv.gz"
+)
+
+# Resumen -----------------------------------------------------------------
+
+vac_resumen <- vacunas %>%
+  select(fecha_corte, fecha_vacunacion,
+         uuid, fabricante, dosis) %>%
+  distinct() %>%
+  group_by(fecha_corte,
+           fecha_vacunacion,
+           fabricante,
+           dosis) %>%
+  tally(name = "n_reg") %>%
+  # summarise(
+  #   n_reg = n()
+  #   # n_uuid = n_distinct(uuid) # esto es lo mismo que n_reg
+  # ) %>%
+  ungroup() %>%
+  mutate(
+    fabricante = factor(fabricante)
+  ) %>%
+  arrange(fecha_vacunacion)
+
+saveRDS(
+  vac_resumen,
+  file = "datos/vacunas_covid_resumen.rds"
+)
+
+write_csv(
+  vac_resumen,
+  file = "datos/vacunas_covid_resumen.csv"
+)
+
