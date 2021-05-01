@@ -1,12 +1,12 @@
 library(tidyverse)
 library(vroom)
 
-download.file(
-  url = "https://cloud.minsa.gob.pe/s/ZgXoXqK2KLjRLxD/download",
-  destfile = "datos/orig/vacunas_covid.csv"
-)
-R.utils::gzip("datos/orig/vacunas_covid.csv",
-              overwrite = TRUE, remove = TRUE)
+#download.file(
+#  url = "https://cloud.minsa.gob.pe/s/ZgXoXqK2KLjRLxD/download",
+#  destfile = "datos/orig/vacunas_covid.csv"
+#)
+#R.utils::gzip("datos/orig/vacunas_covid.csv",
+#              overwrite = TRUE, remove = TRUE)
 
 vacunas <- vroom(
   "datos/orig/vacunas_covid.csv.gz",
