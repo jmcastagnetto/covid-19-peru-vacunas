@@ -14,7 +14,7 @@ else
 	Rscript get-data.R
 	now=`date -I`
 	git commit -a -m "Actualizado el $now"
-	git push origin main
+	HOME=/home/jesus git push origin main
 fi
 
 #Rscript vacunados-covid19-plots.R
