@@ -1,7 +1,9 @@
 library(tidyverse)
 
-df <- readRDS("datos/vacunas_covid_resumen.rds")
+df <- readRDS(url("https://github.com/jmcastagnetto/covid-19-peru-vacunas/raw/main/datos/vacunas_covid_resumen.rds"))
 fecha_corte <- unique(df$fecha_corte)
+
+max_y <- sum(df$n_reg)
 
 por_fabricante <- df %>%
   ungroup() %>%
@@ -31,7 +33,7 @@ ggplot(
   annotate(
     geom = "text",
     x = as.Date("2021-02-20"),
-    y = 1.48e6,
+    y = .95*max_y,
     hjust = .5,
     vjust = 1,
     label = "2021-03-08:\nInicio de vacunación de\nadultos mayores a 80 años",
@@ -41,10 +43,10 @@ ggplot(
   annotate(
     geom = "curve",
     x = as.Date("2021-02-20"),
-    y = 1.2e6,
+    y = .75*max_y,
     xend = as.Date("2021-03-07"),
     yend = .8e6,
-    angle = 25,
+    angle = 45,
     size = 1,
     arrow = arrow(length = unit(5, "mm"), type = "closed"),
     color = "grey40"
@@ -55,7 +57,7 @@ ggplot(
   annotate(
     geom = "text",
     x = as.Date("2021-04-01"),
-    y = 1.48e6,
+    y = .95*max_y,
     hjust = .5,
     vjust = 1,
     label = "2021-04-30:\nInicio de vacunación de\nadultos mayores a 70 años",
@@ -65,10 +67,10 @@ ggplot(
   annotate(
     geom = "curve",
     x = as.Date("2021-04-01"),
-    y = 1.2e6,
+    y = .75*max_y,
     xend = as.Date("2021-04-29"),
     yend = .8e6,
-    angle = 25,
+    angle = 45,
     size = 1,
     arrow = arrow(length = unit(5, "mm"), type = "closed"),
     color = "grey40"
