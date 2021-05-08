@@ -3,20 +3,20 @@ library(tidyverse)
 
 # Primera dosis -----------------------------------------------------------
 
-df <- readRDS("datos/vacunas_covid.rds") %>%
+df <- readRDS("datos/vacunas_covid_aumentada.rds") %>%
   mutate(
-    dosis_lbl = paste("Dosis:", DOSIS)
+    dosis_lbl = paste("Dosis:", dosis)
   ) %>%
-  group_by(FECHA_VACUNACION, FABRICANTE, DOSIS, dosis_lbl, SEXO, rango_edad) %>%
+  group_by(fecha_vacunacion, fabricante, dosis, dosis_lbl, sexo, rango_edad) %>%
   tally() %>%
   ungroup() %>%
-  arrange(FECHA_VACUNACION, FABRICANTE, DOSIS, dosis_lbl, SEXO, rango_edad) %>%
-  group_by(rango_edad, FABRICANTE, DOSIS, dosis_lbl, SEXO) %>%
+  arrange(fecha_vacunacion, fabricante, dosis, dosis_lbl, sexo, rango_edad) %>%
+  group_by(rango_edad, fabricante, dosis, dosis_lbl, sexo) %>%
   mutate(
     csum = cumsum(n)
   )
 
-max_date <- max(df$FECHA_VACUNACION, na.rm = TRUE)
+max_date <- max(df$fecha_vacunacion, na.rm = TRUE)
 
 
 my_theme <- function() {
@@ -25,7 +25,7 @@ my_theme <- function() {
     plot_title_size = 32,
     subtitle_size = 26,
     axis_title_size = 24,
-    strip_text_size = 24,
+    strip_text_size = 18,
     caption_family = "Inconsolata",
     caption_size = 20
   ) +
@@ -41,11 +41,11 @@ my_theme <- function() {
 
 p1 <- ggplot(
   df,
-  aes(x = FECHA_VACUNACION, y = n, group = rango_edad,
+  aes(x = fecha_vacunacion, y = n, group = rango_edad,
       fill = rango_edad)
 ) +
   geom_col() +
-  facet_grid(SEXO~FABRICANTE+dosis_lbl, scales = "free_y") +
+  facet_grid(sexo~fabricante+dosis_lbl, scales = "free_y") +
   scale_x_date() +
   #scale_x_date(date_labels = "%b %d") +
   scale_y_continuous(labels = scales::comma) +
@@ -59,7 +59,7 @@ p1 <- ggplot(
   ) +
   my_theme() +
   guides(fill = guide_legend(nrow = 1))
-p1
+#p1
 ggsave(
   plot = p1,
   filename = "plots/vacunados-por-dia-edades-sexo.png",
@@ -72,12 +72,12 @@ ggsave(
 
 p2 <- ggplot(
   df %>% filter(!is.na(rango_edad)),
-  aes(x = FECHA_VACUNACION, y = csum,
-      group = SEXO, color = SEXO, fill = SEXO)
+  aes(x = fecha_vacunacion, y = csum,
+      group = sexo, color = sexo, fill = sexo)
 ) +
-  geom_point() +
+  geom_point(size = .2) +
   geom_smooth(method = "loess", se = FALSE) +
-  facet_grid(FABRICANTE+dosis_lbl~rango_edad, scales = "free_y") +
+  facet_grid(fabricante+dosis_lbl~rango_edad, scales = "free_y") +
   scale_x_date() +
   scale_y_continuous(labels = scales::comma) +
   scale_color_brewer(palette = "Dark2") +
@@ -92,7 +92,7 @@ p2 <- ggplot(
   ) +
   my_theme()
 
-p2
+#p2
 ggsave(
   plot = p2,
   filename = "plots/vacunas-acumulados-rango-edades-sexo.png",

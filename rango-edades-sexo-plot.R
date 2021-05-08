@@ -2,47 +2,44 @@ library(tidyverse)
 library(patchwork)
 library(ggcharts)
 
-vacunas <- readRDS("datos/vacunas_covid.rds") %>%
+vacunas <- readRDS("datos/vacunas_covid_aumentada.rds") %>%
   mutate(
-    SEXO = str_to_title(SEXO)
+    sexo = str_to_title(sexo)
   )
 
-min_date <- min(vacunas$FECHA_VACUNACION, na.rm = TRUE)
-max_date <- max(vacunas$FECHA_VACUNACION, na.rm = TRUE)
-fabs <- paste(unique(vacunas$FABRICANTE), collapse = ", ")
+min_date <- min(vacunas$fecha_vacunacion, na.rm = TRUE)
+max_date <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
+fabs <- paste(unique(vacunas$fabricante), collapse = ", ")
 
 
 por_sexo_edad <- vacunas %>%
-  group_by(DOSIS, SEXO, rango_edad2) %>%
+  group_by(dosis, sexo, rango_edad2) %>%
   tally() %>%
   ungroup() %>%
   mutate(
-    n = if_else(SEXO == "Masculino", as.integer(-1*n), n),
-    hjust = if_else(SEXO == "Masculino", 1.1, -0.1),
-    dosis_lbl = if_else(DOSIS == 1, "Primera dosis", "Segunda dosis")
+    n = if_else(sexo == "Masculino", as.integer(-1*n), n),
+    hjust = if_else(sexo == "Masculino", 1.1, -0.1),
+    dosis_lbl = if_else(dosis == 1, "Primera dosis", "Segunda dosis")
   )
 
-# xbreaks = seq(-1e5, 1e5, by = .5e5)
-# xlabels = str_trim(format(abs(xbreaks), big.mark = ","))
+max_val <- round(max(abs(por_sexo_edad$n)), -5)
 
 p1 <- ggplot(
   por_sexo_edad,
   aes(x = n, y = rango_edad2,
-      group = SEXO,
-      fill = SEXO)
+      group = sexo,
+      fill = sexo)
 ) +
   geom_col() +
   geom_label(
     aes(label = str_trim(format(abs(n), big.mark = ",")),
         hjust = hjust,
-        color = SEXO),
+        color = sexo),
     show.legend = FALSE,
     fontface = "bold", label.size = 0
   ) +
   scale_x_continuous(
-     limits = c(-.9e5, .9e5),
-  #   breaks = xbreaks,
-  #   labels = xlabels
+     limits = c(-max_val, max_val)
   ) +
   scale_fill_brewer(palette = "Paired",
                     type = "qual",
@@ -90,14 +87,14 @@ ggsave(
 # p1 <- ggplot(
 #   por_sexo_edad,
 #   aes(x = n, y = rango_edad,
-#       group = SEXO,
+#       group = sexo,
 #       color = rango_edad,
 #       fill = rango_edad)
 # ) +
 #   geom_col(show.legend = FALSE) +
 #   hrbrthemes::scale_fill_ipsum() +
 #   scale_x_continuous(labels = scales::comma) +
-#   facet_wrap(~SEXO, scales = "free_x") +
+#   facet_wrap(~sexo, scales = "free_x") +
 #   hrbrthemes::theme_ipsum_rc(
 #     plot_title_size = 32
 #   ) +
@@ -118,15 +115,15 @@ ggsave(
 #   )
 #
 # tab_df <- vacunas %>%
-#   group_by(SEXO) %>%
+#   group_by(sexo) %>%
 #   tally() %>%
 #   mutate(
 #     Porcentaje = sprintf("%.1f%%", 100 * n / sum(n)),
 #     Personas = format(n, big.mark = ",")
 #   ) %>%
-#   select(SEXO, Personas, Porcentaje) %>%
+#   select(sexo, Personas, Porcentaje) %>%
 #   rename(
-#     Sexo = SEXO
+#     Sexo = sexo
 #   )
 #
 # df <- tibble(

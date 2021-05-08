@@ -2,7 +2,7 @@ library(tidyverse)
 library(hrbrthemes)
 library(ggridges)
 
-df <- readRDS("datos/vacunas_covid.rds")
+df <- readRDS("datos/vacunas_covid_aumentada.rds")
 
 my_theme <- function() {
   theme_ipsum_gs() +
@@ -23,16 +23,16 @@ my_theme <- function() {
 }
 
 
-d1 <- df %>% filter(DOSIS == 1)
+d1 <- df %>% filter(dosis == 1)
 tot_d1 <- format(nrow(d1), big.mark = ",")
 
-d2 <- df %>% filter(DOSIS == 2)
+d2 <- df %>% filter(dosis == 2)
 
-fecha_corte <- unique(d1$FECHA_CORTE)
+fecha_corte <- unique(d1$fecha_corte)
 
 p1 <- ggplot(
-  d1 %>% group_by(DEPARTAMENTO, rango_edad2, FABRICANTE, SEXO) %>% tally(),
-  aes(x = rango_edad2, y = DEPARTAMENTO)
+  d1 %>% group_by(departamento, rango_edad2, fabricante, sexo) %>% tally(),
+  aes(x = rango_edad2, y = departamento)
 ) +
   geom_raster(aes(fill = n)) +
   scale_fill_viridis_c(
@@ -43,7 +43,7 @@ p1 <- ggplot(
     labels = scales::comma
   ) +
   my_theme() +
-  facet_wrap(~FABRICANTE+SEXO, nrow = 1) +
+  facet_wrap(~fabricante+sexo, nrow = 1) +
   labs(
     x = "",
     y = "",
@@ -63,8 +63,8 @@ ggsave(
 tot_d2 <- format(nrow(d2), big.mark = ",")
 
 p2 <- ggplot(
-  d2 %>% group_by(DEPARTAMENTO, rango_edad2, FABRICANTE, SEXO) %>% tally(),
-  aes(x = rango_edad2, y = DEPARTAMENTO)
+  d2 %>% group_by(departamento, rango_edad2, fabricante, sexo) %>% tally(),
+  aes(x = rango_edad2, y = departamento)
 ) +
   geom_raster(aes(fill = n)) +
   scale_fill_viridis_c(
@@ -75,7 +75,7 @@ p2 <- ggplot(
     labels = scales::comma
   ) +
   my_theme() +
-  facet_wrap(~FABRICANTE+SEXO, nrow = 1) +
+  facet_wrap(~fabricante+sexo, nrow = 1) +
   labs(
     x = "",
     y = "",
@@ -93,17 +93,17 @@ ggsave(
 
 
 d1m <- d1 %>%
-  group_by(DEPARTAMENTO, FABRICANTE) %>%
+  group_by(departamento, fabricante) %>%
   summarise(
     n = n(),
-    mediana = median(EDAD, na.rm = TRUE),
+    mediana = median(edad, na.rm = TRUE),
     lbl1 = glue::glue("N: {n}"),
     lbl2 = glue::glue("[{mediana}]")
   )
 
 p1d <- ggplot(
   d1,
-  aes(x = EDAD, y = DEPARTAMENTO, fill = factor(stat(quantile)))
+  aes(x = edad, y = departamento, fill = factor(stat(quantile)))
 ) +
   ggridges::stat_density_ridges(
     geom = "density_ridges_gradient",
@@ -138,7 +138,7 @@ p1d <- ggplot(
     plot.title.position = "plot",
     plot.caption = element_text(size = 18, family = "Inconsolata")
   ) +
-  facet_wrap(~FABRICANTE, nrow = 1) +
+  facet_wrap(~fabricante, nrow = 1) +
   labs(
     x = "",
     y = "",
@@ -157,7 +157,7 @@ ggsave(
 
 p2d <- ggplot(
   d2,
-  aes(x = EDAD, y = DEPARTAMENTO, fill = factor(stat(quantile)))
+  aes(x = edad, y = departamento, fill = factor(stat(quantile)))
 ) +
   ggridges::stat_density_ridges(
     geom = "density_ridges_gradient",
@@ -192,7 +192,7 @@ scale_fill_viridis_d(
     plot.title.position = "plot",
     plot.caption = element_text(size = 18, family = "Inconsolata")
   ) +
-  facet_wrap(~FABRICANTE, nrow = 1) +
+  facet_wrap(~fabricante, nrow = 1) +
   labs(
     x = "",
     y = "",

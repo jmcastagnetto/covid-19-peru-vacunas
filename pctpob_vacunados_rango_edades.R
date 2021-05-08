@@ -1,6 +1,6 @@
 library(tidyverse)
 library(lubridate)
-
+Sys.setlocale("LC_TIME", "es_PE.utf8")
 pe_rangoedad <- readRDS("datos/peru-pob2021-rango-etareo-deciles.rds") %>%
   select(rango, población) %>%
   mutate(
@@ -8,41 +8,41 @@ pe_rangoedad <- readRDS("datos/peru-pob2021-rango-etareo-deciles.rds") %>%
       str_replace("80-mas", "80+")
   )
 
-vacunas <- readRDS("datos/vacunas_covid.rds")
+vacunas <- readRDS("datos/vacunas_covid_aumentada.rds")
 min_date1 <- min(vacunas %>%
-                   filter(DOSIS == 1) %>%
-                   pull(FECHA_VACUNACION),
+                   filter(dosis == 1) %>%
+                   pull(fecha_vacunacion),
                  na.rm = TRUE)
 max_date1 <- max(vacunas %>%
-                   filter(DOSIS == 1) %>%
-                   pull(FECHA_VACUNACION),
+                   filter(dosis == 1) %>%
+                   pull(fecha_vacunacion),
                  na.rm = TRUE)
 min_date2 <- min(vacunas %>%
-                   filter(DOSIS == 2) %>%
-                   pull(FECHA_VACUNACION),
+                   filter(dosis == 2) %>%
+                   pull(fecha_vacunacion),
                  na.rm = TRUE)
 max_date2 <- max(vacunas %>%
-                   filter(DOSIS == 2) %>%
-                   pull(FECHA_VACUNACION),
+                   filter(dosis == 2) %>%
+                   pull(fecha_vacunacion),
                  na.rm = TRUE)
 
 vacunas_semana_rangoedad <- vacunas %>%
   mutate(
-    semana = epiweek(FECHA_VACUNACION)
+    semana = epiweek(fecha_vacunacion)
   ) %>%
   group_by(
     semana,
     rango_edad2,
-    DOSIS
+    dosis
   ) %>%
   summarise(
-    max_fecha = max(FECHA_VACUNACION),
+    max_fecha = max(fecha_vacunacion),
     n = n()
   ) %>%
   ungroup() %>%
   group_by(
     rango_edad2,
-    DOSIS
+    dosis
   ) %>%
   mutate(
     n_acum = cumsum(n),
@@ -58,7 +58,7 @@ vacunas_semana_rangoedad <- vacunas %>%
   )
 
 p1 <- ggplot(
-  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & DOSIS == 1),
+  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 1),
   aes(x = max_fecha, y = pct_acum, color = rango_edad2)
 ) +
   geom_line(size = 2, show.legend = FALSE) +
@@ -87,14 +87,14 @@ p1 <- ggplot(
   )
 
 p1a <- ggplot(
-  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & DOSIS == 1),
+  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 1),
   aes(x = max_fecha, y = pct_acum, color = rango_edad2)
 ) +
   geom_line(size = 2, show.legend = FALSE) +
   geom_point(size = 3, show.legend = FALSE) +
   ggrepel::geom_label_repel(
     data = vacunas_semana_rangoedad %>%
-      filter(!is.na(pct_acum) & DOSIS == 1) %>%
+      filter(!is.na(pct_acum) & dosis == 1) %>%
       group_by(rango_edad2) %>%
       summarise(
         xval = max(max_fecha),
@@ -105,9 +105,9 @@ p1a <- ggplot(
     aes(x = xval, y = yval,
         label = lbl),
     label.size = 0,
-    nudge_x = 3,
+    nudge_x = -30,
     seed = 10203,
-    hjust = 0,
+    hjust = 1,
     size = 6,
     show.legend = FALSE
   ) +
@@ -117,8 +117,8 @@ p1a <- ggplot(
     n.breaks = 5
   ) +
   scale_x_date(
-    date_labels = "%b %d\nS: %V",
-    limits = c(as.Date("2021-02-08"), as.Date("2021-04-01"))
+    date_labels = "%b %d\nS: %V"#,
+    #limits = c(as.Date("2021-02-08"), as.Date("2021-04-01"))
   ) +
   scale_color_brewer(type = "qual", palette = "Dark2") +
   ggthemes::theme_few(20) +
@@ -135,6 +135,7 @@ p1a <- ggplot(
     caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
   )
 
+p1
 ggsave(
   plot = p1,
   filename = "plots/pctpob_rangoedad_dosis1.png",
@@ -151,7 +152,7 @@ ggsave(
 
 
 p2 <- ggplot(
-  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & DOSIS == 2),
+  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 2),
   aes(x = max_fecha, y = pct_acum, color = rango_edad2)
 ) +
   geom_line(size = 2, show.legend = FALSE) +
@@ -187,14 +188,14 @@ ggsave(
 )
 
 p2a <- ggplot(
-  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & DOSIS == 2),
+  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 2),
   aes(x = max_fecha, y = pct_acum, color = rango_edad2)
 ) +
   geom_line(size = 2, show.legend = FALSE) +
   geom_point(size = 3, show.legend = FALSE) +
   ggrepel::geom_label_repel(
     data = vacunas_semana_rangoedad %>%
-      filter(!is.na(pct_acum) & DOSIS == 2) %>%
+      filter(!is.na(pct_acum) & dosis == 2) %>%
       group_by(rango_edad2) %>%
       summarise(
         xval = max(max_fecha),

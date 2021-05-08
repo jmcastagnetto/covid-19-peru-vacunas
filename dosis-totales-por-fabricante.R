@@ -1,6 +1,6 @@
 library(tidyverse)
 
-df <- readRDS(url("https://github.com/jmcastagnetto/covid-19-peru-vacunas/raw/main/datos/vacunas_covid_resumen.rds"))
+df <- readRDS("datos/vacunas_covid_resumen.rds")
 fecha_corte <- unique(df$fecha_corte)
 
 max_y <- sum(df$n_reg)
@@ -104,7 +104,7 @@ ggplot(
   )
 
 ggsave(
-  filename = "dosis-totales-por-fabricante.png",
+  filename = "plots/dosis-totales-por-fabricante.png",
   width = 16,
   height = 10
 )
