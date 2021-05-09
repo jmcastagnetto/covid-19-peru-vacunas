@@ -1,6 +1,6 @@
 #! /bin/bash
 
-wget -nv -O datos/orig/vacunas_covid.csv  https://cloud.minsa.gob.pe/s/ZgXoXqK2KLjRLxD/download
+wget -O datos/orig/vacunas_covid.csv  https://cloud.minsa.gob.pe/s/ZgXoXqK2KLjRLxD/download
 md5sum --status -c md5sum.txt
 
 if [ $? -eq 0 ]
