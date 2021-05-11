@@ -46,7 +46,7 @@ p1 <- ggplot(
 ) +
   geom_col() +
   facet_grid(sexo~fabricante+dosis_lbl, scales = "free_y") +
-  scale_x_date() +
+  scale_x_date(expand = expansion()) +
   #scale_x_date(date_labels = "%b %d") +
   scale_y_continuous(labels = scales::comma) +
   labs(

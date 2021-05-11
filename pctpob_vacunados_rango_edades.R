@@ -86,54 +86,54 @@ p1 <- ggplot(
     caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
   )
 
-p1a <- ggplot(
-  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 1),
-  aes(x = max_fecha, y = pct_acum, color = rango_edad2)
-) +
-  geom_line(size = 2, show.legend = FALSE) +
-  geom_point(size = 3, show.legend = FALSE) +
-  ggrepel::geom_label_repel(
-    data = vacunas_semana_rangoedad %>%
-      filter(!is.na(pct_acum) & dosis == 1) %>%
-      group_by(rango_edad2) %>%
-      summarise(
-        xval = max(max_fecha),
-        yval = max(pct_acum),
-        lbl = glue::glue("{rango_edad2} ({sprintf('%.2f%%', 100 * yval)})")
-      ) %>%
-      distinct(),
-    aes(x = xval, y = yval,
-        label = lbl),
-    label.size = 0,
-    nudge_x = -30,
-    seed = 10203,
-    hjust = 1,
-    size = 6,
-    show.legend = FALSE
-  ) +
-  scale_y_continuous(
-    labels = scales::percent,
-    limits = c(0, NA),
-    n.breaks = 5
-  ) +
-  scale_x_date(
-    date_labels = "%b %d\nS: %V"#,
-    #limits = c(as.Date("2021-02-08"), as.Date("2021-04-01"))
-  ) +
-  scale_color_brewer(type = "qual", palette = "Dark2") +
-  ggthemes::theme_few(20) +
-  theme(
-    panel.spacing = unit(2, "lines"),
-    plot.caption = element_text(family = "Inconsolata"),
-    plot.title.position = "plot"
-  ) +
-  labs(
-    x = "",
-    y = "",
-    title = "Porcentaje de la población (por rango etáreo) vacunado contra COVID-19 en Perú (Primera dosis)",
-    subtitle = glue::glue("Total semanal para todos los fabricantes, del {min_date1} al {max_date1}"),
-    caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
-  )
+# p1a <- ggplot(
+#   vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 1),
+#   aes(x = max_fecha, y = pct_acum, color = rango_edad2)
+# ) +
+#   geom_line(size = 2, show.legend = FALSE) +
+#   geom_point(size = 3, show.legend = FALSE) +
+#   ggrepel::geom_label_repel(
+#     data = vacunas_semana_rangoedad %>%
+#       filter(!is.na(pct_acum) & dosis == 1) %>%
+#       group_by(rango_edad2) %>%
+#       summarise(
+#         xval = max(max_fecha),
+#         yval = max(pct_acum),
+#         lbl = glue::glue("{rango_edad2} ({sprintf('%.2f%%', 100 * yval)})")
+#       ) %>%
+#       distinct(),
+#     aes(x = xval, y = yval,
+#         label = lbl),
+#     label.size = 0,
+#     nudge_x = -30,
+#     seed = 10203,
+#     hjust = 1,
+#     size = 6,
+#     show.legend = FALSE
+#   ) +
+#   scale_y_continuous(
+#     labels = scales::percent,
+#     limits = c(0, NA),
+#     n.breaks = 5
+#   ) +
+#   scale_x_date(
+#     date_labels = "%b %d\nS: %V"#,
+#     #limits = c(as.Date("2021-02-08"), as.Date("2021-04-01"))
+#   ) +
+#   scale_color_brewer(type = "qual", palette = "Dark2") +
+#   ggthemes::theme_few(20) +
+#   theme(
+#     panel.spacing = unit(2, "lines"),
+#     plot.caption = element_text(family = "Inconsolata"),
+#     plot.title.position = "plot"
+#   ) +
+#   labs(
+#     x = "",
+#     y = "",
+#     title = "Porcentaje de la población (por rango etáreo) vacunado contra COVID-19 en Perú (Primera dosis)",
+#     subtitle = glue::glue("Total semanal para todos los fabricantes, del {min_date1} al {max_date1}"),
+#     caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
+#   )
 
 p1
 ggsave(
@@ -143,12 +143,12 @@ ggsave(
   height = 11
 )
 
-ggsave(
-  plot = p1a,
-  filename = "plots/pctpob_rangoedad_dosis1_v2.png",
-  width = 16,
-  height = 11
-)
+# ggsave(
+#   plot = p1a,
+#   filename = "plots/pctpob_rangoedad_dosis1_v2.png",
+#   width = 16,
+#   height = 11
+# )
 
 
 p2 <- ggplot(
@@ -187,58 +187,58 @@ ggsave(
   height = 11
 )
 
-p2a <- ggplot(
-  vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 2),
-  aes(x = max_fecha, y = pct_acum, color = rango_edad2)
-) +
-  geom_line(size = 2, show.legend = FALSE) +
-  geom_point(size = 3, show.legend = FALSE) +
-  ggrepel::geom_label_repel(
-    data = vacunas_semana_rangoedad %>%
-      filter(!is.na(pct_acum) & dosis == 2) %>%
-      group_by(rango_edad2) %>%
-      summarise(
-        xval = max(max_fecha),
-        yval = max(pct_acum),
-        lbl = glue::glue("{rango_edad2} ({sprintf('%.2f%%', 100 * yval)})")
-      ) %>%
-      distinct(),
-    aes(x = xval, y = yval,
-        label = lbl),
-    label.size = 0,
-    nudge_x = 3,
-    seed = 10203,
-    hjust = 0,
-    size = 6,
-    show.legend = FALSE
-  ) +
-  scale_y_continuous(
-    labels = scales::percent,
-    limits = c(0, NA),
-    n.breaks = 5
-  ) +
-  scale_x_date(
-    date_labels = "%b %d\nS: %V",
-    limits = c(as.Date("2021-03-01"), as.Date("2021-04-01"))
-  ) +
-  scale_color_brewer(type = "qual", palette = "Dark2") +
-  ggthemes::theme_few(20) +
-  theme(
-    panel.spacing = unit(2, "lines"),
-    plot.caption = element_text(family = "Inconsolata"),
-    plot.title.position = "plot"
-  ) +
-  labs(
-    x = "",
-    y = "",
-    title = "Porcentaje de la población (por rango etáreo) vacunado contra COVID-19 en Perú (Segunda dosis)",
-    subtitle = glue::glue("Total semanal para todos los fabricantes, del {min_date2} al {max_date2}"),
-    caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
-  )
-
-ggsave(
-  plot = p2a,
-  filename = "plots/pctpob_rangoedad_dosis2_v2.png",
-  width = 16,
-  height = 11
-)
+# p2a <- ggplot(
+#   vacunas_semana_rangoedad %>% filter(!is.na(pct_acum) & dosis == 2),
+#   aes(x = max_fecha, y = pct_acum, color = rango_edad2)
+# ) +
+#   geom_line(size = 2, show.legend = FALSE) +
+#   geom_point(size = 3, show.legend = FALSE) +
+#   ggrepel::geom_label_repel(
+#     data = vacunas_semana_rangoedad %>%
+#       filter(!is.na(pct_acum) & dosis == 2) %>%
+#       group_by(rango_edad2) %>%
+#       summarise(
+#         xval = max(max_fecha),
+#         yval = max(pct_acum),
+#         lbl = glue::glue("{rango_edad2} ({sprintf('%.2f%%', 100 * yval)})")
+#       ) %>%
+#       distinct(),
+#     aes(x = xval, y = yval,
+#         label = lbl),
+#     label.size = 0,
+#     nudge_x = 3,
+#     seed = 10203,
+#     hjust = 0,
+#     size = 6,
+#     show.legend = FALSE
+#   ) +
+#   scale_y_continuous(
+#     labels = scales::percent,
+#     limits = c(0, NA),
+#     n.breaks = 5
+#   ) +
+#   scale_x_date(
+#     date_labels = "%b %d\nS: %V",
+#     limits = c(as.Date("2021-03-01"), as.Date("2021-04-01"))
+#   ) +
+#   scale_color_brewer(type = "qual", palette = "Dark2") +
+#   ggthemes::theme_few(20) +
+#   theme(
+#     panel.spacing = unit(2, "lines"),
+#     plot.caption = element_text(family = "Inconsolata"),
+#     plot.title.position = "plot"
+#   ) +
+#   labs(
+#     x = "",
+#     y = "",
+#     title = "Porcentaje de la población (por rango etáreo) vacunado contra COVID-19 en Perú (Segunda dosis)",
+#     subtitle = glue::glue("Total semanal para todos los fabricantes, del {min_date2} al {max_date2}"),
+#     caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
+#   )
+#
+# ggsave(
+#   plot = p2a,
+#   filename = "plots/pctpob_rangoedad_dosis2_v2.png",
+#   width = 16,
+#   height = 11
+# )

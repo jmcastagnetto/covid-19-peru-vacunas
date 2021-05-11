@@ -78,7 +78,8 @@ ggplot(
   scale_y_continuous(labels = scales::comma) +
   scale_x_date(
     date_breaks = "2 weeks",
-    date_labels = "Sem: %V\n%b %Y"
+    date_labels = "Sem: %V\n%b %Y",
+    expand = expansion()
   ) +
   scale_fill_brewer(type = "qual", palette = "Pastel2") +
   labs(
