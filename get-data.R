@@ -69,10 +69,20 @@ saveRDS(
   file = "datos/vacunas_covid_aumentada.rds"
 )
 
-write_csv(
-  vacunas,
-  file = "datos/vacunas_covid_aumentada.csv.gz"
-)
+# separar datos aumentados para evitar problemas de tamaño
+# con github
+n_limit <- 1e6  # de millón en millón
+n_rows <- nrow(vacunas)
+if (n_rows > n_limit) {
+  grupo  <- rep(1:ceiling(n_rows/n_limit),each = n_limit)[1:n_rows]
+  v_list <- split(vacunas, grupo)
+  for(i in 1:length(v_list)) {
+    tmp_df <- v_list[[i]]
+    fname = glue::glue("datos/vacunas_covid_aumentada_{sprintf('%03d', i)}.csv.gz")
+    write_csv(tmp_df, file = fname)
+  }
+}
+
 
 # Resumen -----------------------------------------------------------------
 
