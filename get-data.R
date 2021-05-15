@@ -8,7 +8,7 @@ library(vroom)
 #R.utils::gzip("datos/orig/vacunas_covid.csv",
 #              overwrite = TRUE, remove = TRUE)
 
-vacunas <- vroom(
+orig <- vroom(
   "datos/orig/vacunas_covid.csv.gz",
   col_types = cols(
     FECHA_CORTE = col_date(format = "%Y%m%d"),
@@ -24,7 +24,9 @@ vacunas <- vroom(
     PROVINCIA = col_character(),
     DISTRITO = col_character()
   )
-) %>%
+)
+
+vacunas <- orig %>%
   mutate(
     rango_edad = cut(EDAD,
                      c(seq(0, 80, 20), 130),
@@ -64,25 +66,30 @@ vacunas <- vroom(
   ) %>%
   janitor::clean_names()
 
-saveRDS(
-  vacunas,
-  file = "datos/vacunas_covid_aumentada.rds"
-)
+# saveRDS(
+#   vacunas,
+#   file = "datos/vacunas_covid_aumentada.rds"
+# )
 
-# separar datos aumentados para evitar problemas de tamaño
-# con github
+# separar datos cada millón de registros,
+# para evitar problemas de tamaño con github
 n_limit <- 1e6  # de millón en millón
 n_rows <- nrow(vacunas)
 if (n_rows > n_limit) {
   grupo  <- rep(1:ceiling(n_rows/n_limit),each = n_limit)[1:n_rows]
   v_list <- split(vacunas, grupo)
+  o_list <- split(orig, grupo)
   for(i in 1:length(v_list)) {
     tmp_df <- v_list[[i]]
-    fname = glue::glue("datos/vacunas_covid_aumentada_{sprintf('%03d', i)}.csv.gz")
-    write_csv(tmp_df, file = fname)
+    orig_df <- o_list[[i]]
+    origname <- glue::glue("datos/orig/vacunas_covid_{sprintf('%03d', i)}.csv.gz")
+    csvname <- glue::glue("datos/vacunas_covid_aumentada_{sprintf('%03d', i)}.csv.gz")
+    rdsname <- glue::glue("datos/vacunas_covid_aumentada_{sprintf('%03d', i)}.rds")
+    write_csv(orig_df, file = origname)
+    write_csv(tmp_df, file = csvname)
+    saveRDS(tmp_df, file = rdsname)
   }
 }
-
 
 # Resumen -----------------------------------------------------------------
 

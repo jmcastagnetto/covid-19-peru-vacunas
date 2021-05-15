@@ -6,3 +6,7 @@
 # local tmp files
 tmp/*
 actualizar-datos-local.sh
+
+# local full data files
+datos/vacunas_covid_aumentada.rds
+datos/orig/vacunas_covid.csv.gz
