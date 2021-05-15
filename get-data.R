@@ -66,10 +66,10 @@ vacunas <- orig %>%
   ) %>%
   janitor::clean_names()
 
-# saveRDS(
-#   vacunas,
-#   file = "datos/vacunas_covid_aumentada.rds"
-# )
+saveRDS(
+  vacunas,
+  file = "datos/vacunas_covid_aumentada.rds"
+)
 
 # separar datos cada millón de registros,
 # para evitar problemas de tamaño con github
