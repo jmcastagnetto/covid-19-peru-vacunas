@@ -24,7 +24,7 @@ p1 <- ggplot(dosis1, aes(x = periodo, y = n_acum)) +
   geom_col(aes(y = cantidad, fill = nombre), position = "stack") +
   scale_y_continuous(labels = scales::comma) +
   scale_fill_brewer(type = "qual", palette = "Dark2") +
-  facet_wrap(~dpto, scale = "free_y") +
+  facet_wrap(~dpto, scales = "free_y") +
   labs(
     fill = "",
     x = "",
@@ -50,7 +50,7 @@ p2 <- ggplot(dosis2, aes(x = periodo, y = n_acum)) +
   geom_col(aes(y = cantidad, fill = nombre), position = "stack") +
   scale_y_continuous(labels = scales::comma) +
   scale_fill_brewer(type = "qual", palette = "Dark2") +
-  facet_wrap(~dpto, scale = "free_y") +
+  facet_wrap(~dpto, scales = "free_y") +
   labs(
     fill = "",
     x = "",
