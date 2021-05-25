@@ -1,7 +1,4 @@
-ggplot(data_df, aes(x = periodo, y = cantidad,
-                    fill = nombre)) +
-  geom_col() +
-  facet_wrap(~dpto, scale = "free_y")
+library(tidyverse)
 
 por_dpto <- data_df %>%
   group_by(dpto, dosis) %>%
@@ -86,5 +83,5 @@ ggsave(
   plot = p2,
   filename = "plots/dosis2_distribucion_a_regiones.png",
   width = 16,
-  height = 12
+  height = 10
 )
