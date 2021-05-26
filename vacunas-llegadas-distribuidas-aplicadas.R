@@ -12,6 +12,16 @@ vacunas <- readRDS("datos/vacunas_covid_resumen.rds") %>%
     dosis_acum = cumsum(n_dosis)
   )
 
+distribuidas <- readRDS("datos/vacunas_covid_distribucion.rds") %>%
+  group_by(periodo) %>%
+  summarise(
+    n_vac = sum(cantidad)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    n_acum = cumsum(n_vac)
+  )
+
 round_any = function(x, accuracy, f=round){f(x/ accuracy) * accuracy}
 
 plot_df <- read_csv("datos/covid19_vaccine_arrivals_peru.csv") %>%
@@ -24,8 +34,9 @@ max_y <- round_any(max(plot_df$cantidad_acumulada), 2.5e6)
 max_date <- max(plot_df$fecha_de_llegada, vacunas$fecha_vacunacion)
 vac_apl <- max(vacunas$dosis_acum)
 vac_arr <- max(plot_df$cantidad_acumulada)
+vac_dist <- max(distribuidas$n_acum)
 
-txt_annotation <- glue::glue("Al {max_date}, **han llegado al pais un total de {format(vac_arr, big.mark = ',')} dosis** de vacunas, de las cuales ya <span style='color:green;'>se han aplicado {format(vac_apl, big.mark = ',')}</span> a nivel nacional")
+txt_annotation <- glue::glue("Al {max_date}, **han llegado al pais un total de {str_trim(format(vac_arr, big.mark = ','))} dosis** de vacunas, <span style='color:magenta;'>se han distribuído unas {str_trim(format(vac_dist, big.mark = ','))}</span>, de las cuales ya <span style='color:green;'>se han aplicado {str_trim(format(vac_apl, big.mark = ','))}</span> a nivel nacional")
 
 Sys.setlocale("LC_TIME", "es_PE.utf8")
 p1 <- ggplot() +
@@ -34,6 +45,13 @@ p1 <- ggplot() +
     aes(x = fecha_vacunacion, y = dosis_acum),
     size = 2,
     color = "green"
+  ) +
+  geom_step(
+    data = distribuidas,
+    aes(x = periodo, y = n_acum),
+    direction = "vh",
+    size = 1,
+    color = "magenta"
   ) +
   geom_step(
     data = plot_df,
@@ -69,8 +87,8 @@ p1 <- ggplot() +
   labs(
     x = "",
     y = "Número de dosis",
-    title = "COVID-19: Vacunación en Perú - Dosis entregadas y aplicadas",
-    subtitle = "Fuentes: MINSA y Wikipedia",
+    title = "COVID-19: Vacunación en Perú - Dosis entregadas, distribuídas y aplicadas",
+    subtitle = "Fuentes: MINSA, CENARES y Wikipedia",
     caption = glue::glue("@jmcastagnetto, Jesus M. Castagnetto, {Sys.Date()}")
   ) +
   theme_classic(base_size = 18) +
@@ -83,7 +101,7 @@ p1 <- ggplot() +
 
 ggsave(
   plot = p1,
-  filename = "plots/covid19-peru-vacunas-entregadas-aplicadas.png",
+  filename = "plots/covid19-peru-vacunas-llegadas-distribuidas-aplicadas.png",
   width = 16,
   height = 12
 )
