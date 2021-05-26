@@ -36,3 +36,5 @@ saveRDS(
   data_df,
   file = "datos/vacunas_covid_distribucion.rds"
 )
+
+unlink(tmpfile)

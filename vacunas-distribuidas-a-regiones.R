@@ -1,6 +1,6 @@
 library(tidyverse)
 
-por_dpto <- data_df %>%
+por_dpto <- readRDS("datos/vacunas_covid_distribucion.rds") %>%
   group_by(dpto, dosis) %>%
   arrange(periodo) %>%
   mutate(
