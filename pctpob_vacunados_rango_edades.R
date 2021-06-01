@@ -135,7 +135,7 @@ p1 <- ggplot(
 #     caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
 #   )
 
-p1
+#p1
 ggsave(
   plot = p1,
   filename = "plots/pctpob_rangoedad_dosis1.png",

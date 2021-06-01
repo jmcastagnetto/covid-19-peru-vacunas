@@ -1,6 +1,6 @@
 library(tidyverse)
 library(ggtext)
-library(ggforce)
+#library(ggforce)
 
 vacunas <- readRDS("datos/vacunas_covid_resumen.rds") %>%
   group_by(fecha_vacunacion) %>%
@@ -26,7 +26,21 @@ round_any = function(x, accuracy, f=round){f(x/ accuracy) * accuracy}
 
 plot_df <- read_csv("datos/covid19_vaccine_arrivals_peru.csv") %>%
   mutate(
-    cantidad_acumulada = cumsum(cantidad)
+    cantidad_acumulada = cumsum(cantidad),
+    col_lbl = if_else(
+      covax,
+      glue::glue("{farmaceutica} (COVAX)"),
+      glue::glue("{farmaceutica}")
+    )
+  )
+
+# tbl <- plot_df %>%
+#   select(
+#     "Fecha de Llegada" = fecha_de_llegada,
+#     Fabricante = col_lbl,
+#     Cantidad = cantidad) %>%
+#   mutate(
+#     Cantidad = format(Cantidad, big.mark = ",")
   )
 
 max_y <- round_any(max(plot_df$cantidad_acumulada), 2.5e6)
@@ -59,19 +73,20 @@ p1 <- ggplot() +
     direction = "vh",
     size = 1
   ) +
-  geom_mark_circle(
-    data = plot_df,
-    aes(x = fecha_de_llegada,
-        y = cantidad_acumulada,
-        group = fecha_de_llegada,
-        label = farmaceutica,
-        color = farmaceutica,
-        description = paste0(format(cantidad, big.mark = ","), " dosis")
-    ),
-    con.colour = "blue",
-    label.fill = rgb(1, 1, 1, .6),
-    show.legend = FALSE
-  ) +
+  # geom_mark_circle(
+  #   data = plot_df,
+  #   aes(x = fecha_de_llegada,
+  #       y = cantidad_acumulada,
+  #       group = fecha_de_llegada,
+  #       label = farmaceutica,
+  #       color = farmaceutica,
+  #       description = paste0(format(cantidad, big.mark = ","), " dosis")
+  #   ),
+  #   expand = unit(1, "mm"),
+  #   con.colour = "blue",
+  #   label.fill = rgb(1, 1, 1, .6),
+  #   show.legend = FALSE
+  # ) +
   geom_textbox(
     aes(x = as.Date("2021-02-15"),
         y = 4.5e6,

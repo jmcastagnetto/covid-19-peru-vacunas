@@ -2,18 +2,20 @@ library(tidyverse)
 library(hrbrthemes)
 library(ggridges)
 
+import_roboto_condensed()
+
 df <- readRDS("datos/vacunas_covid_aumentada.rds")
 
 my_theme <- function() {
-  theme_ipsum_gs() +
+  theme_ipsum_ps() +
     theme(
       plot.title.position = "plot",
       plot.title = element_text(size = 32),
       plot.subtitle = element_text(size = 22, color = "grey50"),
       plot.caption = element_text(size = 16, family = "Inconsolata"),
-      strip.text = element_text(size = 20),
-      axis.text.y = element_text(size = 22),
-      axis.text.x = element_text(angle = 90, size = 20, hjust = 1),
+      strip.text = element_text(size = 14),
+      axis.text.y = element_text(size = 16),
+      axis.text.x = element_text(angle = 90, size = 16, hjust = 1),
       legend.position = "left",
       legend.title = element_text(size = 20),
       legend.text = element_text(size = 18),
@@ -51,7 +53,7 @@ p1 <- ggplot(
     subtitle = glue::glue("Al {fecha_corte}, por Fabricante y Sexo, para cada Departamento y Grupo Etáreo"),
     caption = "Fuente: https://www.datosabiertos.gob.pe/dataset/vacunación-contra-covid-19-ministerio-de-salud-minsa\n@jmcastagnetto, Jesus M. Castagnetto"
   )
-p1
+#p1
 
 ggsave(
   plot = p1,
@@ -83,7 +85,7 @@ p2 <- ggplot(
     subtitle = glue::glue("Al {fecha_corte}, por Fabricante y Sexo, para cada Departamento y Grupo Etáreo"),
     caption = "Fuente: https://www.datosabiertos.gob.pe/dataset/vacunación-contra-covid-19-ministerio-de-salud-minsa\n@jmcastagnetto, Jesus M. Castagnetto"
   )
-p2
+#p2
 ggsave(
   plot = p2,
   filename = "plots/vacunados-segunda-dosis-por-departamento.png",
@@ -133,7 +135,7 @@ p1d <- ggplot(
   theme_ridges(font_size = 20) +
   theme(
     panel.spacing.x = unit(2, "lines"),
-    strip.text = element_text(family = "bold", size = 24),
+    strip.text = element_text(family = "bold", size = 16),
     strip.background = element_blank(),
     plot.title.position = "plot",
     plot.caption = element_text(size = 18, family = "Inconsolata")
@@ -146,7 +148,7 @@ p1d <- ggplot(
     subtitle = glue::glue("Al {fecha_corte}, por Fabricante y Departamento, separado por cuartiles"),
     caption = "Fuente: https://www.datosabiertos.gob.pe/dataset/vacunación-contra-covid-19-ministerio-de-salud-minsa\n@jmcastagnetto, Jesus M. Castagnetto"
   )
-p1d
+#p1d
 ggsave(
   plot = p1d,
   filename = "plots/distribucion-edades-por-departamento-primera-dosis.png",
@@ -187,7 +189,7 @@ scale_fill_viridis_d(
   theme_ridges(font_size = 20) +
   theme(
     panel.spacing.x = unit(2, "lines"),
-    strip.text = element_text(family = "bold", size = 24),
+    strip.text = element_text(family = "bold", size = 16),
     strip.background = element_blank(),
     plot.title.position = "plot",
     plot.caption = element_text(size = 18, family = "Inconsolata")
@@ -201,7 +203,7 @@ scale_fill_viridis_d(
     caption = "Fuente: https://www.datosabiertos.gob.pe/dataset/vacunación-contra-covid-19-ministerio-de-salud-minsa\n@jmcastagnetto, Jesus M. Castagnetto"
   )
 
-p2d
+#p2d
 ggsave(
   plot = p2d,
   filename = "plots/distribucion-edades-por-departamento-segunda-dosis.png",

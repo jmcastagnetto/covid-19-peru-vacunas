@@ -1,4 +1,6 @@
-df <- vaccine_arrivals %>%
+library(tidyverse)
+
+df <- read_csv("datos/covid19_vaccine_arrivals_peru.csv") %>%
   group_by(covax) %>%
   summarise(tot = sum(cantidad)) %>%
   ungroup() %>%

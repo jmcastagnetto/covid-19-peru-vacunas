@@ -22,12 +22,20 @@ por_fabricante <- df %>%
   ) %>%
   arrange(fecha_vacunacion, fabricante)
 
-anotaciones <- tribble(
-  ~x, ~y, ~label, ~description,
-  as.Date("2021-03-08"), .75*max_y, "2021-03-08", "Inicio de vacunación de adultos mayores a 80 años",
-  as.Date("2021-04-30"), .75*max_y, "2021-04-30", "Inicio de vacunación de adultos mayores a 70 años",
-  as.Date("2021-05-21"), .75*max_y, "2021-05-21", "Inicio de vacunación de adultos mayores a 65 años"
-)
+# anotaciones <- tribble(
+#   ~x, ~y, ~label, ~description,
+#   as.Date("2021-03-08"), .75*max_y, "2021-03-08", "Inicio de vacunación de adultos mayores a 80 años",
+#   as.Date("2021-04-30"), .75*max_y, "2021-04-30", "Inicio de vacunación de adultos mayores a 70 años",
+#   as.Date("2021-05-21"), .75*max_y, "2021-05-21", "Inicio de vacunación de adultos mayores a 65 años"
+# )
+
+anotaciones <- read_csv("datos/eventos_relacionados_vacunas_covid_peru.csv") %>%
+  rename(x = fecha, description = evento) %>%
+  mutate(
+    label = as.character(x)
+  ) %>%
+  add_column(y = .75 * max_y)
+
 
 p1 <- ggplot(
   por_fabricante,
