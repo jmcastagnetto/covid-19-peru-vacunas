@@ -41,7 +41,7 @@ plot_df <- read_csv("datos/covid19_vaccine_arrivals_peru.csv") %>%
 #     Cantidad = cantidad) %>%
 #   mutate(
 #     Cantidad = format(Cantidad, big.mark = ",")
-  )
+#  )
 
 max_y <- round_any(max(plot_df$cantidad_acumulada), 2.5e6)
 
