@@ -76,7 +76,7 @@ dos_dosis <- dosis1 %>%
 
 write_csv(
   dos_dosis,
-  file = "datos/vacunados-dos-dosis.csv"
+  file = "datos/vacunados-dos-dosis.csv.gz"
 )
 
 qsave(
