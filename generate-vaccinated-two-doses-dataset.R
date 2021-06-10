@@ -1,7 +1,7 @@
 library(tidyverse)
 library(qs)
 
-ubigeos <- readRDS("~/devel/github/ubigeo-peru-aumentado/ubigeos_reniec_inei_aumentado.rds") %>%
+ubigeos <- readRDS(url("https://github.com/jmcastagnetto/ubigeo-peru-aumentado/raw/main/ubigeos_reniec_inei_aumentado.rds")) %>%
   select(reniec, inei, departamento, provincia, distrito) %>%
   mutate_at(
     vars(departamento, provincia, distrito),
