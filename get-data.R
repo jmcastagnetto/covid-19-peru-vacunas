@@ -1,5 +1,6 @@
 library(tidyverse)
 library(vroom)
+library(qs)
 
 #download.file(
 #  url = "https://cloud.minsa.gob.pe/s/ZgXoXqK2KLjRLxD/download",
@@ -66,9 +67,15 @@ vacunas <- orig %>%
   ) %>%
   janitor::clean_names()
 
+# local files that will not fit in github because of their size
 saveRDS(
   vacunas,
   file = "datos/vacunas_covid_aumentada.rds"
+)
+
+qsave(
+  vacunas,
+  file = "datos/vacunas_covid_aumentada.qs"
 )
 
 # separar datos cada millón de registros,
