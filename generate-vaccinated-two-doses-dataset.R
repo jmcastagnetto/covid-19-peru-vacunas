@@ -60,8 +60,8 @@ dosis1 <- vacunas %>%
 dosis2 <- vacunas %>%
   filter(dosis == 2) %>%
   rename(
-    reniec1 = reniec,
-    inei1 = inei,
+    reniec2 = reniec,
+    inei2 = inei,
     rango_edad2 = rango_edad,
     dosis2 = fecha_vacunacion
   ) %>%

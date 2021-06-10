@@ -81,7 +81,7 @@ p1 <- ggplot(
   labs(
     x = "",
     y = "",
-    title = "Porcentaje de la población (por rango etáreo) vacunado contra COVID-19 en Perú (Primera dosis)",
+    title = "Porcentaje de la población vacunado contra COVID-19 en Perú (Primera dosis)",
     subtitle = glue::glue("Total semanal para todos los fabricantes, del {min_date1} al {max_date1}"),
     caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
   )
@@ -175,7 +175,7 @@ p2 <- ggplot(
   labs(
     x = "",
     y = "",
-    title = "Porcentaje de la población (por rango etáreo) vacunado contra COVID-19 en Perú (Segunda dosis)",
+    title = "Porcentaje de la población vacunado contra COVID-19 en Perú (Segunda dosis)",
     subtitle = glue::glue("Total semanal para todos los fabricantes, del {min_date2} al {max_date2}"),
     caption = "Fuente: Datos abiertos de vacunas COVID-19 y de población al 2021 del MINSA\n@jmcastagnetto, Jesus M. Castagnetto"
   )
