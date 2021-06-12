@@ -39,7 +39,8 @@ p1 <- ggplot(
     fontface = "bold", label.size = 0
   ) +
   scale_x_continuous(
-     limits = c(-max_val, max_val)
+     limits = c(-max_val, max_val),
+     expand = expansion(add = 1e5)
   ) +
   scale_fill_brewer(palette = "Paired",
                     type = "qual",
@@ -75,7 +76,7 @@ p1 <- ggplot(
 ggsave(
   plot = p1,
   filename = "plots/vacunados-sexo-rango-edad.png",
-  width = 16,
+  width = 25,
   height = 10
 )
 
