@@ -89,7 +89,7 @@ p1 <- ggplot() +
   # ) +
   geom_textbox(
     aes(x = as.Date("2021-02-15"),
-        y = 4.5e6,
+        y = 0.8 * max_y,
         label = txt_annotation),
     size = 9,
     width = unit(6, "in"),

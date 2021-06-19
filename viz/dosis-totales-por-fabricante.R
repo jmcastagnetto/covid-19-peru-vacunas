@@ -1,5 +1,7 @@
 library(tidyverse)
 library(ggtext)
+library(ggforce)
+library(patchwork)
 
 df <- readRDS("datos/vacunas_covid_resumen.rds")
 fecha_corte <- unique(df$fecha_corte)
@@ -22,21 +24,6 @@ por_fabricante <- df %>%
   ) %>%
   arrange(fecha_vacunacion, fabricante)
 
-# anotaciones <- tribble(
-#   ~x, ~y, ~label, ~description,
-#   as.Date("2021-03-08"), .75*max_y, "2021-03-08", "Inicio de vacunación de adultos mayores a 80 años",
-#   as.Date("2021-04-30"), .75*max_y, "2021-04-30", "Inicio de vacunación de adultos mayores a 70 años",
-#   as.Date("2021-05-21"), .75*max_y, "2021-05-21", "Inicio de vacunación de adultos mayores a 65 años"
-# )
-
-anotaciones <- read_csv("datos/eventos_relacionados_vacunas_covid_peru.csv") %>%
-  rename(x = fecha, description = evento) %>%
-  mutate(
-    label = as.character(x)
-  ) %>%
-  add_column(y = .75 * max_y)
-
-
 p1 <- ggplot(
   por_fabricante,
   aes(x = fecha_vacunacion, y = n_acum,
@@ -44,30 +31,6 @@ p1 <- ggplot(
       fill = fabricante)
 ) +
   geom_area(color = "black") +
-  geom_vline(
-    data = anotaciones,
-    aes(xintercept = x),
-    color = "grey40",
-    size = 2,
-    linetype = "dashed"
-  ) +
-  ggforce::geom_mark_circle(
-    data = anotaciones,
-    aes(
-      x = x,
-      y = y,
-      label = label,
-      description = description
-    ),
-    label.fill = rgb(1,1,1, .7),
-    con.type = "straight",
-    con.colour = "blue",
-    color = "blue",
-    fill = "blue",
-    alpha = 1,
-    expand = unit(1, "mm"),
-    inherit.aes = FALSE
-  ) +
   scale_y_continuous(labels = scales::comma) +
   scale_x_date(
     date_breaks = "2 weeks",
@@ -96,9 +59,44 @@ p1 <- ggplot(
     legend.position = "top",
     plot.margin = unit(rep(1, 4), "cm")
   )
+
+eventos <- read_csv("datos/eventos_relacionados_vacunas_covid_peru.csv")
+
+p2 <- ggplot(
+  eventos,
+  aes(x = fecha, y = 0, label = fecha, description = evento, group = evento)
+) +
+  geom_hline(yintercept = 0, color = "gray70", size = 2) +
+  geom_point() +
+  geom_mark_circle(
+    expand = unit(2, "mm"),
+    label.width = unit(4, "cm"),
+    label.fill = rgb(1, 1, 0, .3),
+    con.colour = "blue",
+    con.cap = 0,
+    label.fontsize = 10
+  ) +
+  scale_y_continuous(limits = c(-1, 1)) +
+  theme_void() +
+  theme(
+    legend.position = "none",
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank()
+  )
+
+p12 <- p1 +
+  inset_element(
+    p2,
+    left = .05,
+    bottom = .2,
+    right = .8,
+    top = 1
+  )
+
 ggsave(
-  plot = p1,
+  plot = p12,
   filename = "plots/dosis-totales-por-fabricante.png",
-  width = 16,
-  height = 10
+  width = 20,
+  height = 14
 )

@@ -11,7 +11,6 @@ min_date <- min(vacunas$fecha_vacunacion, na.rm = TRUE)
 max_date <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
 fabs <- paste(unique(vacunas$fabricante), collapse = ", ")
 
-
 por_sexo_edad <- vacunas %>%
   group_by(dosis, sexo, rango_edad2) %>%
   tally() %>%
