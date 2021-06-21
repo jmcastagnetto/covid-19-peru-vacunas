@@ -1,6 +1,56 @@
 library(tidyverse)
 library(patchwork)
-library(ggcharts)
+
+pob2020_df <- readRDS("datos/inei-estimado-pob2020-edad-sexo.rds") %>%
+  mutate(
+    n = if_else(sexo == "Masculino", -1*n, n),
+    hjust = if_else(sexo == "Masculino", 1.1, -0.1)
+  )
+p0 <- ggplot(
+  pob2020_df,
+  aes(x = n, y = rango_edad2,
+      group = sexo,
+      fill = sexo)
+) +
+  geom_col() +
+  geom_label(
+    aes(label = str_trim(format(abs(n), big.mark = ",")),
+        hjust = hjust,
+        color = sexo),
+    size = 6,
+    show.legend = FALSE,
+    fontface = "bold", label.size = 0
+  ) +
+  scale_x_continuous(
+    expand = expansion(add = 1e6)
+  ) +
+  scale_fill_brewer(palette = "Paired",
+                    type = "qual",
+                    guide = guide_legend(reverse = TRUE)) +
+  scale_color_manual(
+    values = c("Masculino" = "white", "Femenino" = "black")
+  ) +
+  labs(
+    fill = "Sexo:",
+    x = "",
+    y = "",
+    title = "Perú: Población al 2020 por grupo etáreo y sexo",
+    subtitle = "Fuente: Estimaciones poblacionales del INEI"
+  ) +
+  ggthemes::theme_hc(
+    base_family = "Roboto",
+    base_size = 24
+  ) +
+  theme(
+    plot.title.position = "plot",
+    legend.position = "top",
+    plot.subtitle = element_text(size = 20, color = "grey50"),
+    strip.text = element_text(face = "bold"),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.spacing.x = unit(2, "lines"),
+    plot.margin = unit(rep(.5, 4), "cm")
+  )
 
 vacunas <- readRDS("datos/vacunas_covid_aumentada.rds") %>%
   mutate(
@@ -53,8 +103,7 @@ p1 <- ggplot(
     x = "Número de personas vacunadas",
     y = "",
     title = glue::glue("Vacunados por COVID-19 en Perú (del {min_date} al {max_date})"),
-    subtitle = glue::glue("Agrupados por número de dosis, grupo etáreo y sexo. Fabricantes de vacunas: {fabs}"),
-    caption = "Fuente: https://www.datosabiertos.gob.pe/dataset/vacunación-contra-covid-19-ministerio-de-salud-minsa\n@jmcastagnetto, Jesus M. Castagnetto"
+    subtitle = glue::glue("Agrupados por número de dosis, grupo etáreo y sexo. Fabricantes de vacunas: {fabs} // Fuente: MINSA")
   ) +
   ggthemes::theme_hc(
     base_family = "Roboto",
@@ -62,7 +111,6 @@ p1 <- ggplot(
   ) +
   theme(
     plot.title.position = "plot",
-    plot.caption = element_text(family = "Inconsolata"),
     legend.position = "top",
     plot.subtitle = element_text(size = 20, color = "grey50"),
     strip.text = element_text(face = "bold"),
@@ -72,11 +120,19 @@ p1 <- ggplot(
     plot.margin = unit(rep(.5, 4), "cm")
   )
 
+p01 <- (p0 / p1) +
+  plot_annotation(
+    caption = "@jmcastagnetto, Jesus M. Castagnetto"
+  ) &
+  theme(
+    plot.caption = element_text(family = "Inconsolata", size = 24),
+  )
+
 ggsave(
-  plot = p1,
+  plot = p01,
   filename = "plots/vacunados-sexo-rango-edad.png",
   width = 25,
-  height = 10
+  height = 22
 )
 
 
