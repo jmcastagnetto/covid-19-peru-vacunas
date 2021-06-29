@@ -109,9 +109,9 @@ p1 <- ggplot() +
   theme_classic(base_size = 18) +
   theme(
     plot.title.position = "plot",
-    plot.title = element_text(size = 32),
-    plot.subtitle = element_text(size = 24, color = "grey40"),
-    plot.caption = element_text(family = "Inconsolata", size = 20)
+    plot.title = element_text(size = 28),
+    plot.subtitle = element_text(size = 22, color = "grey40"),
+    plot.caption = element_text(family = "Inconsolata", size = 18)
   )
 
 ggsave(
