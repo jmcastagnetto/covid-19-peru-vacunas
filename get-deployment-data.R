@@ -5,7 +5,6 @@ library(V8)
 ctx <- v8()
 url <- "https://mvc.cenares.gob.pe/sic/Vacuna/MapaVacuna3"
 xpath <- "/html/body/script[2]"
-
 txt <- read_html(url) %>%
   html_elements(xpath = xpath) %>%
   html_text(trim = TRUE)
