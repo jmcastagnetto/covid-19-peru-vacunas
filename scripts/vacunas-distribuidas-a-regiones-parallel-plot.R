@@ -81,9 +81,10 @@ p1 <- ggplot(
     plot.title.position = "plot",
     plot.title = element_text(size = 28),
     plot.subtitle = element_text(size = 20, color = "grey40"),
-    plot.caption = element_text(family = "Inconsolata", size = 20),
+    plot.caption = element_text(family = "Inconsolata", size = 16),
     plot.margin = unit(rep(.5, 4), "cm"),
-    panel.spacing = unit(.5, "cm")
+    panel.spacing = unit(.5, "cm"),
+	plot.background = element_rect(fill = "white", color = "white")
   ) +
   labs(
     title = "COVID19 (Perú): Vacunas distribuidas por regiones, fabricante y dosis de vacunación",
