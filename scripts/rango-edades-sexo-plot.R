@@ -9,10 +9,9 @@ pob2020_df <- readRDS("datos/inei-estimado-pob2020-edad-sexo.rds") %>%
 p0 <- ggplot(
   pob2020_df,
   aes(x = n, y = rango_edad2,
-      group = sexo,
-      fill = sexo)
+      group = sexo)
 ) +
-  geom_col() +
+  geom_col(aes(fill = sexo)) +
   geom_label(
     aes(label = str_trim(format(abs(n), big.mark = ",")),
         hjust = hjust,
@@ -24,11 +23,11 @@ p0 <- ggplot(
   scale_x_continuous(
     expand = expansion(add = 1e6)
   ) +
-  scale_fill_brewer(palette = "Paired",
+  scale_fill_brewer(palette = "Set1",
                     type = "qual",
                     guide = guide_legend(reverse = TRUE)) +
   scale_color_manual(
-    values = c("Masculino" = "white", "Femenino" = "black")
+    values = c("Masculino" = "#377eb8", "Femenino" = "#e41a1c")
   ) +
   labs(
     fill = "Sexo:",
@@ -76,14 +75,14 @@ max_val <- 1.5*max(abs(por_sexo_edad$n))
 p1 <- ggplot(
   por_sexo_edad,
   aes(x = n, y = rango_edad2,
-      group = sexo,
-      fill = sexo)
+      group = sexo)
 ) +
-  geom_col() +
+  geom_col(aes(fill = sexo)) +
   geom_label(
     aes(label = str_trim(format(abs(n), big.mark = ",")),
         hjust = hjust,
         color = sexo),
+    size = 6,
     show.legend = FALSE,
     fontface = "bold", label.size = 0
   ) +
@@ -91,11 +90,11 @@ p1 <- ggplot(
      limits = c(-max_val, max_val),
      expand = expansion(add = 1e5)
   ) +
-  scale_fill_brewer(palette = "Paired",
+  scale_fill_brewer(palette = "Set1",
                     type = "qual",
                     guide = guide_legend(reverse = TRUE)) +
   scale_color_manual(
-    values = c("Masculino" = "white", "Femenino" = "black")
+    values = c("Masculino" = "#377eb8", "Femenino" = "#e41a1c")
   ) +
   facet_wrap(~dosis_lbl) +
   labs(
@@ -122,7 +121,7 @@ p1 <- ggplot(
 
 p01 <- (p0 / p1) +
   plot_annotation(
-    caption = "@jmcastagnetto, Jesus M. Castagnetto"
+    caption = glue::glue("@jmcastagnetto, Jesus M. Castagnetto ({Sys.Date()})")
   ) &
   theme(
     plot.caption = element_text(family = "Inconsolata", size = 24),

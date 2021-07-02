@@ -1,6 +1,5 @@
 library(tidyverse)
 library(ggtext)
-library(ggpattern)
 
 pob2020_df <- readRDS("datos/inei-estimado-pob2020-edad-sexo.rds") %>%
   mutate(
@@ -67,7 +66,7 @@ p01 <- ggplot(comb_df) +
         linetype = grupo,
         width = width,
         fill = sexo),
-    alpha = .6,
+   # alpha = .6,
     size = 1,
     position = position_identity()
   ) +
@@ -75,8 +74,8 @@ p01 <- ggplot(comb_df) +
   scale_color_manual(
     values = c(
       "pob2020" = "white",
-      "Primera dosis" = "grey40",
-      "Segunda dosis" = "green"
+      "Primera dosis" = "orange",
+      "Segunda dosis" = "chartreuse3"
     )
   ) +
   scale_linetype_manual(
@@ -86,7 +85,7 @@ p01 <- ggplot(comb_df) +
       "Segunda dosis" = "dashed"
     )
   ) +
-  scale_fill_brewer(palette = "Paired",
+  scale_fill_brewer(palette = "Set1",
                     type = "qual") +
   scale_x_continuous(labels = abs_comma, limits = c(-3e6, 3e6),
                      n.breaks = 7) +
@@ -98,7 +97,7 @@ p01 <- ggplot(comb_df) +
   labs(
     x = "",
     y = "",
-    title = "Vacunación COVID-19 en Perú: Adultos con <span style='color:grey40;'>una</span> y <span style='color:green;'>dos</span> dosis, comparado con la pirámide poblacional",
+    title = "Vacunación COVID-19 en Perú: Adultos con <span style='color:orange;'>primera</span> y <span style='color:chartreuse3;'>segunda</span> dosis, comparado con la pirámide poblacional",
     caption = glue::glue("Fuente: Estimaciones poblacionales del INEI y datos de vacunación contra el COVID-19 del MINSA (rango: del {min_date} al {max_date})\n@jmcastagnetto, Jesus M. Castagnetto ({Sys.Date()})")
   ) +
   ggthemes::theme_hc(
@@ -111,12 +110,11 @@ p01 <- ggplot(comb_df) +
     legend.title = element_text(size = 22),
     legend.text = element_text(size = 20),
     axis.text = element_text(size = 18),
-    plot.title = element_textbox_simple(size = 38),
+    plot.title = element_textbox_simple(size = 42, hjust = .5),
     plot.subtitle = element_text(size = 20, face = "italic"),
     plot.caption = element_text(family = "Inconsolata"),
     plot.margin = unit(rep(.5, 4), "cm")
   )
-
 
 ggsave(
   plot = p01,
