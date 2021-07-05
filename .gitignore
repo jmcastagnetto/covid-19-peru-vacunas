@@ -11,3 +11,4 @@ actualizar-datos-local.sh
 datos/vacunas_covid_aumentada.rds
 datos/*.qs
 datos/orig/vacunas_covid.csv.gz
+datos/parquet/*

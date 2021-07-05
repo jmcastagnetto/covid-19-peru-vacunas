@@ -1,6 +1,7 @@
 library(tidyverse)
 library(vroom)
 library(qs)
+library(arrow)
 
 #download.file(
 #  url = "https://cloud.minsa.gob.pe/s/ZgXoXqK2KLjRLxD/download",
@@ -97,6 +98,18 @@ if (n_rows > n_limit) {
     saveRDS(tmp_df, file = rdsname)
   }
 }
+
+
+# Save as arrow's parquet separated by epi week ---------------------------
+
+vacunas %>%
+  group_by(epi_week) %>%
+  write_dataset(
+    path = "datos/parquet/",
+    format = "parquet",
+    template = "covid_vacunas_part_{i}.parquet"
+  )
+
 
 # Resumen -----------------------------------------------------------------
 
