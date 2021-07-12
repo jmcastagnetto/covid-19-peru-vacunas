@@ -74,10 +74,17 @@ dos_dosis <- dosis1 %>%
   ) %>%
   filter(!is.na(dosis2))
 
-write_csv(
-  dos_dosis,
-  file = "datos/vacunados-dos-dosis.csv.gz"
-)
+n_limit <- 1e6  # de millón en millón
+n_rows <- nrow(dos_dosis)
+if (n_rows > n_limit) {
+  grupo  <- rep(1:ceiling(n_rows/n_limit),each = n_limit)[1:n_rows]
+  v_list <- split(dos_dosis, grupo)
+  for(i in 1:length(v_list)) {
+    tmp_df <- v_list[[i]]
+    csvname <- glue::glue("datos/vacunados_dos_dosis_{sprintf('%03d', i)}.csv.gz")
+    write_csv(tmp_df, file = csvname)
+  }
+}
 
 qsave(
   dos_dosis,
