@@ -1,6 +1,7 @@
 library(tidyverse)
 library(ggforce)
 
+last_date <- max(readRDS("datos/vacunas_covid_distribucion.rds")$ultimoReparto)
 vacunas_dist <- readRDS("datos/vacunas_covid_distribucion.rds") %>%
   group_by(
     dpto, nombre, dosis
@@ -24,8 +25,10 @@ vacunas_dist <- readRDS("datos/vacunas_covid_distribucion.rds") %>%
         "DOSIS 1" = "D1",
         "DOSIS 2" = "D2"
       )
-    )
+    ),
+    dosis = factor(dosis, levels = c("D1", "D2"), ordered = TRUE)
   )
+
 
 por_dtpo <- vacunas_dist %>%
   group_by(dpto) %>%
@@ -88,7 +91,7 @@ p1 <- ggplot(
   ) +
   labs(
     title = "COVID19 (Perú): Vacunas distribuidas por regiones, fabricante y dosis de vacunación",
-    subtitle = "D1: primera dosis, D2: segunda dosis - Fuente: CENARES (https://mvc.cenares.gob.pe/sic/Vacuna/MapaVacuna3)",
+    subtitle = glue::glue("D1: primera dosis, D2: segunda dosis - Fuente: CENARES. Datos al {last_date}"),
     caption = glue::glue("@jmcastagnetto, Jesus M. Castagnetto, {Sys.Date()}")
   )
 
