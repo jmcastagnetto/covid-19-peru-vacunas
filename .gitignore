@@ -10,5 +10,8 @@ actualizar-datos-local.sh
 # local full data files
 datos/vacunas_covid_aumentada.rds
 datos/*.qs
+datos/orig/vacunas_covid.7z
 datos/orig/vacunas_covid.csv.gz
 datos/parquet/*
+md5sum.txt
+sha256sum.txt
