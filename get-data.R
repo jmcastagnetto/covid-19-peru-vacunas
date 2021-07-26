@@ -1,4 +1,5 @@
 library(tidyverse)
+library(archive)
 library(vroom)
 library(qs)
 library(arrow)
@@ -11,7 +12,7 @@ library(arrow)
 #              overwrite = TRUE, remove = TRUE)
 
 orig <- vroom(
-  "datos/orig/vacunas_covid.csv.gz",
+  archive_read("datos/orig/vacunas_covid.7z", "vacunas_covid.csv"),
   col_types = cols(
     FECHA_CORTE = col_date(format = "%Y%m%d"),
     UUID = col_character(),
