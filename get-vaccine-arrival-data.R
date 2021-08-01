@@ -5,7 +5,7 @@ library(lubridate)
 # Fuente: Wikipedia
 url <- "https://es.wikipedia.org/wiki/Vacunaci%C3%B3n_contra_la_COVID-19_en_Per%C3%BA"
 
-table_xpath <- "/html/body/div[3]/div[3]/div[5]/div[1]/table[12]"
+table_xpath <- "/html/body/div[3]/div[3]/div[5]/div[1]/table[14]"
 
 raw_data <- read_html(url)
 tab1 <- raw_data %>%
@@ -21,8 +21,8 @@ Sys.setlocale("LC_TIME", "es_PE.utf8")
 vaccine_arrivals <- tab1 %>%
   slice(2:nrows) %>%
   janitor::clean_names() %>%
+  select(-nro) %>%
   mutate(
-    nro = str_remove(nro, "°") %>% as.integer(),
     fecha_de_llegada = as_date(
       fecha_de_llegada,
       format = "%e de %B de %Y"
