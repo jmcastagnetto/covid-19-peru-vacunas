@@ -25,8 +25,6 @@ vacunas_por_fabricante <- readRDS("datos/vacunas_covid_resumen.rds") %>%
     dosis_acum = cumsum(n_dosis)
   )
 
-
-
 distribuidas <- readRDS("datos/vacunas_covid_distribucion.rds") %>%
   group_by(periodo) %>%
   summarise(
@@ -60,6 +58,10 @@ vac_dist <- max(distribuidas$n_acum)
 
 Sys.setlocale("LC_TIME", "es_PE.utf8")
 p1 <- ggplot() +
+  geom_area(
+    data = vacunas_por_fabricante,
+    aes(x = fecha_vacunacion, y = dosis_acum, fill = fabricante)
+  ) +
   geom_line(
     data = vacunas,
     aes(x = fecha_vacunacion, y = dosis_acum),
@@ -76,7 +78,7 @@ p1 <- ggplot() +
       )
     ),
     color = "darkgreen",
-    method = list("last.bumpup", cex = 1.7)
+    method = list("last.points", cex = 1.7)
   ) +
   geom_step(
     data = distribuidas,
@@ -112,11 +114,7 @@ p1 <- ggplot() +
         "Llegaron: {format(cantidad_acumulada, big.mark = ',')} dosis"
       )
     ),
-    method = list("last.bumpup", cex = 1.7)
-  ) +
-  geom_area(
-    data = vacunas_por_fabricante,
-    aes(x = fecha_vacunacion, y = dosis_acum, fill = fabricante)
+    method = list("last.points", cex = 1.7)
   ) +
   scale_y_continuous(labels = scales::comma) + #, limits = c(0, max_y)) +
   scale_x_date(
