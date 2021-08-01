@@ -1,7 +1,7 @@
 library(tidyverse)
 library(ggtext)
 library(directlabels)
-#library(ggforce)
+library(ggforce)
 
 vacunas <- readRDS("datos/vacunas_covid_resumen.rds") %>%
   group_by(fecha_vacunacion) %>%
@@ -35,6 +35,7 @@ distribuidas <- readRDS("datos/vacunas_covid_distribucion.rds") %>%
     n_acum = cumsum(n_vac)
   )
 
+
 round_any = function(x, accuracy, f=round){f(x/ accuracy) * accuracy}
 
 plot_df <- read_csv("datos/covid19_vaccine_arrivals_peru.csv") %>%
@@ -46,6 +47,26 @@ plot_df <- read_csv("datos/covid19_vaccine_arrivals_peru.csv") %>%
       glue::glue("{farmaceutica}")
     )
   )
+
+last_df <- tibble(
+  label = c("Llegaron", "Distribuidas", "Aplicadas"),
+  x = c(
+    max(plot_df$fecha_de_llegada),
+    max(distribuidas$periodo),
+    max(vacunas$fecha_vacunacion)
+  ),
+  y = c(
+    max(plot_df$cantidad_acumulada),
+    max(distribuidas$n_acum),
+    max(vacunas$dosis_acum)
+  ),
+  label_color = c("black", "darkmagenta", "darkgreen" )
+) %>%
+  mutate(
+    description = glue::glue("{format(y, big.mark = ',')} dosis\nal {x}")
+  )
+
+
 
 max_y <- max(plot_df$cantidad_acumulada) * 1.2
 
@@ -68,18 +89,20 @@ p1 <- ggplot() +
     size = 1,
     color = "darkgreen"
   ) +
-  geom_dl(
-    data = vacunas %>% tail(1),
-    aes(
-      x = fecha_vacunacion,
-      y = dosis_acum,
-      label = glue::glue(
-        "Aplicadas: {format(dosis_acum, big.mark = ',')} dosis"
-      )
-    ),
-    color = "darkgreen",
-    method = list("last.points", cex = 1.7)
-  ) +
+  # geom_mark_circle(
+  #   data = vacunas %>% tail(1),
+  #   aes(
+  #     x = fecha_vacunacion,
+  #     y = dosis_acum,
+  #     label = "Aplicadas",
+  #     description = glue::glue(
+  #       "{format(dosis_acum, big.mark = ',')} dosis"
+  #     )
+  #   ),
+  #   label.colour = "darkgreen",
+  #   color = "black",
+  #   expand = unit(1, "mm")
+  # ) +
   geom_step(
     data = distribuidas,
     aes(x = periodo, y = n_acum),
@@ -87,42 +110,59 @@ p1 <- ggplot() +
     size = 1,
     color = "darkmagenta"
   ) +
-  geom_dl(
-    data = distribuidas %>% tail(1),
-    aes(
-      x = periodo,
-      y = n_acum,
-      label = glue::glue(
-        "Distribuidas: {format(n_acum, big.mark = ',')} dosis"
-      )
-    ),
-    color = "darkmagenta",
-    method = list("last.bumpup", cex = 1.7)
-  ) +
+  # geom_mark_circle(
+  #   data = distribuidas %>% tail(1),
+  #   aes(
+  #     x = periodo,
+  #     y = n_acum,
+  #     label = "Distribuidas",
+  #     description = glue::glue(
+  #       "{format(n_acum, big.mark = ',')} dosis"
+  #     )
+  #   ),
+  #   label.colour = "darkmagenta",
+  #   color = "black",
+  #   expand = unit(1, "mm")
+  # ) +
   geom_step(
     data = plot_df,
     aes(x = fecha_de_llegada, y = cantidad_acumulada),
     direction = "vh",
     size = 1
   ) +
-  geom_dl(
-    data = plot_df %>% tail(1),
+  # geom_mark_circle(
+  #   data = plot_df %>% tail(1),
+  #   aes(
+  #     x = fecha_de_llegada,
+  #     y = cantidad_acumulada,
+  #     label = "Llegaron",
+  #     description = glue::glue(
+  #       "{format(cantidad_acumulada, big.mark = ',')} dosis"
+  #     )
+  #   ),
+  #   label.colour = "black",
+  #   color = "black",
+  #   expand = unit(1, "mm")
+  # ) +
+  geom_mark_circle(
+    data = last_df,
     aes(
-      x = fecha_de_llegada,
-      y = cantidad_acumulada,
-      label = glue::glue(
-        "Llegaron: {format(cantidad_acumulada, big.mark = ',')} dosis"
-      )
+      x = x,
+      y = y,
+      label = label,
+      description = description,
     ),
-    method = list("last.points", cex = 1.7)
+    label.colour = c("blue", "black"),
+    label.fill = rgb(.9, .9, .9, .7),
+    color = "black",
+    expand = unit(1, "mm")
   ) +
   scale_y_continuous(labels = scales::comma) + #, limits = c(0, max_y)) +
   scale_x_date(
     date_breaks = "1 month",
-    date_labels = "%b",
-    limits = c(min_date, max_date + 45)
+    date_labels = "%b"#,
+    #limits = c(min_date, max_date + 45)
   ) +
-  #scale_fill_brewer(palette = "Pastel2") +
   scale_fill_manual(
     values = c("#bae4b3", "#74c476", "#238b45")
   ) +
@@ -140,7 +180,7 @@ p1 <- ggplot() +
     plot.title = element_text(size = 28),
     plot.subtitle = element_text(size = 22, color = "grey40"),
     plot.caption = element_text(family = "Inconsolata", size = 18),
-    legend.position = c(.9, .5),
+    legend.position = c(.4, .7),
     legend.key.height = unit(1, "cm")
   )
 
