@@ -16,12 +16,6 @@ qsave(
   file = "datos/vacunas_covid_aumentada.qs"
 )
 
-# SQLite
-vac_conn <- dbConnect(RSQLite::SQLite(), "datos/vacunas_covid_aumentada.sqlite")
-dbWriteTable(vac_conn, name = "vacunas_covid", value = vacunas,
-             row.names = FALSE, append = FALSE, overwrite = TRUE)
-dbDisconnect(vac_conn)
-
 # Arrow
 vacunas %>%
   group_by(epi_week) %>%
@@ -30,3 +24,16 @@ vacunas %>%
     format = "parquet",
     template = "covid_vacunas_part_{i}.parquet"
   )
+
+# SQLite
+# change types of columns so sqlite can grok them
+vacunas <- vacunas %>%
+  mutate(
+    fecha_corte = as.character(fecha_corte),
+	fecha_vacunacion = as.character(fecha_vacunacion)
+  )
+vac_conn <- dbConnect(RSQLite::SQLite(), "datos/vacunas_covid_aumentada.sqlite")
+dbWriteTable(vac_conn, name = "vacunas_covid", value = vacunas,
+             row.names = FALSE, append = FALSE, overwrite = TRUE)
+dbDisconnect(vac_conn)
+
