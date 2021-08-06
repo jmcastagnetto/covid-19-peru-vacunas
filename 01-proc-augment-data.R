@@ -1,9 +1,7 @@
 library(tidyverse)
-library(archive)
 library(vroom)
-library(qs)
-library(arrow)
 
+message("Proceso inicial de datos, separando por cada millón de registros")
 
 # separar datos cada millón de registros,
 # para evitar problemas de tamaño con github
@@ -96,66 +94,3 @@ for(part in seq_nums) {
   write_csv(vacunas, file = csvname)
   saveRDS(vacunas, file = rdsname)
 }
-
-
-# Recombinar los datos procesados -----------------------------------------
-rm("orig")
-rm("vacunas")
-gc()
-print("Recombinando datos y guardando RDS, qs y parquet locales")
-rdslist <- fs::dir_ls("datos/", regexp = "vacunas_covid_aumentada_[0-9]{3}\\.rds")
-vacunas <- tibble()
-for(fn in rdslist) {
-  vacunas <- bind_rows(vacunas, readRDS(fn))
-}
-
-# local files that will not fit in github because of their size
-saveRDS(
-  vacunas,
-  file = "datos/vacunas_covid_aumentada.rds"
-)
-
-qsave(
-  vacunas,
-  file = "datos/vacunas_covid_aumentada.qs"
-)
-
-# Save as arrow's parquet separated by epi week ---------------------------
-
-vacunas %>%
-  group_by(epi_week) %>%
-  write_dataset(
-    path = "datos/parquet/",
-    format = "parquet",
-    template = "covid_vacunas_part_{i}.parquet"
-  )
-
-
-# Resumen -----------------------------------------------------------------
-print("Generando archivo resúmen")
-
-vac_resumen <- vacunas %>%
-  select(fecha_corte, fecha_vacunacion,
-         uuid, fabricante, dosis) %>%
-  distinct() %>%
-  group_by(fecha_corte,
-           fecha_vacunacion,
-           fabricante,
-           dosis) %>%
-  tally(name = "n_reg") %>%
-  ungroup() %>%
-  mutate(
-    fabricante = factor(fabricante)
-  ) %>%
-  arrange(fecha_vacunacion)
-
-saveRDS(
-  vac_resumen,
-  file = "datos/vacunas_covid_resumen.rds"
-)
-
-write_csv(
-  vac_resumen,
-  file = "datos/vacunas_covid_resumen.csv"
-)
-
