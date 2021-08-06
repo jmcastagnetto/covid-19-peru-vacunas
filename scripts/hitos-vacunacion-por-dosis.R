@@ -22,6 +22,14 @@ dosis1 <- vacunas %>%
     n_days = as.integer(fecha_vacunacion - min(fecha_vacunacion))
   )
 
+max_tramo1 <- max(dosis1$tramo)
+max_value1 <- max(dosis1$n_ac)
+
+# decide if we need to filter off last block
+if (max_value1 < (max_tramo1 + 1)*1e6) {
+  dosis1 <- dosis1 %>%
+    filter(tramo < max_tramo1)
+}
 max_fechavac1 <- max(dosis1$fecha_vacunacion)
 
 markers_1 <- dosis1 %>%
@@ -102,6 +110,15 @@ dosis2 <- vacunas %>%
     n_days = as.integer(fecha_vacunacion - min(fecha_vacunacion))
   )
 
+max_tramo2 <- max(dosis2$tramo)
+max_value2 <- max(dosis2$n_ac)
+
+# decide if we need to filter off last block
+if (max_value2 < (max_tramo2 + 1)*1e6) {
+  dosis2 <- dosis2 %>%
+    filter(tramo < max_tramo2)
+}
+
 max_fechavac2 <- max(dosis2$fecha_vacunacion)
 
 markers_2 <- dosis2 %>%
@@ -149,8 +166,8 @@ p2 <- ggplot(
     geom = "text",
     label = "Segunda dosis",
     size = 12,
-    x = as.Date("2021-07-01"),
-    y = 2.5
+    x = as.Date("2021-06-01"),
+    y = 1.5
   ) +
   scale_x_date(
     date_breaks = "1 month",
@@ -186,6 +203,6 @@ p12 <- (p1 + p2) +
 ggsave(
   p12,
   filename = "plots/hitos-vacunados-por-dosis.png",
-  width = 22,
+  width = 24,
   height = 10
 )
