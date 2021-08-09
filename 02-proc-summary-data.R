@@ -1,8 +1,10 @@
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(cli))
 
-message("Generando archivo resúmen")
+cli_h1("Generando archivo resúmen")
 
 rdslist <- fs::dir_ls("datos/", regexp = "vacunas_covid_aumentada_[0-9]{3}\\.rds")
+cli_alert("Cargando los archivos parciales")
 vacunas <- map_dfr(rdslist, read_rds, .id = "source")
 # RDS
 saveRDS(
@@ -10,6 +12,7 @@ saveRDS(
   file = "datos/vacunas_covid_aumentada.rds"
 )
 
+cli_alert("Acumulando datos por fecha de vacunación")
 vac_resumen <- vacunas %>%
   select(fecha_corte, fecha_vacunacion,
          uuid, fabricante, dosis) %>%
@@ -35,3 +38,4 @@ write_csv(
   file = "datos/vacunas_covid_resumen.csv"
 )
 
+cli_alert_success("Proceso finalizado")

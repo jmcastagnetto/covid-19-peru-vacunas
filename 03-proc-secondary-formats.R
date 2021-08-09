@@ -1,22 +1,28 @@
-library(tidyverse)
-library(arrow)
-library(qs)
-library(RSQLite)
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(arrow))
+suppressPackageStartupMessages(library(qs))
+suppressPackageStartupMessages(library(RSQLite))
+suppressPackageStartupMessages(library(cli))
 
 # Guardar en formatos secundarios, datos completos ------------------------
 
-message("Convirtiendo de RDS a qs, sqlite y parquet locales")
+cli_h1("Convirtiendo de RDS a sqlite y parquet locales")
+
+cli_progress_bar("Procesando... ", type = "task")
+cli_progress_update(status = "Cargando datos acumulados")
 vacunas <- readRDS("datos/vacunas_covid_aumentada.rds")
 
 # Archivos que no van a github
 
 # QS
-qsave(
-  vacunas,
-  file = "datos/vacunas_covid_aumentada.qs"
-)
+#cli_alert("Generando QS")
+#qsave(
+#  vacunas,
+#  file = "datos/vacunas_covid_aumentada.qs"
+#)
 
 # Arrow
+cli_progress_update(status = "Generando parquet, por semana epidemiológica")
 vacunas %>%
   group_by(epi_week) %>%
   write_dataset(
@@ -27,6 +33,7 @@ vacunas %>%
 
 # SQLite
 # change types of columns so sqlite can grok them
+cli_progress_update(status = "Generando SQLite")
 vacunas <- vacunas %>%
   mutate(
     fecha_corte = as.character(fecha_corte),
@@ -36,4 +43,6 @@ vac_conn <- dbConnect(RSQLite::SQLite(), "datos/vacunas_covid_aumentada.sqlite")
 dbWriteTable(vac_conn, name = "vacunas_covid", value = vacunas,
              row.names = FALSE, append = FALSE, overwrite = TRUE)
 dbDisconnect(vac_conn)
+cli_progress_done()
 
+cli_alert_success("Proceso finalizado")
