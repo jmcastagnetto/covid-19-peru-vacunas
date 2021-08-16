@@ -113,7 +113,7 @@ tab_cmp <- tab_df1 %>%
     subtitle = glue::glue("Datos del {min_date} al {max_date}. Fuente: MINSA")
   ) %>%
   tab_source_note(
-    "@jmcastagnetto, Jesus M. Castagnetto (2021-07-19)"
+    glue::glue("@jmcastagnetto, Jesus M. Castagnetto ({Sys.Date()})")
   ) %>%
   tab_style(
     style = cell_text(align = "center", v_align = "middle"),
