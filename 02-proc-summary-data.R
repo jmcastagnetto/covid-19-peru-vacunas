@@ -94,10 +94,10 @@ owid <- vacunas %>%
     date = iso_year_week_day(epi_year, epi_week, 1) %>%
       as_date(), #monday
   ) %>%
-  group_by(epi_year, epi_week, date, rango_owid) %>%
+  group_by(epi_year, epi_week, date, rango_edad_owid) %>%
   tally() %>%
-  arrange(rango_owid, date) %>%
-  group_by(rango_owid) %>%
+  arrange(rango_edad_owid, date) %>%
+  group_by(rango_edad_owid) %>%
   mutate(
     n_acum = cumsum(n)
   )

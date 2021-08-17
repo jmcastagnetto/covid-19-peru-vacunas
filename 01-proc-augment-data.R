@@ -87,7 +87,7 @@ proc_blocks <- function() {
                           )
         ),
         rango_edad_owid = cut(EDAD,
-                              c(0, 18, 25, 60, 70, 80, 130),
+                              c(0, 18, 25, 50, 60, 70, 80, 130),
                               include.lowest = TRUE,
                               right = FALSE,
                               labels = c(
