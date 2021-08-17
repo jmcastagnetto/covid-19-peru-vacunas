@@ -86,9 +86,25 @@ proc_blocks <- function() {
                             "80+"
                           )
         ),
+        rango_edad_owid = cut(EDAD,
+                              c(0, 18, 25, 60, 70, 80, 130),
+                              include.lowest = TRUE,
+                              right = FALSE,
+                              labels = c(
+                                "0-17",
+                                "18-24",
+                                "25-49",
+                                "50-59",
+                                "60-69",
+                                "70-79",
+                                "80+"
+                              )
+        ),
         rango_edad2 = fct_explicit_na(rango_edad2, "Desconocido"),
+        rango_edad_owid = fct_explicit_na(rango_edad_owid, "(Missing)"),
         rango_edad = as.character(rango_edad),
         rango_edad2 = as.character(rango_edad2),
+        rango_edad_owid = as.character(rango_edad_owid),
         SEXO = replace_na(SEXO, "No registrado"),
         epi_week = lubridate::epiweek(FECHA_VACUNACION),
         epi_year = lubridate::epiyear(FECHA_VACUNACION)

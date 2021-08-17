@@ -1,5 +1,6 @@
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(cli))
+suppressPackageStartupMessages(library(clock))
 
 cli_h1("Generando archivo resúmen")
 
@@ -38,5 +39,78 @@ write_csv(
   vac_resumen,
   file = "datos/vacunas_covid_resumen.csv"
 )
+
+cli_alert("Acumulando datos por semana epi y rango de edades")
+
+deciles <- vacunas %>%
+  mutate(
+    date = iso_year_week_day(epi_year, epi_week, 1) %>%
+      as_date(), #monday
+  ) %>%
+  group_by(epi_year, epi_week, date, rango_edad) %>%
+  tally() %>%
+  arrange(rango_edad, date) %>%
+  group_by(rango_edad) %>%
+  mutate(
+    n_acum = cumsum(n)
+  )
+
+saveRDS(
+  deciles,
+  file = "datos/vacunas_covid_rangoedad_deciles.rds"
+)
+
+write_csv(
+  deciles,
+  file = "datos/vacunas_covid_rangoedad_deciles.csv"
+)
+
+quintiles <- vacunas %>%
+  mutate(
+    date = iso_year_week_day(epi_year, epi_week, 1) %>%
+      as_date(), #monday
+  ) %>%
+  group_by(epi_year, epi_week, date, rango_edad2) %>%
+  tally() %>%
+  arrange(rango_edad2, date) %>%
+  group_by(rango_edad2) %>%
+  mutate(
+    n_acum = cumsum(n)
+  )
+
+saveRDS(
+  quintiles,
+  file = "datos/vacunas_covid_rangoedad_quintiles.rds"
+)
+
+write_csv(
+  quintiles,
+  file = "datos/vacunas_covid_rangoedad_quintiles.csv"
+)
+
+
+owid <- vacunas %>%
+  mutate(
+    date = iso_year_week_day(epi_year, epi_week, 1) %>%
+      as_date(), #monday
+  ) %>%
+  group_by(epi_year, epi_week, date, rango_owid) %>%
+  tally() %>%
+  arrange(rango_owid, date) %>%
+  group_by(rango_owid) %>%
+  mutate(
+    n_acum = cumsum(n)
+  )
+
+saveRDS(
+  owid,
+  file = "datos/vacunas_covid_rangoedad_owid.rds"
+)
+
+write_csv(
+  quintiles,
+  file = "datos/vacunas_covid_rangoedad_owid.csv"
+)
+
 
 cli_alert_success("Proceso finalizado")
