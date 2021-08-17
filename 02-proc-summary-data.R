@@ -108,7 +108,7 @@ saveRDS(
 )
 
 write_csv(
-  quintiles,
+  owid,
   file = "datos/vacunas_covid_rangoedad_owid.csv"
 )
 
