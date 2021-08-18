@@ -58,6 +58,7 @@ quintiles <- vacunas %>%
     n_acum = cumsum(n)
   ) %>%
   ungroup() %>%
+  rename(rango_edad = rango_edad_quintiles) %>%
   left_join(
     pob_quintiles,
     by = c("rango_edad" = "rango")
@@ -94,6 +95,7 @@ deciles <- vacunas %>%
     n_acum = cumsum(n)
   ) %>%
   ungroup() %>%
+  rename(rango_edad = rango_edad_deciles) %>%
   left_join(
     pob_deciles,
     by = c("rango_edad" = "rango")
