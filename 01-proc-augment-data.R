@@ -69,8 +69,7 @@ proc_blocks <- function() {
                            "80+"
                          )
         ),
-        rango_edad = fct_explicit_na(rango_edad, "Desconocido"),
-         rango_edad2 = cut(EDAD,
+        rango_edad_deciles = cut(EDAD,
                           c(seq(0, 80, 10), 130),
                           include.lowest = TRUE,
                           right = FALSE,
@@ -86,6 +85,30 @@ proc_blocks <- function() {
                             "80+"
                           )
         ),
+        rango_edad_quintiles = cut(EDAD,
+                                 c(seq(0, 80, 5), 130),
+                                 include.lowest = TRUE,
+                                 right = FALSE,
+                                 labels = c(
+                                   "0-4",
+                                   "5-9",
+                                   "10-14",
+                                   "15-19",
+                                   "20-24",
+                                   "25-29",
+                                   "30-34",
+                                   "35-39",
+                                   "40-44",
+                                   "45-49",
+                                   "50-54",
+                                   "55-59",
+                                   "60-64",
+                                   "65-69",
+                                   "70-74",
+                                   "75-79",
+                                   "80+"
+                                 )
+        ),
         rango_edad_owid = cut(EDAD,
                               c(0, 18, 25, 50, 60, 70, 80, 130),
                               include.lowest = TRUE,
@@ -100,10 +123,13 @@ proc_blocks <- function() {
                                 "80+"
                               )
         ),
-        rango_edad2 = fct_explicit_na(rango_edad2, "Desconocido"),
+        rango_edad = fct_explicit_na(rango_edad, "Desconocido"),
+        rango_edad_deciles = fct_explicit_na(rango_edad_deciles, "Desconocido"),
+        rango_edad_quintiles = fct_explicit_na(rango_edad_quintiles, "Desconocido"),
         rango_edad_owid = fct_explicit_na(rango_edad_owid, "(Missing)"),
         rango_edad = as.character(rango_edad),
-        rango_edad2 = as.character(rango_edad2),
+        rango_edad_deciles = as.character(rango_edad_deciles),
+        rango_edad_quintiles = as.character(rango_edad_quintiles),
         rango_edad_owid = as.character(rango_edad_owid),
         SEXO = replace_na(SEXO, "No registrado"),
         epi_week = lubridate::epiweek(FECHA_VACUNACION),

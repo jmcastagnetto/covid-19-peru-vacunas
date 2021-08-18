@@ -42,41 +42,30 @@ write_csv(
 
 cli_alert("Acumulando datos por semana epi y rango de edades")
 
-deciles <- vacunas %>%
-  mutate(
-    date = iso_year_week_day(epi_year, epi_week, 1) %>%
-      as_date(), #monday
-  ) %>%
-  group_by(epi_year, epi_week, date, rango_edad, dosis) %>%
-  tally() %>%
-  arrange(rango_edad, dosis, date) %>%
-  group_by(rango_edad, dosis) %>%
-  mutate(
-    n_acum = cumsum(n)
-  )
-
-saveRDS(
-  deciles,
-  file = "datos/vacunas_covid_rangoedad_deciles.rds"
-)
-
-write_csv(
-  deciles,
-  file = "datos/vacunas_covid_rangoedad_deciles.csv"
-)
-
+cli_alert("-> Por quintiles")
+pob_quintiles <- readRDS("datos/peru-pob2021-rango-etareo-quintiles.rds") %>%
+  select(rango, pob2021 = población)
 quintiles <- vacunas %>%
   mutate(
     date = iso_year_week_day(epi_year, epi_week, 1) %>%
       as_date(), #monday
   ) %>%
-  group_by(epi_year, epi_week, date, rango_edad2, dosis) %>%
+  group_by(epi_year, epi_week, date, rango_edad_quintiles, dosis) %>%
   tally() %>%
-  arrange(rango_edad2, dosis, date) %>%
-  group_by(rango_edad2, dosis) %>%
+  arrange(rango_edad_quintiles, dosis, date) %>%
+  group_by(rango_edad_quintiles, dosis) %>%
   mutate(
     n_acum = cumsum(n)
-  )
+  ) %>%
+  ungroup() %>%
+  left_join(
+    pob_quintiles,
+    by = c("rango_edad" = "rango")
+  ) %>%
+  mutate(
+    pct_acum = n_acum / pob2021
+  ) %>%
+  arrange(date, rango_edad, dosis)
 
 saveRDS(
   quintiles,
@@ -89,6 +78,79 @@ write_csv(
 )
 
 
+cli_alert("-> Por deciles")
+pob_deciles <- readRDS("datos/peru-pob2021-rango-etareo-deciles.rds") %>%
+  select(rango, pob2021 = población)
+deciles <- vacunas %>%
+  mutate(
+    date = iso_year_week_day(epi_year, epi_week, 1) %>%
+      as_date(), #monday
+  ) %>%
+  group_by(epi_year, epi_week, date, rango_edad_deciles, dosis) %>%
+  tally() %>%
+  arrange(rango_edad_deciles, dosis, date) %>%
+  group_by(rango_edad_deciles, dosis) %>%
+  mutate(
+    n_acum = cumsum(n)
+  ) %>%
+  ungroup() %>%
+  left_join(
+    pob_deciles,
+    by = c("rango_edad" = "rango")
+  ) %>%
+  mutate(
+    pct_acum = n_acum / pob2021
+  ) %>%
+  arrange(date, rango_edad, dosis)
+
+saveRDS(
+  deciles,
+  file = "datos/vacunas_covid_rangoedad_deciles.rds"
+)
+
+write_csv(
+  deciles,
+  file = "datos/vacunas_covid_rangoedad_deciles.csv"
+)
+
+cli_alert("-> Por veintiles")
+pob_veintiles <- readRDS("datos/peru-pob2021-rango-etareo-veintiles.rds") %>%
+  select(rango, pob2021 = población)
+veintiles <- vacunas %>%
+  mutate(
+    date = iso_year_week_day(epi_year, epi_week, 1) %>%
+      as_date(), #monday
+  ) %>%
+  group_by(epi_year, epi_week, date, rango_edad, dosis) %>%
+  tally() %>%
+  arrange(rango_edad, dosis, date) %>%
+  group_by(rango_edad, dosis) %>%
+  mutate(
+    n_acum = cumsum(n)
+  ) %>%
+  ungroup() %>%
+  left_join(
+    pob_veintiles,
+    by = c("rango_edad" = "rango")
+  ) %>%
+  mutate(
+    pct_acum = n_acum / pob2021
+  ) %>%
+  arrange(date, rango_edad, dosis)
+
+saveRDS(
+  veintiles,
+  file = "datos/vacunas_covid_rangoedad_veintiles.rds"
+)
+
+write_csv(
+  veintiles,
+  file = "datos/vacunas_covid_rangoedad_veintiles.csv"
+)
+
+cli_alert("-> Por OWID")
+pob_owid <- readRDS("datos/peru-pob2021-rango-etareo-owid.rds") %>%
+  select(rango, pob2021 = población)
 owid <- vacunas %>%
   mutate(
     date = iso_year_week_day(epi_year, epi_week, 1) %>%
@@ -100,7 +162,17 @@ owid <- vacunas %>%
   group_by(rango_edad_owid, dosis) %>%
   mutate(
     n_acum = cumsum(n)
-  )
+  ) %>%
+  ungroup() %>%
+  rename(rango_edad = rango_edad_owid) %>%
+  left_join(
+    pob_owid,
+    by = c("rango_edad" = "rango")
+  ) %>%
+  mutate(
+    pct_acum = n_acum / pob2021
+  ) %>%
+  arrange(date, rango_edad, dosis)
 
 saveRDS(
   owid,
@@ -111,6 +183,5 @@ write_csv(
   owid,
   file = "datos/vacunas_covid_rangoedad_owid.csv"
 )
-
 
 cli_alert_success("Proceso finalizado")
