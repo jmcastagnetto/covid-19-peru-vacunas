@@ -1,5 +1,5 @@
 library(tidyverse)
-library(qs)
+#library(qs)
 
 ubigeos <- readRDS(url("https://github.com/jmcastagnetto/ubigeo-peru-aumentado/raw/main/ubigeos_reniec_inei_aumentado.rds")) %>%
   select(reniec, inei, departamento, provincia, distrito) %>%
@@ -9,7 +9,7 @@ ubigeos <- readRDS(url("https://github.com/jmcastagnetto/ubigeo-peru-aumentado/r
     to='ASCII//TRANSLIT'
   )
 
-vacunas <- qread("datos/vacunas_covid_aumentada.qs") %>%
+vacunas <- readRDS("datos/vacunas_covid_aumentada.rds") %>%
   select(uuid, sexo, rango_edad, dosis, fecha_vacunacion,
          departamento, provincia, distrito) %>%
   mutate(
@@ -86,7 +86,11 @@ if (n_rows > n_limit) {
   }
 }
 
-qsave(
+saveRDS(
   dos_dosis,
-  file = "datos/vacunados-dos-dosis.qs"
+  file = "datos/vacunados-dos-dosis.rds"
 )
+#qsave(
+#  dos_dosis,
+#  file = "datos/vacunados-dos-dosis.qs"
+#)
