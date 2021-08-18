@@ -12,6 +12,7 @@ datos/vacunas_covid_aumentada.rds
 datos/vacunas_covid_aumentada.csv
 datos/vacunas_covid_aumentada.sqlite
 datos/*.qs
+datos/vacunados-dos-dosis.rds
 datos/orig/vacunas_covid.7z
 datos/orig/vacunas_covid.csv
 datos/orig/vacunas_covid.7z.aria2
