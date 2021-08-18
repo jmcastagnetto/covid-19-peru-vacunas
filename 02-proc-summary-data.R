@@ -176,13 +176,41 @@ owid <- vacunas %>%
   ) %>%
   arrange(date, rango_edad, dosis)
 
+owid_format <- owid %>%
+  filter(rango_edad != "(Missing)") %>%
+  select(date, rango_edad, dosis, pct_acum) %>%
+  add_column(
+    location = "Peru",
+    .before = 1
+  ) %>%
+  mutate(
+    pct_acum = round(pct_acum * 100, 4),
+    rango_edad = str_replace(rango_edad, "80\\+", "80-")
+  ) %>%
+  separate(
+    col = rango_edad,
+    into = c("age_group_min", "age_group_max"),
+    sep = "-"
+  ) %>%
+  mutate(
+    dosis = if_else(
+      dosis == 1,
+      "people_vaccinated_per_hundred",
+      "people_fully_vaccinated_per_hundred"
+    )
+  ) %>%
+  pivot_wider(
+    names_from = dosis,
+    values_from = pct_acum
+  )
+
 saveRDS(
-  owid,
+  owid_format,
   file = "datos/vacunas_covid_rangoedad_owid.rds"
 )
 
 write_csv(
-  owid,
+  owid_format,
   file = "datos/vacunas_covid_rangoedad_owid.csv"
 )
 
