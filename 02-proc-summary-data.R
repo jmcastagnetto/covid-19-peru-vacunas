@@ -50,7 +50,7 @@ quintiles <- vacunas %>%
     date = iso_year_week_day(epi_year, epi_week, 1) %>%
       as_date(), #monday
   ) %>%
-  group_by(epi_year, epi_week, date, rango_edad_quintiles, dosis) %>%
+  group_by(fecha_corte, epi_year, epi_week, date, rango_edad_quintiles, dosis) %>%
   tally() %>%
   arrange(rango_edad_quintiles, dosis, date) %>%
   group_by(rango_edad_quintiles, dosis) %>%
@@ -87,7 +87,7 @@ deciles <- vacunas %>%
     date = iso_year_week_day(epi_year, epi_week, 1) %>%
       as_date(), #monday
   ) %>%
-  group_by(epi_year, epi_week, date, rango_edad_deciles, dosis) %>%
+  group_by(fecha_corte, epi_year, epi_week, date, rango_edad_deciles, dosis) %>%
   tally() %>%
   arrange(rango_edad_deciles, dosis, date) %>%
   group_by(rango_edad_deciles, dosis) %>%
@@ -123,7 +123,7 @@ veintiles <- vacunas %>%
     date = iso_year_week_day(epi_year, epi_week, 1) %>%
       as_date(), #monday
   ) %>%
-  group_by(epi_year, epi_week, date, rango_edad, dosis) %>%
+  group_by(fecha_corte, epi_year, epi_week, date, rango_edad, dosis) %>%
   tally() %>%
   arrange(rango_edad, dosis, date) %>%
   group_by(rango_edad, dosis) %>%
