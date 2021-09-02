@@ -1,1 +1,0 @@
-Fuente de la imágen: https://commons.wikimedia.org/wiki/File:Pfizer-BioNTech_COVID-19_vaccine_%282020%29_F.jpg
