@@ -4,7 +4,6 @@ library(vroom)
 library(lubridate)
 library(cli)
 
-
 options(cli.progress_show_after = 0)
 options(cli.progress_clear = FALSE)
 
@@ -19,7 +18,8 @@ vac_raw <- vroom(
   col_types = cols(
     .default = col_integer(),
     fecha_vacunacion = col_date(format = "%d/%m/%Y")
-  )
+  ),
+  num_threads = 4
 ) %>%
   mutate(
     grp = glue::glue(

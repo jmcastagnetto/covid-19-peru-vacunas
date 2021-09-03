@@ -35,7 +35,8 @@ vacunas_sumario <- vacunas %>%
 
 write_csv(
   vacunas_sumario,
-  file = "datos/vacunas_covid_resumen.csv"
+  file = "datos/vacunas_covid_resumen.csv",
+  num_threads = 4
 )
 
 saveRDS(
@@ -87,7 +88,8 @@ saveRDS(
 
 write_csv(
   quintiles,
-  file = "datos/vacunas_covid_rangoedad_quintiles.csv"
+  file = "datos/vacunas_covid_rangoedad_quintiles.csv",
+  num_threads = 4
 )
 
 
@@ -120,7 +122,8 @@ saveRDS(
 
 write_csv(
   deciles,
-  file = "datos/vacunas_covid_rangoedad_deciles.csv"
+  file = "datos/vacunas_covid_rangoedad_deciles.csv",
+  num_threads = 4
 )
 
 cli_inform("-> Por veintiles")
@@ -154,7 +157,8 @@ saveRDS(
 
 write_csv(
   veintiles,
-  file = "datos/vacunas_covid_rangoedad_veintiles.csv"
+  file = "datos/vacunas_covid_rangoedad_veintiles.csv",
+  num_threads = 4
 )
 
 cli_inform("-> Por OWID")
@@ -216,7 +220,8 @@ saveRDS(
 
 write_csv(
   owid_format,
-  file = "datos/vacunas_covid_rangoedad_owid.csv"
+  file = "datos/vacunas_covid_rangoedad_owid.csv",
+  num_threads = 4
 )
 
 cli_process_done()
