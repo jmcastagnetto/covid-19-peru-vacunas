@@ -94,7 +94,8 @@ cli_alert("Descargando los datos acumulados")
 df <- dbGetQuery(
   db,
   "SELECT * from proc_vacunascovid19.vacunacion_covid19_resumen ORDER BY fecha_vacunacion"
-)
+) %>%
+  mutate(n_reg = as.numeric(n_reg))
 saveRDS(
   df,
   file = "datos/vacunas_covid_resumen.rds"
@@ -107,7 +108,8 @@ write_csv(
 df <- dbGetQuery(
   db,
   "SELECT * from proc_vacunascovid19.vacunacion_covid19_edad_resumen ORDER BY fecha_vacunacion"
-)
+) %>%
+  mutate(n = as.numeric(n))
 saveRDS(
   df,
   file = "datos/vacunas_covid_edad_resumen.rds"
