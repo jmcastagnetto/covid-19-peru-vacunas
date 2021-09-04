@@ -150,8 +150,8 @@ for (rds_fn in wk_rds) {
     relocate(id_centro_vacunacion, .before = centro_vacunacion)
   base_fname <- str_replace(rds_fn, "tmp/vacunas_raw_", "datos/vacunas_covid_aumentada_") %>%
     str_remove(fixed(".rds"))
-  csvname <- glue::glue("{base_fname}.csv.xz")
-  rdsname <- glue::glue("{base_fname}.rds")
+  csvname <- glue::glue("{base_fname}.csv")
+  rdsname <- glue::glue("{base_fname}.rds)
   write_csv(vacunas, file = csvname, num_threads = 4)
   saveRDS(vacunas, file = rdsname)
   cli_progress_update()
