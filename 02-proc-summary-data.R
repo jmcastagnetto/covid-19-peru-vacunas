@@ -43,7 +43,6 @@ saveRDS(
   vacunas_sumario,
   file = "datos/vacunas_covid_resumen.rds"
 )
-max_date <- vacunas$fecha_vacunacion
 
 cli_progress_step("Acumulando datos por semana epi y rango de edades")
 
@@ -51,8 +50,8 @@ vacunas <- vacunas %>%
   select(monday, dosis,
          rango_edad_veintiles,
          rango_edad_deciles,
-         rango_edad_quintiles#,
-         #rango_edad_owid
+         rango_edad_quintiles,
+         rango_edad_owid
          ) %>%
   add_column(
     fecha_corte = fecha_corte,
@@ -131,9 +130,7 @@ pob_veintiles <- readRDS("datos/peru-pob2021-rango-etareo-veintiles.rds") %>%
   select(rango, pob2021 = población)
 veintiles <- vacunas %>%
   group_by(fecha_corte, monday, rango_edad_veintiles, dosis) %>%
-  summarise(
-    n = sum(n, na.rm = TRUE)
-  ) %>%
+  tally() %>%
   arrange(rango_edad_veintiles, dosis, monday) %>%
   group_by(rango_edad_veintiles, dosis) %>%
   mutate(
@@ -166,9 +163,7 @@ pob_owid <- readRDS("datos/peru-pob2021-rango-etareo-owid.rds") %>%
   select(rango, pob2021 = población)
 owid <- vacunas %>%
   group_by(monday, rango_edad_owid, dosis) %>%
-  summarise(
-    n = sum(n, na.rm = TRUE)
-  ) %>%
+  tally() %>%
   arrange(rango_edad_owid, dosis, monday) %>%
   group_by(rango_edad_owid, dosis) %>%
   mutate(
