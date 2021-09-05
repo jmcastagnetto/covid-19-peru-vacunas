@@ -3,22 +3,27 @@ library(tidyverse)
 library(cli)
 library(lubridate)
 library(clock)
+library(fst)
 
 cli_h1("Generando archivos resúmen")
 
 cli_progress_step("Cargando los datos procesados")
-vacunas <- readRDS("datos/vacunas_covid_aumentada.rds") %>%
-  select(
-    fecha_vacunacion,
-    fabricante,
-    dosis,
-    rango_edad_veintiles = rango_edad,
-    rango_edad_deciles,
-    rango_edad_quintiles,
-    rango_edad_owid,
-    epi_year,
-    epi_week,
-  ) %>%
+#vacunas <- readRDS("datos/vacunas_covid_aumentada.rds") %>%
+vacunas <- read_fst(
+  "datos/vacunas_covid_aumentada.fst",
+  columns = c(
+    "fecha_vacunacion",
+    "fabricante",
+    "dosis",
+    "rango_edad",
+    "rango_edad_deciles",
+    "rango_edad_quintiles",
+    "rango_edad_owid",
+    "epi_year",
+    "epi_week"
+  )
+) %>%
+  rename(rango_edad_veintiles = rango_edad) %>%
   mutate(
     monday = iso_year_week_day(epi_year, epi_week, 1) %>%
       as_date(), #monday

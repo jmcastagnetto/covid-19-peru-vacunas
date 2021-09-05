@@ -2,6 +2,7 @@ options(tidyverse.quiet = TRUE)
 library(tidyverse)
 library(vroom)
 library(cli)
+library(fst)
 
 options(cli.progress_show_after = 0)
 options(cli.progress_clear = FALSE)
@@ -10,12 +11,12 @@ cli_h1("Aumentando datos en las semanas que han cambiado")
 
 cli_progress_step("Leyendo los datos de referencia")
 chng <- readRDS("tmp/changed_weeks.rds")
-eess <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/eess.rds")
-vacs <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/vacunas.rds")
-centros <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/centro_vacunacion.rds")
-grupos <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/grupo_riesgo.rds")
-ubigeos <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.rds")
-personas <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/personas.rds") %>%
+eess <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/eess.fst")
+vacs <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/vacunas.fst")
+centros <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/centro_vacunacion.fst")
+grupos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/grupo_riesgo.fst")
+ubigeos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.fst")
+personas <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/personas.fst") %>%
   mutate(
     edad = as.integer(format(Sys.Date(), "%Y")) - anho_nac
   ) %>%
@@ -30,17 +31,17 @@ personas <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/personas.rds"
     ubigeo_persona = factor(ubigeo_persona)
   )
 
-
 cli_progress_step("Leyendo los datos por semana epi")
-wk_rds <- fs::dir_ls("tmp", regexp = "vacunas_.+\\.rds")
+wk_rds <- fs::dir_ls("tmp", regexp = "vacunas_.+\\.fst")
 
 changed_wk_rds <- wk_rds[wk_rds %in% chng$file]
+#changed_wk_rds <- wk_rds
 
 cli_progress_bar("Procesando cada semana que ha cambiado",
                  total = length(changed_wk_rds))
-for (rds_fn in changed_wk_rds) {
-  cli_alert_info("> Usando datos de: {rds_fn}")
-  vac_raw <- readRDS(rds_fn) %>%
+for (fst_fn in changed_wk_rds) {
+  cli_alert_info("> Usando datos de: {fst_fn}")
+  vac_raw <- read_fst(fst_fn) %>%
     select(-grp) %>%
     rename(id_gruporiesgo = id_grupo_riesgo)
   vacunas <- vac_raw %>%
@@ -154,13 +155,15 @@ for (rds_fn in changed_wk_rds) {
     relocate(id_gruporiesgo, .before = grupo_riesgo) %>%
     relocate(id_eess, .before = eess) %>%
     relocate(id_centro_vacunacion, .before = centro_vacunacion)
-    base_fname <- str_replace(rds_fn, "tmp/vacunas_raw_", 
+    base_fname <- str_replace(fst_fn, "tmp/vacunas_raw_", 
                               "datos/vacunas_covid_aumentada_") %>%
-    str_remove(fixed(".rds"))
+    str_remove(fixed(".fst"))
   csvname <- glue::glue("{base_fname}.csv")
   rdsname <- glue::glue("{base_fname}.rds")
+  fstname <- glue::glue("{base_fname}.fst")
   write_csv(vacunas, file = csvname, num_threads = 4)
-  saveRDS(vacunas, file = rdsname)
+  #saveRDS(vacunas, file = rdsname)
+  write_fst(vacunas, path = fstname, compress = 100)
   cli_progress_update()
 }
 
@@ -170,11 +173,16 @@ gc()
 
 cli_progress_step("Cargando los archivos parciales para generar el consolidado")
 rdslist <- fs::dir_ls("datos/",
-                      regexp = "vacunas_covid_aumentada_2021-.+\\.rds")
-vacunas <- map_dfr(rdslist, read_rds)
-saveRDS(
+                      regexp = "vacunas_covid_aumentada_2021-.+\\.fst")
+vacunas <- map_dfr(rdslist, read_fst)
+#saveRDS(
+#  vacunas,
+#  file = "datos/vacunas_covid_aumentada.rds",
+#  compress = "xz"
+#)
+write_fst(
   vacunas,
-  file = "datos/vacunas_covid_aumentada.rds",
-  compress = "xz"
+  path = "datos/vacunas_covid_aumentada.fst",
+  compress = 100
 )
 cli_alert_success("Proceso de datos, finalizado")

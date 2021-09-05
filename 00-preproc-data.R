@@ -3,6 +3,7 @@ library(tidyverse)
 library(vroom)
 library(lubridate)
 library(cli)
+library(fst)
 
 options(cli.progress_show_after = 0)
 options(cli.progress_clear = FALSE)
@@ -38,17 +39,26 @@ cli_progress_bar(
   glue::glue("Desagregando por semana epi (Total={length(wk_list)}): "), 
   total = length(wk_list)
 )
+
 for (wk in wk_list) {
-  out_fn <- glue::glue("tmp/vacunas_raw_{wk}.rds")
+  out_fn <- glue::glue("tmp/vacunas_raw_{wk}.fst")
   days <- fechas %>%
     filter(grp == wk)
   wk_df <- vac_raw %>%
     filter(fecha_vacunacion %in% days$fecha_vacunacion) %>%
     arrange(id_vacunados_covid19)
+  changed = FALSE
   if (file.exists(out_fn)) {
-    res <- try (
-      prev_df <- readRDS(out_fn) %>%
-        arrange(id_vacunados_covid19)
+    prev_df <- try(readRDS(out_fn))
+    if (inherits(prev_df, "try-error")) {
+      cli_alert_danger(as.character(attr(prev_df, "condition")))
+      # removiendo el archivo con problemas
+      unlink(out_fn)
+      cli_alert_warning("Datos de {wk} se van a re-procesar")
+      changed <- TRUE
+    } else {
+      prev_df <- prev_df %>%
+          arrange(id_vacunados_covid19)
       compare <- all.equal(prev_df,
                            wk_df,
                            check.attributes = FALSE,
@@ -57,21 +67,23 @@ for (wk in wk_list) {
         changed_list <- paste0(
           substr(
             as.character(paste(compare, sep = " ", collapse = ",")), 
-            1, 8), 
+            1, 30), 
           "...")
         cli_alert_warning("Datos de {wk} han cambiado ({changed_list})")
-        mark_changed <- bind_rows(
-          mark_changed,
-          tibble(changed_wk = wk, file = out_fn)
-        )
+        changed <- TRUE
       }
-    )
-    if (inherits(res, "try-error") {
-      cli_alert_danger(as.character(attr(r, "condition")))
-    }
+    } 
+  } else {
+    changed <- TRUE
   }
-  cli_alert_info("Guardando {out_fn}")
-  saveRDS(wk_df, file = out_fn)
+  if (changed == TRUE) {
+    mark_changed <- bind_rows(
+      mark_changed,
+      tibble(changed_wk = wk, file = out_fn)
+    )
+    cli_alert_info("Guardando {out_fn}")
+    write_fst(wk_df, out_fn)
+  }
   cli_progress_update()
 }
 
