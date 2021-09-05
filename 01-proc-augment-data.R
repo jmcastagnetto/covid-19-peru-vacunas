@@ -6,9 +6,10 @@ library(cli)
 options(cli.progress_show_after = 0)
 options(cli.progress_clear = FALSE)
 
-cli_h1("Aumento de datos")
+cli_h1("Aumentando datos en las semanas que han cambiado")
 
 cli_progress_step("Leyendo los datos de referencia")
+chng <- readRDS("tmp/changed_weeks.rds")
 eess <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/eess.rds")
 vacs <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/vacunas.rds")
 centros <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/centro_vacunacion.rds")
@@ -31,10 +32,14 @@ personas <- readRDS("~/devel/local/datos-accessorios-vacunas/datos/personas.rds"
 
 
 cli_progress_step("Leyendo los datos por semana epi")
-wk_rds <- fs::dir_ls("tmp", glob = "*.rds")
+wk_rds <- fs::dir_ls("tmp", regexp = "vacunas_.+\\.rds")
 
-cli_progress_bar("Procesando por cada semana", total = length(wk_rds))
-for (rds_fn in wk_rds) {
+changed_wk_rds <- wk_rds[wk_rds %in% chng$file]
+
+cli_progress_bar("Procesando cada semana que ha cambiado",
+                 total = length(changed_wk_rds))
+for (rds_fn in changed_wk_rds) {
+  cli_alert_info("> Usando datos de: {rds_fn}")
   vac_raw <- readRDS(rds_fn) %>%
     select(-grp) %>%
     rename(id_gruporiesgo = id_grupo_riesgo)
@@ -134,7 +139,8 @@ for (rds_fn in wk_rds) {
       ),
       rango_edad = fct_explicit_na(rango_edad, "Desconocido"),
       rango_edad_deciles = fct_explicit_na(rango_edad_deciles, "Desconocido"),
-      rango_edad_quintiles = fct_explicit_na(rango_edad_quintiles, "Desconocido"),
+      rango_edad_quintiles = fct_explicit_na(rango_edad_quintiles, 
+                                             "Desconocido"),
       rango_edad_owid = fct_explicit_na(rango_edad_owid, "(Missing)"),
       rango_edad = as.character(rango_edad),
       rango_edad_deciles = as.character(rango_edad_deciles),
@@ -148,19 +154,20 @@ for (rds_fn in wk_rds) {
     relocate(id_gruporiesgo, .before = grupo_riesgo) %>%
     relocate(id_eess, .before = eess) %>%
     relocate(id_centro_vacunacion, .before = centro_vacunacion)
-  base_fname <- str_replace(rds_fn, "tmp/vacunas_raw_", "datos/vacunas_covid_aumentada_") %>%
+    base_fname <- str_replace(rds_fn, "tmp/vacunas_raw_", 
+                              "datos/vacunas_covid_aumentada_") %>%
     str_remove(fixed(".rds"))
   csvname <- glue::glue("{base_fname}.csv")
-  rdsname <- glue::glue("{base_fname}.rds)
+  rdsname <- glue::glue("{base_fname}.rds")
   write_csv(vacunas, file = csvname, num_threads = 4)
   saveRDS(vacunas, file = rdsname)
   cli_progress_update()
 }
 
 cli_progress_done()
-# cleanup memory
 rm(list = ls())
 gc()
+
 cli_progress_step("Cargando los archivos parciales para generar el consolidado")
 rdslist <- fs::dir_ls("datos/",
                       regexp = "vacunas_covid_aumentada_2021-.+\\.rds")
@@ -170,5 +177,4 @@ saveRDS(
   file = "datos/vacunas_covid_aumentada.rds",
   compress = "xz"
 )
-cli_progress_done()
 cli_alert_success("Proceso de datos, finalizado")
