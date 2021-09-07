@@ -25,7 +25,8 @@ vac_raw <- vroom(
     grp = glue::glue(
       "{epiyear(fecha_vacunacion)}-w",
       "{sprintf('%02d', epiweek(fecha_vacunacion))}"
-    )
+    ) %>%
+    as.character()
   )
 cli_progress_step("Estimando las semanas epidemiológicas")
 fechas <- vac_raw %>%
@@ -49,7 +50,7 @@ for (wk in wk_list) {
     arrange(id_vacunados_covid19)
   changed = FALSE
   if (file.exists(out_fn)) {
-    prev_df <- try(readRDS(out_fn))
+    prev_df <- try(read_fst(out_fn))
     if (inherits(prev_df, "try-error")) {
       cli_alert_danger(as.character(attr(prev_df, "condition")))
       # removiendo el archivo con problemas
@@ -67,7 +68,7 @@ for (wk in wk_list) {
         changed_list <- paste0(
           substr(
             as.character(paste(compare, sep = " ", collapse = ",")), 
-            1, 30), 
+            1, 80), 
           "...")
         cli_alert_warning("Datos de {wk} han cambiado ({changed_list})")
         changed <- TRUE
