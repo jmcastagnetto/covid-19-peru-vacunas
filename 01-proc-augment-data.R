@@ -17,12 +17,12 @@ centros <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/centro_vacuna
 grupos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/grupo_riesgo.fst")
 ubigeos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.fst")
 personas <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/personas.fst") %>%
-  mutate(
-    edad = as.integer(format(Sys.Date(), "%Y")) - anho_nac
-  ) %>%
+  # mutate(
+  #   edad = as.integer(format(Sys.Date(), "%Y")) - anho_nac
+  # ) %>%
   select(
     id_persona,
-    edad,
+#    edad,
     sexo,
     ubigeo_persona = ubigeo
   ) %>%
@@ -140,7 +140,7 @@ for (fst_fn in changed_wk_rds) {
       ),
       rango_edad = fct_explicit_na(rango_edad, "Desconocido"),
       rango_edad_deciles = fct_explicit_na(rango_edad_deciles, "Desconocido"),
-      rango_edad_quintiles = fct_explicit_na(rango_edad_quintiles, 
+      rango_edad_quintiles = fct_explicit_na(rango_edad_quintiles,
                                              "Desconocido"),
       rango_edad_owid = fct_explicit_na(rango_edad_owid, "(Missing)"),
       rango_edad = as.character(rango_edad),
@@ -155,7 +155,7 @@ for (fst_fn in changed_wk_rds) {
     relocate(id_gruporiesgo, .before = grupo_riesgo) %>%
     relocate(id_eess, .before = eess) %>%
     relocate(id_centro_vacunacion, .before = centro_vacunacion)
-    base_fname <- str_replace(fst_fn, "tmp/vacunas_raw_", 
+    base_fname <- str_replace(fst_fn, "tmp/vacunas_raw_",
                               "datos/vacunas_covid_aumentada_") %>%
     str_remove(fixed(".fst"))
   csvname <- glue::glue("{base_fname}.csv")
