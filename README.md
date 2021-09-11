@@ -5,6 +5,13 @@ Los datos procesados incluyen:
 - Datos acumulados por día y fabricante
 - Datos acumulados por semana epidemiológica, y rango de edades (tres agrupaciones: quintiles, deciles, y los rangos empleados por OWID)
 
+Si quieres hacer un clon de este repositorio, cuya historia contiene muchos archivos grandes (blobs), te sugiero que hagas un "blob-less" clone, de manera que sólo descargas lo mas reciente y si lo requieres puedes obtener los anteriores, algo como:
+
+```
+$ git clone --filter=blob:none https://github.com/jmcastagnetto/covid-19-peru-vacunas.git
+```
+
+Un buen artículo sobre este tema es [Get up to speed with partial clone and shallow clone](https://github.blog/2020-12-21-get-up-to-speed-with-partial-clone-and-shallow-clone/)
 
 *Notas*
 
