@@ -1,6 +1,7 @@
 library(tidyverse)
+library(fst)
 
-vacunas <- readRDS("datos/vacunas_covid_aumentada.rds") %>%
+vacunas <- read_fst("datos/vacunas_covid_aumentada.fst") %>%
   select(id_persona, sexo, edad, dosis, 
          fecha_vacunacion, persona_ubigeo = ubigeo_persona,
          centro_vacunacion_ubigeo)
@@ -30,9 +31,9 @@ dos_dosis <- dosis1 %>%
   ) %>%
   filter(!is.na(dosis_2))
 
-saveRDS(
+write_fst(
   dos_dosis,
-  file = "datos/vacunados-dos-dosis.rds"
+  "datos/vacunados-dos-dosis.fst"
 )
 
 n_limit <- 1e6  # de millón en millón
@@ -42,7 +43,7 @@ if (n_rows > n_limit) {
   v_list <- split(dos_dosis, grupo)
   for(i in 1:length(v_list)) {
     tmp_df <- v_list[[i]]
-    csvname <- glue::glue("datos/vacunados_dos_dosis_{sprintf('%03d', i)}.csv.gz")
+    csvname <- glue::glue("datos/vacunados_dos_dosis_{sprintf('%03d', i)}.csv.xz")
     write_csv(tmp_df, file = csvname)
   }
 }
