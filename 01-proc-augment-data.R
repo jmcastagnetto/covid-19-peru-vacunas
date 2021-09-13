@@ -72,6 +72,12 @@ for (fst_fn in changed_wk_rds) {
       by = "id_centro_vacunacion"
     ) %>%
     mutate(
+      # imputar UBIGEO para los casos genéricos
+      centro_vacunacion_ubigeo = if_else(
+        centro_vacunacion == "MISMO ESTABLECIMIENTO DE SALUD",
+        eess_ubigeo,
+        centro_vacunacion_ubigeo
+      ),
       rango_edad = cut(
         edad,
         c(seq(0, 80, 20), 130),
@@ -158,10 +164,10 @@ for (fst_fn in changed_wk_rds) {
     base_fname <- str_replace(fst_fn, "tmp/vacunas_raw_",
                               "datos/vacunas_covid_aumentada_") %>%
     str_remove(fixed(".fst"))
-  csvname <- glue::glue("{base_fname}.csv")
+  #csvname <- glue::glue("{base_fname}.csv")
   rdsname <- glue::glue("{base_fname}.rds")
   fstname <- glue::glue("{base_fname}.fst")
-  write_csv(vacunas, file = csvname, num_threads = 4)
+  #write_csv(vacunas, file = csvname, num_threads = 4)
   #saveRDS(vacunas, file = rdsname)
   write_fst(vacunas, path = fstname, compress = 100)
   cli_progress_update()
