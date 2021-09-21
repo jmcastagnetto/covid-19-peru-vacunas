@@ -2,7 +2,7 @@ library(tidyverse)
 library(fst)
 
 vacunas <- read_fst("datos/vacunas_covid_aumentada.fst") %>%
-  select(id_persona, sexo, edad, dosis, 
+  select(id_persona, sexo, edad, fabricante, dosis, 
          fecha_vacunacion, persona_ubigeo = ubigeo_persona,
          centro_vacunacion_ubigeo)
 
@@ -11,6 +11,7 @@ dosis1 <- vacunas %>%
   rename(
     vacunacion_ubigeo_1 = centro_vacunacion_ubigeo,
     edad_1 = edad,
+    fabricante_1 = fabricante,
     dosis_1 = fecha_vacunacion
   ) %>%
   select(-dosis)
@@ -20,6 +21,7 @@ dosis2 <- vacunas %>%
   rename(
     vacunacion_ubigeo_2 = centro_vacunacion_ubigeo,
     edad_2 = edad,
+    fabricante_2 = fabricante,
     dosis_2 = fecha_vacunacion
   ) %>%
   select(-dosis, -sexo, -persona_ubigeo)
