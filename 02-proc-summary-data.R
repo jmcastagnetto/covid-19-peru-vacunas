@@ -224,6 +224,61 @@ write_csv(
   num_threads = 4
 )
 
+cli_h2("Generando archivos resúmen por UBIGEO (distrito) de la persona")
+
+ubigeos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.fst")
+
+cli_progress_step("Cargando los datos procesados con UBIGEO")
+vacunas_ubiraw <- read_fst(
+  "datos/vacunas_covid_aumentada.fst",
+  columns = c(
+    "fecha_vacunacion",
+    "fabricante",
+    "dosis",
+    "ubigeo_persona"
+  )
+)
+
+fecha_corte <- max(vacunas_ubiraw$fecha_vacunacion, na.rm = TRUE)
+
+cli_progress_step("Acumulando por UBIGEO de la persona")
+vacunas_ubigeo <- vacunas_ubiraw %>%
+  group_by(ubigeo_persona, fabricante, dosis) %>%
+  tally(name = "n_reg") %>%
+  add_column(fecha_corte = fecha_corte, .before = 1) %>%
+  ungroup() %>%
+  left_join(
+    ubigeos %>%
+      select(
+        ubigeo_persona = ubigeo_inei,
+        departamento,
+        provincia,
+        distrito,
+        macroregion_inei,
+        macroregion_minsa
+      ),
+    by = "ubigeo_persona"
+  ) %>%
+  relocate(
+    departamento,
+    provincia,
+    distrito,
+    macroregion_inei,
+    macroregion_minsa,
+    .before = fabricante
+  )
+
+write_csv(
+  vacunas_ubigeo,
+  file = "datos/vacunas_covid_totales_fabricante_ubigeo.csv",
+  num_threads = 4
+)
+
+saveRDS(
+  vacunas_ubigeo,
+  file = "datos/vacunas_covid_totales_fabricante_ubigeo.rds"
+)
+
 cli_process_done()
 
 cli_alert_success("Proceso finalizado")
