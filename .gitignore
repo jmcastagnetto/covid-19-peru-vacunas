@@ -7,6 +7,28 @@
 tmp/*
 actualizar-datos-local.sh
 actualizar-datos-manual.sh
+add-commit-push-weekly-csv.sh
+
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# local tmp files
+tmp/*
+actualizar-datos-local.sh
+actualizar-datos-manual.sh
+
+# local full data files
+datos/vacunas_covid_aumentada*.rds
+datos/*.fst
+datos/vacunados-dos-dosis.rds
+datos/orig/vacunas_covid.7z
+datos/orig/vacunas_covid.csv
+datos/orig/vacunas_covid.7z.aria2
+datos/vacunas_covid_edad_resumen.rds
+md5sum.txt
+sha256sum.txt
 
 # local full data files
 datos/vacunas_covid_aumentada*.rds
