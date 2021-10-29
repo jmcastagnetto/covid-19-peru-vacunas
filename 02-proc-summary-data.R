@@ -166,8 +166,9 @@ write_csv(
 cli_inform("-> Por OWID")
 pob_owid <- readRDS("datos/peru-pob2021-rango-etareo-owid.rds") %>%
   select(rango, pob2021 = población)
+# Future TO DO: figure out what to do when there will be many more dosis (>2 or 3) per person
 owid <- vacunas %>%
-  filter(dosis < 3) %>%  # OWID consider datos de 1 o 2 dosis para esta estodística
+  filter(dosis < 3) %>%  # OWID considera datos de 1 o 2 dosis para esta estadística
   group_by(monday, rango_edad_owid, dosis) %>%
   tally() %>%
   arrange(rango_edad_owid, dosis, monday) %>%
