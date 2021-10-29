@@ -167,6 +167,7 @@ cli_inform("-> Por OWID")
 pob_owid <- readRDS("datos/peru-pob2021-rango-etareo-owid.rds") %>%
   select(rango, pob2021 = población)
 owid <- vacunas %>%
+  filter(dosis < 3) %>%  # OWID consider datos de 1 o 2 dosis para esta estodística
   group_by(monday, rango_edad_owid, dosis) %>%
   tally() %>%
   arrange(rango_edad_owid, dosis, monday) %>%
@@ -208,6 +209,7 @@ owid_format <- owid %>%
       "people_fully_vaccinated_per_hundred"
     )
   ) %>%
+  ungroup() %>%
   pivot_wider(
     names_from = dosis,
     values_from = pct_acum
