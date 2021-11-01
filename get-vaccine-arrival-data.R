@@ -5,9 +5,7 @@ library(lubridate)
 # Fuente: Wikipedia
 url <- "https://es.wikipedia.org/wiki/Vacunaci%C3%B3n_contra_la_COVID-19_en_Per%C3%BA"
 
-#table_xpath <- "/html/body/div[3]/div[3]/div[5]/div[1]/table[14]"
-
-table_xpath <- "/html/body/div[3]/div[3]/div[5]/div[1]/table[15]"
+table_xpath <- "/html/body/div[3]/div[3]/div[5]/div[1]/div[11]/table[1]"
 
 raw_data <- read_html(url)
 tab1 <- raw_data %>%
@@ -15,13 +13,12 @@ tab1 <- raw_data %>%
   html_table() %>%
   janitor::clean_names()
 
-header <- slice(tab1, 1:1)
+#header <- slice(tab1, 1:1)
 nrows <- nrow(tab1)
-colnames(tab1) <- header
+#colnames(tab1) <- header
 
 Sys.setlocale("LC_TIME", "es_PE.utf8")
 vaccine_arrivals <- tab1 %>%
-  slice(2:nrows) %>%
   janitor::clean_names() %>%
   select(-nro) %>%
   mutate(
