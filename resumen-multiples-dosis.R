@@ -162,6 +162,12 @@ gtsave(
   expand = 15
 )
 
+gtsave(
+  data = tab1,
+  filename = "tabla_multiples_dosis.pdf",
+  expand = 15
+)
+
 
 # Combinación de vacunas --------------------------------------------------
 
@@ -398,10 +404,25 @@ tab2 <- gt(por_fabricante) %>%
   ) %>%
   gt_theme_538()
 
-#tab_1_2 <- gt_two_column_layout(tables = list(tab1, tab2))
 
 gtsave(
   data = tab2,
   filename = "tabla_multiples-dosis-fabricantes.png",
   expand = 15
+)
+gtsave(
+  data = tab2,
+  filename = "tabla_multiples-dosis-fabricantes.pdf",
+  expand = 15
+)
+
+# Combinar tablas --------------------------------------------------------------
+
+gt_two_column_layout(
+  tables = list(tab1, tab2),
+  output = "save",
+  expand = 50,
+  file = "tabla_combinada_multiples-dosis_fabricantes.png",
+  vwidth = 1500,
+  vheight = 1200
 )
