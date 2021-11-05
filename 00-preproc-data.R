@@ -17,7 +17,8 @@ vac_raw <- vroom(
   "datos/orig/vacunas_covid.csv",
   col_types = cols(
     .default = col_integer(),
-    fecha_vacunacion = col_date(format = "%d/%m/%Y")
+    #fecha_vacunacion = col_date(format = "%d/%m/%Y")
+    fecha_vacunacion = col_date(format = "%Y%m%d")
   ),
   num_threads = 4
 ) %>%
@@ -37,7 +38,7 @@ wk_list <- unique(fechas$grp)
 mark_changed <- data.frame()
 
 cli_progress_bar(
-  glue::glue("Desagregando por semana epi (Total={length(wk_list)}): "), 
+  glue::glue("Desagregando por semana epi (Total={length(wk_list)}): "),
   total = length(wk_list)
 )
 
@@ -67,13 +68,13 @@ for (wk in wk_list) {
       if (!isTRUE(compare)) {
         changed_list <- paste0(
           substr(
-            as.character(paste(compare, sep = " ", collapse = ",")), 
-            1, 80), 
+            as.character(paste(compare, sep = " ", collapse = ",")),
+            1, 80),
           "...")
         cli_alert_warning("Datos de {wk} han cambiado ({changed_list})")
         changed <- TRUE
       }
-    } 
+    }
   } else {
     changed <- TRUE
   }
