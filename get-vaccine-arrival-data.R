@@ -5,7 +5,7 @@ library(lubridate)
 # Fuente: Wikipedia
 url <- "https://es.wikipedia.org/wiki/Vacunaci%C3%B3n_contra_la_COVID-19_en_Per%C3%BA"
 
-table_xpath <- "/html/body/div[3]/div[3]/div[5]/div[1]/div[11]/table[1]"
+table_xpath <- "/html/body/div[3]/div[3]/div[5]/div[1]/div[12]/table[1]"
 
 raw_data <- read_html(url)
 tab1 <- raw_data %>%
