@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5748333.svg)](https://doi.org/10.5281/zenodo.5748333)
+
+
 Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVID-19 en Perú: https://www.datosabiertos.gob.pe/dataset/vacunacion
 
 Los datos procesados incluyen:
