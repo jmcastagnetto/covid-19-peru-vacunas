@@ -1,12 +1,88 @@
+# Datos de vacunación en Peru procesados, corregidos y resumidos
+
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5748333.svg)](https://doi.org/10.5281/zenodo.5748333)
 
 
+## Fuente
+
 Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVID-19 en Perú: https://www.datosabiertos.gob.pe/dataset/vacunacion
+
+## Contenido y estructura de los datos
 
 Los datos procesados incluyen:
 
 - Datos acumulados por día y fabricante
 - Datos acumulados por semana epidemiológica, y rango de edades (tres agrupaciones: quintiles, deciles, y los rangos empleados por OWID)
+
+### Estructura de datos acumulados por día y fabricante:
+
+| Campo              | Contenido                                                   |
+| :----------------- | :---------------------------------------------------------- |
+| `fecha_corte`      | Fecha de corte para los datos (YYYY-MM-DD)                  |
+| `fecha_vacunacion` | Fecha de vacunación (YYYY-MM-DD)                            |
+| `fabricante`       | Fabricante de la vacuna                                     |
+| `dosis`            | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
+| `n_reg`            | Número de vacunaciones (registros)                          |
+
+### Estructura de datos acumulados por UBIGEO, fabricante y dosis
+
+| Campo               | Contenido                                                   |
+| :------------------ | :---------------------------------------------------------- |
+| `fecha_corte`       | Fecha de corte para los datos (YYYY-MM-DD)                  |
+| `ubigeo_persona`    | UBIGEO de la persona                                        |
+| `departamento`      | Departamento correspondiente al UBIGEO                      |
+| `provincia`         | Provincia correspondiente al UBIGEO                         |
+| `distrito`          | Distrito correspondiente al UBIGEO                          |
+| `macroregion_inei`  | Macroregión según INEI                                      |
+| `macroregion_minsa` | Macroregión según MINSA                                     |
+| `fabricante`        | Fabricante de la vacuna                                     |
+| `dosis`             | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
+| `n_reg`             | Número de vacunaciones (registros)                          |
+
+fecha_corte,ubigeo_persona,departamento,provincia,distrito,macroregion_inei,macroregion_minsa,fabricante,dosis,n_reg
+
+
+### Estructura de datos por semana epidemiológica y rango de edades:
+
+*Para veintiles, deciles y quintiles*
+
+| Campo                  | Contenido                                                                             |
+| :--------------------- | :------------------------------------------------------------------------------------ |
+| `fecha_corte`          | Fecha de corte para los datos (YYYY-MM-DD)                                            |
+| `epi_year`             | Año epidemiológico                                                                    |
+| `epi_year`             | Semana epidemiológica                                                                 |
+| `last_day_of_epi_week` | Fecha (YYYY-MM-DD) del último día de la seamana epidemiológica (Sábado)               |
+| `complete_epi_week`    | Datos corresponden a una semana completa (1) o incompleta (0)                         |
+| `rango_edad`           | Rango de edades considerado                                                           |
+| `dosis`                | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo)                           |
+| `n`                    | Número de vacunaciones (registros)                                                    |
+| `n_acum`               | Número de vacunaciones (registros) acumulados a la fecha                              |
+| `pob2021`              | Población en el rango de edad considerado                                             |
+| `pct_acum`             | Porcentaje de la población (acumulada) en el rango de edad y con la dosis considerada |
+
+
+*Para rangos de edad de OWID*
+
+| Campo                                  | Contenido                                                               |
+| :------------------------------------- | :---------------------------------------------------------------------- |
+| `location`                             | País (Peru)                                                             |
+| `fecha_corte`                          | Fecha de corte para los datos (YYYY-MM-DD)                              |
+| `epi_year`                             | Año epidemiológico                                                      |
+| `epi_year`                             | Semana epidemiológica                                                   |
+| `last_day_of_epi_week`                 | Fecha (YYYY-MM-DD) del último día de la seamana epidemiológica (Sábado) |
+| `complete_epi_week`                    | Datos corresponden a una semana completa (1) o incompleta (0)           |
+| `age_group_min`                        | Edad mínima del rango de edades                                         |
+| `age_group_max`                        | Edad máxima del rango de edades                                         |
+| `people_vaccinated_per_hundred`        | Personas por cada cien que han recibido al menos una dosis (dosis = 1)  |
+| `people_fully_vaccinated_per_hundred`  | Personas por cada cien completamente vacunadas (dosis = 2)              |
+| `people_recieving_booster_per_hundred` | Personas por cada cien que han recibido refuerzo (dosis = 3)            |
+
+
+
+
+
+## Acerca de clonar este repositorio
 
 Si quieres hacer un clon de este repositorio, cuya historia contiene muchos archivos grandes (blobs), te sugiero que hagas un "blob-less" clone, de manera que sólo descargas lo mas reciente y si lo requieres puedes obtener los anteriores, algo como:
 
@@ -16,7 +92,7 @@ $ git clone --filter=blob:none https://github.com/jmcastagnetto/covid-19-peru-va
 
 Un buen artículo sobre este tema es [Get up to speed with partial clone and shallow clone](https://github.blog/2020-12-21-get-up-to-speed-with-partial-clone-and-shallow-clone/)
 
-*Notas*
+## Notas
 
 - 2021-04-30: OWID está usando los datos resumidos de vacunación de este repositorio como fuente para Perú (ref: https://github.com/owid/covid-19-data/commit/52bb05a0a5954983dca347f92d0af95fada1bbd0)
 - 2021-05-13: Los datos procesados y aumentados se están ahora separando en múltiples archivos (cada millón de registros), para evitar llegar al límite máximo en tamaño de Github. Los nombres son de la forma `vacunas_covid_aumentada_NNN.csv.gz`, donde `NNN` es el número de secuencia del archivo.
