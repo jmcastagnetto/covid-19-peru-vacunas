@@ -40,8 +40,6 @@ Los datos procesados incluyen:
 | `dosis`             | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
 | `n_reg`             | Número de vacunaciones (registros)                          |
 
-fecha_corte,ubigeo_persona,departamento,provincia,distrito,macroregion_inei,macroregion_minsa,fabricante,dosis,n_reg
-
 
 ### Estructura de datos por semana epidemiológica y rango de edades:
 
