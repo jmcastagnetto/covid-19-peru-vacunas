@@ -17,6 +17,8 @@ Los datos procesados incluyen:
 
 ### Estructura de datos acumulados por día y fabricante:
 
+- [datos/vacunas_covid_resumen.csv](datos/vacunas_covid_resumen.csv)
+
 | Campo              | Contenido                                                   |
 | :----------------- | :---------------------------------------------------------- |
 | `fecha_corte`      | Fecha de corte para los datos (YYYY-MM-DD)                  |
@@ -26,6 +28,8 @@ Los datos procesados incluyen:
 | `n_reg`            | Número de vacunaciones (registros)                          |
 
 ### Estructura de datos acumulados por UBIGEO, fabricante y dosis
+
+- [datos/vacunas_covid_totales_fabricante_ubigeo.csv](datos/vacunas_covid_totales_fabricante_ubigeo.csv)
 
 | Campo               | Contenido                                                   |
 | :------------------ | :---------------------------------------------------------- |
@@ -45,6 +49,10 @@ Los datos procesados incluyen:
 
 *Para veintiles, deciles y quintiles*
 
+- [datos/vacunas_covid_rangoedad_veintiles.csv](datos/vacunas_covid_rangoedad_veintiles.csv)
+- [datos/vacunas_covid_rangoedad_deciles.csv](datos/vacunas_covid_rangoedad_deciles.csv)
+- [datos/vacunas_covid_rangoedad_quintiles.csv](datos/vacunas_covid_rangoedad_quintiles.csv)
+
 | Campo                  | Contenido                                                                             |
 | :--------------------- | :------------------------------------------------------------------------------------ |
 | `fecha_corte`          | Fecha de corte para los datos (YYYY-MM-DD)                                            |
@@ -61,6 +69,8 @@ Los datos procesados incluyen:
 
 
 *Para rangos de edad de OWID*
+
+- [datos/vacunas_covid_rangoedad_owid.csv](datos/vacunas_covid_rangoedad_owid.csv)
 
 | Campo                                  | Contenido                                                               |
 | :------------------------------------- | :---------------------------------------------------------------------- |
