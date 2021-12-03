@@ -15,7 +15,7 @@ Los datos procesados incluyen:
 - Datos acumulados por día y fabricante
 - Datos acumulados por semana epidemiológica, y rango de edades (tres agrupaciones: quintiles, deciles, y los rangos empleados por OWID)
 
-### Estructura de datos acumulados por día y fabricante:
+### Estructura de datos acumulados por día, fabricante y dosis:
 
 - [datos/vacunas_covid_resumen.csv](datos/vacunas_covid_resumen.csv)
 
@@ -26,6 +26,20 @@ Los datos procesados incluyen:
 | `fabricante`       | Fabricante de la vacuna                                     |
 | `dosis`            | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
 | `n_reg`            | Número de vacunaciones (registros)                          |
+
+
+### Estructura de datos acumulados por día, fabricante:
+
+[datos/vacunas_covid_fabricante.csv](datos/vacunas_covid_fabricante.csv)
+
+| Campo                | Contenido                                         |
+| :------------------- | :------------------------------------------------ |
+| `location`           | Peru                                              |
+| `date`               | Fecha de vacunación (YYYY-MM-DD)                  |
+| `vaccine`            | Fabricante de la vacuna                           |
+| `vaccinations`       | Número de vacunaciones del fabricante en la fecha |
+| `total_vaccinations` | Número acumulado de vacunaciones por fabricante   |
+
 
 ### Estructura de datos acumulados por UBIGEO, fabricante y dosis
 
