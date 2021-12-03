@@ -61,6 +61,48 @@ saveRDS(
   file = "datos/vacunas_covid_resumen.rds"
 )
 
+cli_progress_step("Acumulando por dia y fabricante")
+
+vacunas_fabricante <- vacunas_sumario %>%
+  group_by(fecha_vacunacion, fabricante) %>%
+  summarise(
+    n_reg_day = sum(n_reg, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  arrange(fabricante, fecha_vacunacion) %>%
+  group_by(fabricante) %>%
+  mutate(
+    total_vaccinations = cumsum(n_reg_day),
+    fabricante = str_replace_all(
+      fabricante,
+      c(
+        "PFIZER" = "Pfizer/BioNTech",
+        "ASTRAZENECA" = "Oxford/AstraZeneca",
+        "SINOPHARM" = "Sinopharm/Beijing"
+      )
+    )
+  ) %>%
+  add_column(location = "Peru", .before = 1) %>%
+  select(
+    location,
+    date = fecha_vacunacion,
+    vaccine = fabricante,
+    vaccinations = n_reg_day,
+    total_vaccinations
+  ) %>%
+  arrange(date, vaccine)
+
+write_csv(
+  vacunas_fabricante,
+  file = "datos/vacunas_covid_fabricante.csv",
+  num_threads = 4
+)
+
+saveRDS(
+  vacunas_fabricante,
+  file = "datos/vacunas_covid_fabricante.rds"
+)
+
 cli_progress_step("Acumulando datos por semana epi y rango de edades")
 
 vacunas <- vacunas %>%
