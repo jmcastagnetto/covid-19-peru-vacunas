@@ -31,16 +31,28 @@ vacunas <- read_fst(
     last_day_of_epi_week = ceiling_date(fecha_vacunacion, "weeks", week_start = 7), # last dow
   )
 
+current_year <- lubridate::epiyear(Sys.Date())
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
-last_epi_week <- max(vacunas$epi_week, na.rm = TRUE)
+last_epi_week <- vacunas %>%
+  select(epi_year, epi_week) %>%
+  distinct() %>%
+  filter(epi_year == current_year) %>%
+  filter(epi_week == max(epi_week, na.rm = TRUE)) %>%
+  select(epi_week) %>%
+  pull(epi_week)
+
 vacunas <- vacunas %>%
   mutate(
     complete_epi_week = case_when(
-      epi_week < last_epi_week ~ 1,
-      (epi_week == last_epi_week) &
-        (fecha_corte == last_day_of_epi_week) ~ 1,
-      (epi_week == last_epi_week) &
-        (fecha_corte < last_day_of_epi_week) ~ 0
+      epi_year < current_year ~ 1,
+      epi_year == current_year &
+        epi_week < last_epi_week ~ 1,
+      epi_year == current_year &
+        epi_week == last_epi_week &
+        fecha_corte == last_day_of_epi_week ~ 1,
+      epi_year == current_year &
+        epi_week == last_epi_week &
+        fecha_corte < last_day_of_epi_week ~ 0
     )
   )
 
@@ -101,6 +113,54 @@ write_csv(
 saveRDS(
   vacunas_fabricante,
   file = "datos/vacunas_covid_fabricante.rds"
+)
+
+cli_progress_step("Acumulando datos por semana epi, dosis y proporción de población total del Perú")
+
+pob_peru <- readRDS("datos/peru-poblacion2021-departamentos.rds") %>%
+  filter(departamento == "PERU") %>%
+  pull(pob2021)
+
+vacunas_totales <- vacunas %>%
+  group_by(
+    epi_year, epi_week,
+    last_day_of_epi_week,
+    complete_epi_week,
+    dosis
+  ) %>%
+  tally(name = "n_reg") %>%
+  arrange(epi_year, epi_week, dosis) %>%
+  group_by(
+    epi_year,
+    dosis
+  ) %>%
+  mutate(
+    total_vaccinations = cumsum(n_reg),
+    pct_total_population = 100 * total_vaccinations / pob_peru
+  ) %>%
+  add_column(location = "Peru", .before = 1) %>%
+  select(
+    location,
+    epi_year,
+    epi_week,
+    last_day_of_epi_week,
+    complete_epi_week,
+    vaccine_dose = dosis,
+    vaccinations_epi_week = n_reg,
+    total_vaccinations,
+    pct_total_population
+  ) %>%
+  arrange(epi_year, epi_week, vaccine_dose)
+
+write_csv(
+  vacunas_totales,
+  file = "datos/vacunas_covid_totales_por_semana.csv",
+  num_threads = 4
+)
+
+saveRDS(
+  vacunas_totales,
+  file = "datos/vacunas_covid_totales_por_semana.rds"
 )
 
 cli_progress_step("Acumulando datos por semana epi y rango de edades")
@@ -270,6 +330,7 @@ owid_format <- owid %>%
     into = c("age_group_min", "age_group_max"),
     sep = "-"
   ) %>%
+  filter(dosis <= 3) %>% # filter off dosis == 4,5,etc.
   mutate(
     dosis = case_when(
       dosis == 1 ~ "people_vaccinated_per_hundred",

@@ -41,6 +41,23 @@ Los datos procesados incluyen:
 | `total_vaccinations` | Número acumulado de vacunaciones por fabricante   |
 
 
+### Estructura de datos acumulados por semana epidemiológica y dosis
+
+- [datos/vacunas_covid_totales_por_semana.csv](datos/vacunas_covid_totales_por_semana.csv)
+
+| Campo                    | Contenido                                                                                            |
+| :----------------------- | :--------------------------------------------------------------------------------------------------- |
+| `location`               | Peru                                                                                                 |
+| `epi_year`               | Año epidemiológico                                                                                   |
+| `epi_week`               | Semana epidemiológica                                                                                |
+| `last_day_of_epi_week`   | Fecha (YYYY-MM-DD) del último día de la semana epidemiológica (Sábado)                               |
+| `complete_epi_week`      | Datos corresponden a una semana completa (1) o incompleta (0)                                        |
+| `vaccine_dose`           | Dosis de la vacuna (1, 2, etc.)                                                                      |
+| `vaccinations_epi_week`  | Número de vacunaciones en la semana epidemiológica por dosis                                         |
+| `total_vaccinations`     | Número acumulado de vacunaciones por dosis                                                           |
+| `pct_total_vaccinations` | Porcentaje de la población total (Perú, 2021) correspondiente al acumulado de vacunaciones por dosis |
+
+
 ### Estructura de datos acumulados por UBIGEO, fabricante y dosis
 
 - [datos/vacunas_covid_totales_fabricante_ubigeo.csv](datos/vacunas_covid_totales_fabricante_ubigeo.csv)
@@ -72,7 +89,7 @@ Los datos procesados incluyen:
 | `fecha_corte`          | Fecha de corte para los datos (YYYY-MM-DD)                                            |
 | `epi_year`             | Año epidemiológico                                                                    |
 | `epi_year`             | Semana epidemiológica                                                                 |
-| `last_day_of_epi_week` | Fecha (YYYY-MM-DD) del último día de la seamana epidemiológica (Sábado)               |
+| `last_day_of_epi_week` | Fecha (YYYY-MM-DD) del último día de la semana epidemiológica (Sábado)               |
 | `complete_epi_week`    | Datos corresponden a una semana completa (1) o incompleta (0)                         |
 | `rango_edad`           | Rango de edades considerado                                                           |
 | `dosis`                | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo)                           |
