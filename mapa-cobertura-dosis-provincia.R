@@ -23,6 +23,9 @@ pob2021 <- readRDS("datos/peru-pob2021-provincias.rds") %>%
     poblacion = total
   )
 
+fecha_corte <- read_csv("datos/vacunas_covid_resumen.csv", n_max = 1) %>%
+  pull(fecha_corte)
+
 vacunas_prov_dosis <- readRDS("datos/vacunas_covid_totales_fabricante_ubigeo.rds") %>%
   mutate(
     ubigeo_prov = substr(ubigeo_persona, 1, 4)
@@ -72,7 +75,7 @@ peru_prov_map_df <- peru_prov_map %>%
       )
   )
 
-ggplot(peru_prov_map_df) +
+map1 <- ggplot(peru_prov_map_df) +
   geom_sf(aes(fill = pct * 100)) +
   scale_fill_viridis_b(direction = -1, n.breaks = 8, option = "plasma") +
   theme_void(16) +
@@ -91,11 +94,12 @@ ggplot(peru_prov_map_df) +
   labs(
     fill = "% de la\npoblación\nvacunada",
     title = "Perú: Cobertura de vacunación COVID-19 por dosis a nivel de provincia",
-    subtitle = "Fuente: Datos abiertos del MINSA (al 2021-12-04)",
+    subtitle = glue::glue("Fuente: Datos abiertos del MINSA (al {fecha_corte})"),
     caption = "@jmcastagnetto, Jesus M. Castagnetto"
   )
 
 ggsave(
+  map1,
   filename = "peru-cobertura-vacunas-provincia-dosis.png",
   width = 18,
   height = 10
