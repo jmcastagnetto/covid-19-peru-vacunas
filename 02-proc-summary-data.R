@@ -32,6 +32,7 @@ vacunas <- read_fst(
   )
 
 current_year <- lubridate::epiyear(Sys.Date())
+current_year <- 2021
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
 last_epi_week <- vacunas %>%
   select(epi_year, epi_week) %>%
