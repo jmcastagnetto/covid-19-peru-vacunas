@@ -8,6 +8,11 @@
 
 Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVID-19 en Perú: https://www.datosabiertos.gob.pe/dataset/vacunacion
 
+**Nota importante**:
+
+La primera vacuna de la campaña general de vacunación contra el COVID-19 en Perú, se puso el 2021-02-08, por lo que las fechas anteriores a ese día en los datos abiertos que publica el MINSA, corresponden a registros (parciales) de las dosis aplicadas durante los ensayos clínicos que se hicieron en el país.
+
+
 ## Contenido y estructura de los datos
 
 Los datos procesados incluyen:
