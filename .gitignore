@@ -32,6 +32,7 @@ sha256sum.txt
 
 # local full data files
 datos/vacunas_covid_aumentada*.rds
+datos/*.parquet
 datos/*.fst
 datos/vacunados-dos-dosis.rds
 datos/orig/vacunas_covid.7z
