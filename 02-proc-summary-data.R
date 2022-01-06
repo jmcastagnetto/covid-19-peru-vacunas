@@ -31,8 +31,22 @@ vacunas <- read_fst(
     last_day_of_epi_week = ceiling_date(fecha_vacunacion, "weeks", week_start = 7), # last dow
   )
 
+cli_alert_info(
+  glue::glue("Los datos abarcan desde el {min(vacunas$fecha_vacunacion, na.rm = TRUE)} hasta el {max(vacunas$fecha_vacunacion, na.rm = TRUE)}")
+)
+
+n_old_records <- nrow(
+  vacunas %>%
+    filter(fecha_vacunacion < as.Date("2021-02-08"))
+)
+n_total <- nrow(vacunas)
+
+cli_alert_info(
+  glue::glue("Hay {format(n_old_records, big.mark = ',')} registros anteriores al 2021-02-08, de un total de {format(n_total, big.mark = ',')}. Estos corresponden a un {sprintf('%.4f%%', (n_old_records * 100 / n_total))} del total.")
+)
+
 current_year <- lubridate::epiyear(Sys.Date())
-current_year <- 2021
+
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
 last_epi_week <- vacunas %>%
   select(epi_year, epi_week) %>%

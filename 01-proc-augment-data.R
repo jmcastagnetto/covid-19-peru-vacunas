@@ -179,7 +179,7 @@ gc()
 
 cli_progress_step("Cargando los archivos parciales para generar el consolidado")
 rdslist <- fs::dir_ls("datos/",
-                      regexp = "vacunas_covid_aumentada_2021-.+\\.fst")
+                      regexp = "vacunas_covid_aumentada_202.+\\.fst")
 vacunas <- map_dfr(rdslist, read_fst)
 #saveRDS(
 #  vacunas,
