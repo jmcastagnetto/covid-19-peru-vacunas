@@ -1,31 +1,28 @@
 options(tidyverse.quiet = TRUE)
 library(tidyverse)
 library(cli)
-library(lubridate)
+library(lubridate, warn.conflicts = FALSE)
+library(arrow, warn.conflicts = FALSE)
 library(fst)
 
 cli_h1("Generando archivos resúmen")
 
 cli_progress_step("Cargando los datos procesados")
 
-vacunas <- read_fst(
-  "datos/vacunas_covid_aumentada.fst",
-  columns = c(
-    "fecha_vacunacion",
-    "fabricante",
-    "dosis",
-    "rango_edad",
-    "rango_edad_deciles",
-    "rango_edad_quintiles",
-    "rango_edad_owid",
-    "epi_year",
-    "epi_week",
-    "flag_vacunacion_general"
-  )
-) %>%
-  rename(
-    rango_edad_veintiles = rango_edad
+vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
+  select(
+    fecha_vacunacion,
+    fabricante,
+    dosis,
+    rango_edad_veintiles = rango_edad,
+    rango_edad_deciles,
+    rango_edad_quintiles,
+    rango_edad_owid,
+    epi_year,
+    epi_week,
+    flag_vacunacion_general
   ) %>%
+  collect() %>%
   mutate(
     first_day_of_epi_week = floor_date(fecha_vacunacion, "weeks", week_start = 7), # first dow
     last_day_of_epi_week = ceiling_date(fecha_vacunacion, "weeks", week_start = 7), # last dow
@@ -37,12 +34,12 @@ cli_alert_info(
 
 n_old_records <- nrow(
   vacunas %>%
-    filter(fecha_vacunacion < as.Date("2021-02-08"))
+    filter(flag_vacunacion_general == FALSE)
 )
 n_total <- nrow(vacunas)
 
 cli_alert_info(
-  glue::glue("Hay {format(n_old_records, big.mark = ',')} registros anteriores al 2021-02-08, de un total de {format(n_total, big.mark = ',')}. Estos corresponden a un {sprintf('%.4f%%', (n_old_records * 100 / n_total))} del total.")
+  glue::glue("Hay {format(n_old_records, big.mark = ',')} registros que no parecen ser parte de la vacunación general, de un total de {format(n_total, big.mark = ',')}. Estos corresponden a un {sprintf('%.4f%%', (n_old_records * 100 / n_total))} del total.")
 )
 
 current_year <- lubridate::epiyear(Sys.Date())
@@ -138,11 +135,12 @@ pob_peru <- readRDS("datos/peru-poblacion2021-departamentos.rds") %>%
   pull(pob2021)
 
 vacunas_totales <- vacunas %>%
+  filter(flag_vacunacion_general == TRUE) %>%
   group_by(
     epi_year, epi_week,
     last_day_of_epi_week,
     complete_epi_week,
-    dosis, flag_vacunacion_general
+    dosis
   ) %>%
   tally(name = "n_reg") %>%
   arrange(epi_year, epi_week, dosis) %>%
@@ -164,8 +162,7 @@ vacunas_totales <- vacunas %>%
     vaccine_dose = dosis,
     vaccinations_epi_week = n_reg,
     total_vaccinations,
-    pct_total_population,
-    flag_vacunacion_general
+    pct_total_population
   ) %>%
   arrange(epi_year, epi_week, vaccine_dose)
 
@@ -183,6 +180,8 @@ saveRDS(
 cli_progress_step("Acumulando datos por semana epi y rango de edades")
 
 # Sólo considerar los registros de la campaña general de vacunación
+# flag_vacunacion_general == TRUE
+
 vacunas <- vacunas %>%
   filter(flag_vacunacion_general == TRUE) %>%
   select(epi_year, epi_week,
@@ -308,14 +307,10 @@ write_csv(
 cli_inform("-> Por OWID")
 pob_owid <- readRDS("datos/peru-pob2021-rango-etareo-owid.rds") %>%
   select(rango, pob2021 = población)
-# Sólo considerar los registros para los cuales
-# flag_vacunacion_general == TRUE
 owid <- vacunas %>%
-  filter(flag_vacunacion_general == TRUE) %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
-           rango_edad_owid, dosis,
-           flag_vacunacion_general) %>%
+           rango_edad_owid, dosis) %>%
   tally() %>%
   arrange(rango_edad_owid, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_owid, dosis) %>%
@@ -383,16 +378,15 @@ cli_h2("Generando archivos resúmen por UBIGEO (distrito) de la persona")
 ubigeos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.fst")
 
 cli_progress_step("Cargando los datos procesados con UBIGEO")
-vacunas_ubiraw <- read_fst(
-  "datos/vacunas_covid_aumentada.fst",
-  columns = c(
-    "fecha_vacunacion",
-    "fabricante",
-    "dosis",
-    "ubigeo_persona",
-    "flag_vacunacion_general"
-  )
-)
+vacunas_ubiraw <- open_dataset("tmp/arrow_augmented_data/") %>%
+  select(
+    fecha_vacunacion,
+    fabricante,
+    dosis,
+    ubigeo_persona,
+    flag_vacunacion_general
+  ) %>%
+  collect()
 
 fecha_corte <- max(vacunas_ubiraw$fecha_vacunacion, na.rm = TRUE)
 
