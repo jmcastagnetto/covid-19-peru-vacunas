@@ -24,6 +24,19 @@ Los datos procesados incluyen:
 - Datos acumulados por día y fabricante
 - Datos acumulados por semana epidemiológica, y rango de edades (tres agrupaciones: quintiles, deciles, y los rangos empleados por OWID)
 
+En las estructuras siguientes, el campo `flag_vacunacion_general` se define de las siguiente manera:
+
+```
+flag_vacunacion_general = if 
+  (fabricante == "SINOPHARM" & fecha_vacunacion > 2021-02-07) |
+  (fabricante == "PFIZER" & fecha_vacunacion > 2021-03-03) |
+  (fabricante == "ASTRAZENECA" & fecha_vacunacion > 2021-04-18) 
+then
+  TRUE
+else
+  FALSE
+```
+
 ### Estructura de datos acumulados por día, fabricante y dosis:
 
 - [datos/vacunas_covid_resumen.csv](datos/vacunas_covid_resumen.csv)
@@ -35,6 +48,7 @@ Los datos procesados incluyen:
 | `fabricante`       | Fabricante de la vacuna                                     |
 | `dosis`            | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
 | `n_reg`            | Número de vacunaciones (registros)                          |
+| `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
 
 
 ### Estructura de datos acumulados por día, fabricante:
@@ -48,6 +62,7 @@ Los datos procesados incluyen:
 | `vaccine`            | Fabricante de la vacuna                           |
 | `vaccinations`       | Número de vacunaciones del fabricante en la fecha |
 | `total_vaccinations` | Número acumulado de vacunaciones por fabricante   |
+| `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
 
 
 ### Estructura de datos acumulados por semana epidemiológica y dosis
@@ -65,6 +80,7 @@ Los datos procesados incluyen:
 | `vaccinations_epi_week`  | Número de vacunaciones en la semana epidemiológica por dosis                                         |
 | `total_vaccinations`     | Número acumulado de vacunaciones por dosis                                                           |
 | `pct_total_vaccinations` | Porcentaje de la población total (Perú, 2021) correspondiente al acumulado de vacunaciones por dosis |
+| `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
 
 
 ### Estructura de datos acumulados por UBIGEO, fabricante y dosis
@@ -83,9 +99,12 @@ Los datos procesados incluyen:
 | `fabricante`        | Fabricante de la vacuna                                     |
 | `dosis`             | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
 | `n_reg`             | Número de vacunaciones (registros)                          |
+| `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
 
 
 ### Estructura de datos por semana epidemiológica y rango de edades:
+
+_Notas_: Estos datos contemplan solamente los registros para los cuales `flag_vacunacion_general == TRUE`
 
 *Para veintiles, deciles y quintiles*
 
@@ -112,6 +131,8 @@ Los datos procesados incluyen:
 
 - [datos/vacunas_covid_rangoedad_owid.csv](datos/vacunas_covid_rangoedad_owid.csv)
 
+_Notas_: Estos datos contemplan solamente los registros para los cuales `flag_vacunacion_general == TRUE`
+
 | Campo                                  | Contenido                                                               |
 | :------------------------------------- | :---------------------------------------------------------------------- |
 | `location`                             | País (Peru)                                                             |
@@ -125,9 +146,6 @@ Los datos procesados incluyen:
 | `people_vaccinated_per_hundred`        | Personas por cada cien que han recibido al menos una dosis (dosis = 1)  |
 | `people_fully_vaccinated_per_hundred`  | Personas por cada cien completamente vacunadas (dosis = 2)              |
 | `people_recieving_booster_per_hundred` | Personas por cada cien que han recibido refuerzo (dosis = 3)            |
-
-
-
 
 
 ## Acerca de clonar este repositorio

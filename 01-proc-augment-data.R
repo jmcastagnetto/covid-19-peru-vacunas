@@ -17,12 +17,8 @@ centros <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/centro_vacuna
 grupos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/grupo_riesgo.fst")
 ubigeos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.fst")
 personas <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/personas.fst") %>%
-  # mutate(
-  #   edad = as.integer(format(Sys.Date(), "%Y")) - anho_nac
-  # ) %>%
   select(
     id_persona,
-#    edad,
     sexo,
     ubigeo_persona = ubigeo
   ) %>%
@@ -33,9 +29,13 @@ personas <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/personas.fst
 
 cli_progress_step("Leyendo los datos por semana epi")
 wk_rds <- fs::dir_ls("tmp", regexp = "vacunas_.+\\.fst")
-
 changed_wk_rds <- wk_rds[wk_rds %in% chng$file]
-#changed_wk_rds <- wk_rds
+
+# fechas de llegada de los primeros lotes de vacunas
+# asumimos que la aplicación de las mismas se da en fechas posteriores
+primer_lote_sinopharm <- as.Date("2021-02-07")
+primer_lote_pfizer <- as.Date("2021-03-03")
+primer_lote_astrazeneca <- as.Date("2021-04-18")
 
 cli_progress_bar("Procesando cada semana que ha cambiado",
                  total = length(changed_wk_rds))
@@ -154,7 +154,17 @@ for (fst_fn in changed_wk_rds) {
       rango_edad_quintiles = as.character(rango_edad_quintiles),
       rango_edad_owid = as.character(rango_edad_owid),
       epi_week = lubridate::epiweek(fecha_vacunacion),
-      epi_year = lubridate::epiyear(fecha_vacunacion)
+      epi_year = lubridate::epiyear(fecha_vacunacion),
+      flag_vacunacion_general = if_else(
+        (fecha_vacunacion > primer_lote_sinopharm &
+          fabricante == "SINOPHARM") |
+        (fecha_vacunacion > primer_lote_pfizer &
+          fabricante == "PFIZER") |
+        (fecha_vacunacion > primer_lote_astrazeneca &
+          fabricante == "ASTRAZENECA"),
+        TRUE,
+        FALSE
+      )
     ) %>%
     relocate(id_vacunados_covid19, .before = 1) %>%
     relocate(id_vacuna, .before = fabricante) %>%
@@ -164,11 +174,7 @@ for (fst_fn in changed_wk_rds) {
     base_fname <- str_replace(fst_fn, "tmp/vacunas_raw_",
                               "datos/vacunas_covid_aumentada_") %>%
     str_remove(fixed(".fst"))
-  #csvname <- glue::glue("{base_fname}.csv")
-  rdsname <- glue::glue("{base_fname}.rds")
   fstname <- glue::glue("{base_fname}.fst")
-  #write_csv(vacunas, file = csvname, num_threads = 4)
-  #saveRDS(vacunas, file = rdsname)
   write_fst(vacunas, path = fstname, compress = 100)
   cli_progress_update()
 }
@@ -181,11 +187,7 @@ cli_progress_step("Cargando los archivos parciales para generar el consolidado")
 rdslist <- fs::dir_ls("datos/",
                       regexp = "vacunas_covid_aumentada_202.+\\.fst")
 vacunas <- map_dfr(rdslist, read_fst)
-#saveRDS(
-#  vacunas,
-#  file = "datos/vacunas_covid_aumentada.rds",
-#  compress = "xz"
-#)
+
 write_fst(
   vacunas,
   path = "datos/vacunas_covid_aumentada.fst",

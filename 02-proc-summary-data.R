@@ -2,7 +2,6 @@ options(tidyverse.quiet = TRUE)
 library(tidyverse)
 library(cli)
 library(lubridate)
-#library(clock)
 library(fst)
 
 cli_h1("Generando archivos resúmen")
@@ -20,7 +19,8 @@ vacunas <- read_fst(
     "rango_edad_quintiles",
     "rango_edad_owid",
     "epi_year",
-    "epi_week"
+    "epi_week",
+    "flag_vacunacion_general"
   )
 ) %>%
   rename(
@@ -73,7 +73,7 @@ vacunas <- vacunas %>%
 
 cli_progress_step("Acumulando por fecha de vacunación")
 vacunas_sumario <- vacunas %>%
-  group_by(fecha_vacunacion, fabricante, dosis) %>%
+  group_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
   tally(name = "n_reg") %>%
   add_column(fecha_corte = fecha_corte, .before = 1)
 
@@ -91,13 +91,13 @@ saveRDS(
 cli_progress_step("Acumulando por dia y fabricante")
 
 vacunas_fabricante <- vacunas_sumario %>%
-  group_by(fecha_vacunacion, fabricante) %>%
+  group_by(fecha_vacunacion, fabricante, flag_vacunacion_general) %>%
   summarise(
     n_reg_day = sum(n_reg, na.rm = TRUE)
   ) %>%
   ungroup() %>%
   arrange(fabricante, fecha_vacunacion) %>%
-  group_by(fabricante) %>%
+  group_by(fabricante, flag_vacunacion_general) %>%
   mutate(
     total_vaccinations = cumsum(n_reg_day),
     fabricante = str_replace_all(
@@ -115,7 +115,8 @@ vacunas_fabricante <- vacunas_sumario %>%
     date = fecha_vacunacion,
     vaccine = fabricante,
     vaccinations = n_reg_day,
-    total_vaccinations
+    total_vaccinations,
+    flag_vacunacion_general
   ) %>%
   arrange(date, vaccine)
 
@@ -141,7 +142,7 @@ vacunas_totales <- vacunas %>%
     epi_year, epi_week,
     last_day_of_epi_week,
     complete_epi_week,
-    dosis
+    dosis, flag_vacunacion_general
   ) %>%
   tally(name = "n_reg") %>%
   arrange(epi_year, epi_week, dosis) %>%
@@ -163,7 +164,8 @@ vacunas_totales <- vacunas %>%
     vaccine_dose = dosis,
     vaccinations_epi_week = n_reg,
     total_vaccinations,
-    pct_total_population
+    pct_total_population,
+    flag_vacunacion_general
   ) %>%
   arrange(epi_year, epi_week, vaccine_dose)
 
@@ -180,7 +182,9 @@ saveRDS(
 
 cli_progress_step("Acumulando datos por semana epi y rango de edades")
 
+# Sólo considerar los registros de la campaña general de vacunación
 vacunas <- vacunas %>%
+  filter(flag_vacunacion_general == TRUE) %>%
   select(epi_year, epi_week,
          last_day_of_epi_week,
          complete_epi_week,
@@ -304,10 +308,14 @@ write_csv(
 cli_inform("-> Por OWID")
 pob_owid <- readRDS("datos/peru-pob2021-rango-etareo-owid.rds") %>%
   select(rango, pob2021 = población)
+# Sólo considerar los registros para los cuales
+# flag_vacunacion_general == TRUE
 owid <- vacunas %>%
+  filter(flag_vacunacion_general == TRUE) %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
-           rango_edad_owid, dosis) %>%
+           rango_edad_owid, dosis,
+           flag_vacunacion_general) %>%
   tally() %>%
   arrange(rango_edad_owid, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_owid, dosis) %>%
@@ -381,7 +389,8 @@ vacunas_ubiraw <- read_fst(
     "fecha_vacunacion",
     "fabricante",
     "dosis",
-    "ubigeo_persona"
+    "ubigeo_persona",
+    "flag_vacunacion_general"
   )
 )
 
@@ -389,7 +398,7 @@ fecha_corte <- max(vacunas_ubiraw$fecha_vacunacion, na.rm = TRUE)
 
 cli_progress_step("Acumulando por UBIGEO de la persona")
 vacunas_ubigeo <- vacunas_ubiraw %>%
-  group_by(ubigeo_persona, fabricante, dosis) %>%
+  group_by(ubigeo_persona, fabricante, dosis, flag_vacunacion_general) %>%
   tally(name = "n_reg") %>%
   add_column(fecha_corte = fecha_corte, .before = 1) %>%
   ungroup() %>%

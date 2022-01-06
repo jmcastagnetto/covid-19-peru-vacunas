@@ -5,7 +5,7 @@ vacunas <- read_fst(
   "datos/vacunas_covid_aumentada.fst",
   columns = c("id_persona", "sexo", "edad", "fabricante", "dosis",
               "fecha_vacunacion", "ubigeo_persona",
-              "centro_vacunacion_ubigeo")
+              "centro_vacunacion_ubigeo", "flag_vacunacion_general")
 )
 
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
@@ -17,7 +17,8 @@ dosis1 <- vacunas %>%
     ubigeo_persona_1 = ubigeo_persona,
     edad_1 = edad,
     fabricante_1 = fabricante,
-    dosis_1 = fecha_vacunacion
+    dosis_1 = fecha_vacunacion,
+    flag_vacunacion_general_1 = flag_vacunacion_general
   ) %>%
   select(-dosis)
 
@@ -28,7 +29,8 @@ dosis2 <- vacunas %>%
     ubigeo_persona_2 = ubigeo_persona,
     edad_2 = edad,
     fabricante_2 = fabricante,
-    dosis_2 = fecha_vacunacion
+    dosis_2 = fecha_vacunacion,
+    flag_vacunacion_general_2 = flag_vacunacion_general
   ) %>%
   select(-dosis, -sexo)
 
@@ -39,7 +41,8 @@ dosis3 <- vacunas %>%
     ubigeo_persona_3 = ubigeo_persona,
     edad_3 = edad,
     fabricante_3 = fabricante,
-    dosis_3 = fecha_vacunacion
+    dosis_3 = fecha_vacunacion,
+    flag_vacunacion_general_3 = flag_vacunacion_general
   ) %>%
   select(-dosis, -sexo)
 

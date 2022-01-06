@@ -1,7 +1,7 @@
 library(fst)
 library(dplyr)
 library(stringr)
-wk_list <- fs::dir_ls("datos", regexp = "vacunas_covid_aumentada_2021.+\\.fst")
+wk_list <- fs::dir_ls("datos", regexp = "vacunas_covid_aumentada_202.+\\.fst")
 
 for (wk in wk_list) {
   df <- read_fst(wk) %>%
