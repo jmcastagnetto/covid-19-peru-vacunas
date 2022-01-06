@@ -1,13 +1,19 @@
-# change to use arrow
 library(tidyverse)
-library(fst)
+library(arrow)
 
-vacunas <- read_fst(
-  "datos/vacunas_covid_aumentada.fst",
-  columns = c("id_persona", "sexo", "edad", "fabricante", "dosis",
-              "fecha_vacunacion", "ubigeo_persona",
-              "centro_vacunacion_ubigeo", "flag_vacunacion_general")
-)
+vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
+  select(
+    id_persona,
+    sexo,
+    edad,
+    fabricante,
+    dosis,
+    fecha_vacunacion,
+    ubigeo_persona,
+    centro_vacunacion_ubigeo,
+    flag_vacunacion_general
+  ) %>%
+  collect()
 
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
 
@@ -60,8 +66,8 @@ multiples_dosis <- dosis1 %>%
     fecha_corte = fecha_corte
   )
 
-write_fst(
+write_parquet(
   multiples_dosis,
-  "datos/vacunados-multiples-dosis.fst"
+  "datos/vacunados-multiples-dosis.parquet"
 )
 
