@@ -8,10 +8,14 @@
 
 Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVID-19 en Perú: https://www.datosabiertos.gob.pe/dataset/vacunacion
 
-**Nota importante**:
+**Notas importante**:
 
-La primera vacuna de la campaña general de vacunación contra el COVID-19 en Perú, se puso el 2021-02-08, por lo que las fechas anteriores a ese día en los datos abiertos que publica el MINSA, corresponden a un número parcial y comparativamente pequeño de registros de las dosis aplicadas durante los ensayos clínicos que se hicieron en el país, y, posiblemente, de dosis aplicadas a peruanos en el extranjero. Al 2022-01-05 estos registros corresponden a menos del 0.004% del total.
+- La primera vacuna de la campaña general de vacunación contra el COVID-19 en Perú, se puso el 2021-02-08, por lo que las fechas anteriores a ese día en los datos abiertos que publica el MINSA, corresponden a un número parcial y comparativamente pequeño de registros de las dosis aplicadas durante los ensayos clínicos que se hicieron en el país, y, posiblemente, de dosis aplicadas a peruanos en el extranjero. Al 2022-01-05 estos registros corresponden a menos del 0.004% del total.
 
+- Para poder distinguir si los registros de fechas posteriores al 2021-02-08 puedan corresponder a vacunaciones que no son parte de la campaña general, se pueden tomar en cuenta las siguientes fechas:
+	- El primer lote de vacunas de Sinopharm (Beijing) llegó el 2021-02-07 (referencia: https://andina.pe/agencia/noticia-lote-vacunas-llega-a-los-almacenes-talma-832838.aspx)
+	- El primer lote de vacunas de Pfizer/BioNTech llegó el 2021-03-03 (referencia: https://elperuano.pe/noticia/116268-primer-lote-de-50000-vacunas-de-pfizer-llegara-manana-al-pais-anuncia-jefe-del-estado)
+	- El primer lote de vacunas de Oxford/AstraZeneca llegó el 2021-04-18 (referncia: https://www.minsa.gob.pe/newsletter/2021/edicion-64/nota2/index.html)
 
 ## Contenido y estructura de los datos
 
