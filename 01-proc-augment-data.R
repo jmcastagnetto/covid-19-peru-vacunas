@@ -1,19 +1,18 @@
 library(tidyverse, warn.conflicts = FALSE)
 library(arrow, warn.conflicts = FALSE)
-library(fst)
 library(cli)
 
 vac_raw <- open_dataset("tmp/arrow_data/")
 
 cli_progress_step("Leyendo los datos de referencia")
-eess <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/eess.fst")
-vacs <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/vacunas.fst")
-centros <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/centro_vacunacion.fst")
-grupos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/grupo_riesgo.fst")
-ubigeos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.fst")
-personas <- read_fst(
-  "~/devel/local/datos-accessorios-vacunas/datos/personas.fst",
-  columns = c("id_persona", "sexo", "ubigeo")
+eess <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/eess.parquet")
+vacs <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/vacunas.parquet")
+centros <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/centro_vacunacion.parquet")
+grupos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/grupo_riesgo.parquet")
+ubigeos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.parquet")
+personas <- read_parquet(
+  "~/devel/local/datos-accessorios-vacunas/datos/personas.parquet",
+  col_select = c("id_persona", "sexo", "ubigeo")
 ) %>%
   rename(ubigeo_persona = ubigeo) %>%
   mutate(
