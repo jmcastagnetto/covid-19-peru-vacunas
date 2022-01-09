@@ -13,6 +13,8 @@ vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
     centro_vacunacion_ubigeo,
     flag_vacunacion_general
   ) %>%
+  filter(flag_vacunacion_general == TRUE) %>%
+  select(-flag_vacunacion_general) %>%
   collect()
 
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
@@ -24,8 +26,7 @@ dosis1 <- vacunas %>%
     ubigeo_persona_1 = ubigeo_persona,
     edad_1 = edad,
     fabricante_1 = fabricante,
-    dosis_1 = fecha_vacunacion,
-    flag_vacunacion_general_1 = flag_vacunacion_general
+    dosis_1 = fecha_vacunacion
   ) %>%
   select(-dosis)
 
@@ -36,8 +37,7 @@ dosis2 <- vacunas %>%
     ubigeo_persona_2 = ubigeo_persona,
     edad_2 = edad,
     fabricante_2 = fabricante,
-    dosis_2 = fecha_vacunacion,
-    flag_vacunacion_general_2 = flag_vacunacion_general
+    dosis_2 = fecha_vacunacion
   ) %>%
   select(-dosis, -sexo)
 
@@ -48,8 +48,7 @@ dosis3 <- vacunas %>%
     ubigeo_persona_3 = ubigeo_persona,
     edad_3 = edad,
     fabricante_3 = fabricante,
-    dosis_3 = fecha_vacunacion,
-    flag_vacunacion_general_3 = flag_vacunacion_general
+    dosis_3 = fecha_vacunacion
   ) %>%
   select(-dosis, -sexo)
 

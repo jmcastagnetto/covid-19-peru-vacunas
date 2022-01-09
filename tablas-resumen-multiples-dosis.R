@@ -1,41 +1,95 @@
 library(tidyverse)
-library(fst)
+library(arrow)
 library(gt)
 library(gtExtras)
 
-multiples <- read_fst("datos/vacunados-multiples-dosis.fst")
+cat("Leyendo fabricantes\n")
 
-fecha_corte <- unique(multiples$fecha_corte)
+multiples <- read_parquet(
+  "datos/vacunados-multiples-dosis.parquet",
+  col_select = c(
+    "fabricante_1",
+    "fabricante_2",
+    "fabricante_3"
+  )
+) %>%
+  group_by(fabricante_1, fabricante_2, fabricante_3) %>%
+  tally() %>%
+  ungroup()
+
+fecha_corte <- read_parquet(
+  "datos/vacunados-multiples-dosis.parquet",
+  col_select = c("fecha_corte")
+) %>%
+  distinct() %>%
+  pull(fecha_corte)
 
 # Cantidad y tipo de dosis ------------------------------------------------
 
-vac_1_2_3 <- sum(!is.na(multiples$fabricante_1) &
-                   !is.na(multiples$fabricante_2) &
-                   !is.na(multiples$fabricante_3))
+vac_1_2_3 <- multiples %>%
+  filter(!is.na(fabricante_1) &
+           !is.na(fabricante_2) &
+           !is.na(fabricante_3)) %>%
+  summarise(
+    total = sum(n, na.rm = TRUE)
+  ) %>%
+  pull(total)
 
-vac_1_2 <- sum(!is.na(multiples$fabricante_1) &
-                   !is.na(multiples$fabricante_2) &
-                   is.na(multiples$fabricante_3))
+vac_1_2 <- multiples %>%
+  filter(!is.na(fabricante_1) &
+           !is.na(fabricante_2) &
+           is.na(fabricante_3)) %>%
+  summarise(
+    total = sum(n, na.rm = TRUE)
+  ) %>%
+  pull(total)
 
-vac_1 <- sum(!is.na(multiples$fabricante_1) &
-                   is.na(multiples$fabricante_2) &
-                   is.na(multiples$fabricante_3))
+vac_1 <- multiples %>%
+  filter(!is.na(fabricante_1) &
+           is.na(fabricante_2) &
+           is.na(fabricante_3)) %>%
+  summarise(
+    total = sum(n, na.rm = TRUE)
+  ) %>%
+  pull(total)
 
-vac_2 <- sum(is.na(multiples$fabricante_1) &
-               !is.na(multiples$fabricante_2) &
-               is.na(multiples$fabricante_3))
+vac_2 <- multiples %>%
+  filter(is.na(fabricante_1) &
+           !is.na(fabricante_2) &
+           is.na(fabricante_3)) %>%
+  summarise(
+    total = sum(n, na.rm = TRUE)
+  ) %>%
+  pull(total)
 
-vac_2_3 <- sum(is.na(multiples$fabricante_1) &
-                 !is.na(multiples$fabricante_2) &
-                 !is.na(multiples$fabricante_3))
+vac_2_3 <- multiples %>%
+  filter(is.na(fabricante_1) &
+           !is.na(fabricante_2) &
+           !is.na(fabricante_3)) %>%
+  summarise(
+    total = sum(n, na.rm = TRUE)
+  ) %>%
+  pull(total)
 
-vac_3 <- sum(is.na(multiples$fabricante_1) &
-                   is.na(multiples$fabricante_2) &
-                   !is.na(multiples$fabricante_3))
+vac_3 <- multiples %>%
+  filter(is.na(fabricante_1) &
+           is.na(fabricante_2) &
+           !is.na(fabricante_3)) %>%
+  summarise(
+    total = sum(n, na.rm = TRUE)
+  ) %>%
+  pull(total)
 
-vac_1_3 <- sum(!is.na(multiples$fabricante_1) &
-                   is.na(multiples$fabricante_2) &
-                   !is.na(multiples$fabricante_3))
+vac_1_3 <- multiples %>%
+  filter(!is.na(fabricante_1) &
+           is.na(fabricante_2) &
+           !is.na(fabricante_3)) %>%
+  summarise(
+    total = sum(n, na.rm = TRUE)
+  ) %>%
+  pull(total)
+
+cat("Generando las tablas\n")
 
 vac_dosis_sum <- tribble(
   ~dosis_recibida, ~n,
@@ -64,7 +118,7 @@ tab1 <- gt(vac_dosis_sum) %>%
   cols_label(
     dosis_recibida = md("**Dosis recibidas<br/>por cada persona**"),
     n = md("**Número de<br/>personas**"),
-    pct = md("**Porcentaje<br/>del total**")
+    pct = md("**Porcentaje del<br/>total de vacunas**")
   ) %>%
   fmt_integer(
     columns = 2
@@ -171,7 +225,14 @@ gtsave(
 
 # Combinación de vacunas --------------------------------------------------
 
-por_fabricante <- multiples %>%
+por_fabricante <-  read_parquet(
+  "datos/vacunados-multiples-dosis.parquet",
+  col_select = c(
+    "fabricante_1",
+    "fabricante_2",
+    "fabricante_3"
+  )
+) %>%
   group_by(fabricante_1, fabricante_2, fabricante_3) %>%
   tally() %>%
   mutate(
