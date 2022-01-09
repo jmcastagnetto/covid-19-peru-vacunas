@@ -1,11 +1,18 @@
-edicion_nro,intervalo_de_tiempo,informacion,day_ini,day_end,month,year,date_ini,date_end
-1,Del 11 al 12 de septiembre de 2021,"El 10 de septiembre, el Ministro de Salud anunció que desde las 7 de la mañana del 11 de septiembre hasta las 7 de la noche del 12 de septiembre se llevaría a cabo la primera campaña de vacunación destinada a personas desde los 27 años a más. Los ciudadanos podrían acudir a los centros de vacunación con disfraces o pijamas, ya que se realizaría un concurso que consiste en postear las fotografías en las redes sociales con la indumentaria que usaron, y serían calificadas por un jurado de acuerdo al número de likes que obtengan, y estos recibirían premios para incentivar la vacunación entre los más jóvenes.[41]​ Para dicha jornada estarían habilitados 30 centros vacunatorios en Lima Metropolitana y Callao.[42]​",11,12,setiembre,2021,2021-09-11,2021-09-12
-2,Del 18 al 19 de septiembre de 2021,,18,19,setiembre,2021,2021-09-18,2021-09-19
-3,Del 25 al 26 de septiembre de 2021,,25,26,setiembre,2021,2021-09-25,2021-09-26
-4,Del 2 al 3 de octubre de 2021,,2,3,octubre,2021,2021-10-02,2021-10-03
-5,Del 9 al 10 de octubre de 2021,,9,10,octubre,2021,2021-10-09,2021-10-10
-6,Del 16 al 17 de octubre de 2021,,16,17,octubre,2021,2021-10-16,2021-10-17
-7,Del 23 al 24 de octubre de 2021,,23,24,octubre,2021,2021-10-23,2021-10-24
-8,Del 30 al 31 de octubre de 2021,,30,31,octubre,2021,2021-10-30,2021-10-31
-9,Del 6 al 7 de noviembre de 2021,,6,7,noviembre,2021,2021-11-06,2021-11-07
-10,Del 13 al 14 de noviembre de 2021,,13,14,noviembre,2021,2021-11-13,2021-11-14
+edicion,fecha_inicio,fecha_fin
+Primera edición,2021-09-11,2021-09-12
+Segunda edición,2021-09-18,2021-08-19
+Tercera edición,2021-09-25,2021-09-26
+Cuarta edición,2021-10-02,2021-10-03
+Quinta edición,2021-10-09,2021-10-10
+Sexta edición,2021-10-16,2021-10-17
+Séptima edición,2021-10-23,2021-10-24
+Octava edición,2021-10-30,2021-10-31
+Novena edición,2021-11-06,2021-11-07
+Décima edición,2021-11-13,2021-11-14
+Undécima edición,2021-11-20,2021-11-21
+Duodécima edición,2021-11-27,2021-11-28
+Décimo tercera edición,2021-12-04,2021-12-05
+Décimo cuarta edición,2021-12-11,2021-12-12
+Décimo quinta edición,2021-12-18,2021-12-19
+Décimo sexta edición,2021-12-25,2021-12-26
+Décimo séptima edición,2021-12-31,2022-01-01
