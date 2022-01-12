@@ -157,6 +157,11 @@ proc_week_data <- function(infn) {
     relocate(id_centro_vacunacion, .before = centro_vacunacion)
 
   outfn <- str_replace(infn, "arrow_data", "arrow_augmented_data")
+  base_dir <- dirname(outfn)
+  # make base dir if it does not exist
+  if(!fs::dir_exists(base_dir)) {
+    fs::dir_create(base_dir)
+  }
   cli_progress_step(
     paste0(">>> Guardando datos aumentados en: ", outfn)
   )
