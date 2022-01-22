@@ -3,7 +3,6 @@ library(tidyverse)
 library(cli)
 library(lubridate, warn.conflicts = FALSE)
 library(arrow, warn.conflicts = FALSE)
-library(fst)
 
 cli_h1("Generando archivos resúmen")
 
@@ -375,7 +374,7 @@ write_csv(
 
 cli_h2("Generando archivos resúmen por UBIGEO (distrito) de la persona")
 
-ubigeos <- read_fst("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.fst")
+ubigeos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.parquet")
 
 cli_progress_step("Cargando los datos procesados con UBIGEO")
 vacunas_ubiraw <- open_dataset("tmp/arrow_augmented_data/") %>%
