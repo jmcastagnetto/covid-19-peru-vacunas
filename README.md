@@ -1,7 +1,7 @@
 # Datos de vacunación en Peru procesados, corregidos y resumidos
 
 [![DOI](https://zenodo.org/badge/342131396.svg)](https://zenodo.org/badge/latestdoi/342131396)
-
+[![License](https://img.shields.io/github/license/jmcastagnetto/covid-19-peru-vacunas)](LICENSE)
 
 ## Fuente
 
