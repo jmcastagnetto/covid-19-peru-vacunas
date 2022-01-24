@@ -1,7 +1,6 @@
 # Datos de vacunación en Peru procesados, corregidos y resumidos
 
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5748333.svg)](https://doi.org/10.5281/zenodo.5748333)
+[![DOI](https://zenodo.org/badge/342131396.svg)](https://zenodo.org/badge/latestdoi/342131396)
 
 
 ## Fuente
