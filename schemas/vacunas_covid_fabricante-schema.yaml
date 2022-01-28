@@ -1,0 +1,16 @@
+fields:
+  - name: location
+    type: string
+  - name: date
+    type: date
+  - name: vaccine
+    type: string
+  - name: vaccinations
+    type: integer
+  - name: total_vaccinations
+    type: integer
+  - name: flag_vacunacion_general
+    type: boolean
+missingValues:
+  - "NA"
+  - ""

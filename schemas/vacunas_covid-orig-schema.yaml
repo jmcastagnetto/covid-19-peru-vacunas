@@ -1,0 +1,25 @@
+# --------
+# metadata: vacunas_covid.csv
+# --------
+
+fields:
+  - name: id_persona
+    type: integer
+  - name: id_vacunados_covid19
+    type: integer
+  - name: fecha_vacunacion
+    type: date
+    format: "%Y%m%d"
+  - name: id_centro_vacunacion
+    type: integer
+  - name: id_vacuna
+    type: integer
+  - name: id_grupo_riesgo
+    type: integer
+  - name: dosis
+    type: integer
+  - name: id_eess
+    type: integer
+  - name: edad
+    type: integer
+

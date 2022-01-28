@@ -1,0 +1,16 @@
+fields:
+  - name: cantidad
+    type: integer
+  - name: fecha_de_llegada
+    type: string
+  - name: vacuna
+    type: string
+  - name: farmaceutica
+    type: string
+  - name: covax
+    type: boolean
+  - name: last_update
+    type: date
+missingValues:
+  - "NA"
+  - ""

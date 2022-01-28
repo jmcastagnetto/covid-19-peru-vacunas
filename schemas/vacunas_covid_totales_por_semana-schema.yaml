@@ -1,0 +1,22 @@
+fields:
+  - name: location
+    type: string
+  - name: epi_year
+    type: integer
+  - name: epi_week
+    type: integer
+  - name: last_day_of_epi_week
+    type: date
+  - name: complete_epi_week
+    type: integer
+  - name: vaccine_dose
+    type: integer
+  - name: vaccinations_epi_week
+    type: integer
+  - name: total_vaccinations
+    type: integer
+  - name: pct_total_population
+    type: number
+missingValues:
+  - "NA"
+  - ""

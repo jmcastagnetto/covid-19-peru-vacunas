@@ -1,0 +1,26 @@
+fields:
+  - name: fecha_corte
+    type: date
+  - name: ubigeo_persona
+    type: integer
+  - name: departamento
+    type: string
+  - name: provincia
+    type: string
+  - name: distrito
+    type: string
+  - name: macroregion_inei
+    type: string
+  - name: macroregion_minsa
+    type: string
+  - name: fabricante
+    type: string
+  - name: dosis
+    type: integer
+  - name: flag_vacunacion_general
+    type: boolean
+  - name: n_reg
+    type: integer
+missingValues:
+  - "NA"
+  - ""

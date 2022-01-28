@@ -1,0 +1,26 @@
+fields:
+  - name: fecha_corte
+    type: date
+  - name: epi_year
+    type: integer
+  - name: epi_week
+    type: integer
+  - name: last_day_of_epi_week
+    type: date
+  - name: complete_epi_week
+    type: integer
+  - name: rango_edad
+    type: string
+  - name: dosis
+    type: integer
+  - name: n
+    type: integer
+  - name: n_acum
+    type: integer
+  - name: pob2021
+    type: number
+  - name: pct_acum
+    type: number
+missingValues:
+  - "NA"
+  - ""

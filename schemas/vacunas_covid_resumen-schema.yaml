@@ -1,0 +1,16 @@
+fields:
+  - name: fecha_corte
+    type: date
+  - name: fecha_vacunacion
+    type: date
+  - name: fabricante
+    type: string
+  - name: dosis
+    type: integer
+  - name: flag_vacunacion_general
+    type: boolean
+  - name: n_reg
+    type: integer
+missingValues:
+  - "NA"
+  - ""

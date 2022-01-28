@@ -1,0 +1,10 @@
+fields:
+  - name: edicion
+    type: string
+  - name: fecha_inicio
+    type: date
+  - name: fecha_fin
+    type: date
+missingValues:
+  - "NA"
+  - ""
