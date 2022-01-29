@@ -1,0 +1,202 @@
+main:
+  tasks:
+    - path: datos/vacunas_covid_fabricante.csv
+      schema:
+        fields:
+          - name: location
+            type: string
+          - name: date
+            type: date
+          - name: vaccine
+            type: string
+          - name: vaccinations
+            type: integer
+          - name: total_vaccinations
+            type: integer
+          - name: flag_vacunacion_general
+            type: boolean
+        missingValues:
+          - "NA"
+          - ""
+    - path: datos/vacunas_covid_rangoedad_deciles.csv
+      schema:
+        fields:
+          - name: fecha_corte
+            type: date
+          - name: epi_year
+            type: integer
+          - name: epi_week
+            type: integer
+          - name: last_day_of_epi_week
+            type: date
+          - name: complete_epi_week
+            type: integer
+          - name: rango_edad
+            type: string
+          - name: dosis
+            type: integer
+          - name: n
+            type: integer
+          - name: n_acum
+            type: integer
+          - name: pob2021
+            type: integer
+          - name: pct_acum
+            type: number
+        missingValues:
+          - "NA"
+          - ""
+    - path: datos/vacunas_covid_rangoedad_owid.csv
+      schema:
+        fields:
+          - name: location
+            type: string
+          - name: fecha_corte
+            type: date
+          - name: epi_year
+            type: integer
+          - name: epi_week
+            type: integer
+          - name: last_day_of_epi_week
+            type: date
+          - name: complete_epi_week
+            type: integer
+          - name: age_group_min
+            type: integer
+          - name: age_group_max
+            type: integer
+          - name: people_vaccinated_per_hundred
+            type: number
+          - name: people_fully_vaccinated_per_hundred
+            type: number
+          - name: people_recieving_booster_per_hundred
+            type: number
+        missingValues:
+          - "NA"
+          - ""
+    - path: datos/vacunas_covid_rangoedad_quintiles.csv
+      schema:
+        fields:
+          - name: fecha_corte
+            type: date
+          - name: epi_year
+            type: integer
+          - name: epi_week
+            type: integer
+          - name: last_day_of_epi_week
+            type: date
+          - name: complete_epi_week
+            type: integer
+          - name: rango_edad
+            type: string
+          - name: dosis
+            type: integer
+          - name: n
+            type: integer
+          - name: n_acum
+            type: integer
+          - name: pob2021
+            type: number
+          - name: pct_acum
+            type: number
+        missingValues:
+          - "NA"
+          - ""
+    - path: datos/vacunas_covid_rangoedad_veintiles.csv
+      schema:
+        fields:
+          - name: fecha_corte
+            type: date
+          - name: epi_year
+            type: integer
+          - name: epi_week
+            type: integer
+          - name: last_day_of_epi_week
+            type: date
+          - name: complete_epi_week
+            type: integer
+          - name: rango_edad
+            type: string
+          - name: dosis
+            type: integer
+          - name: n
+            type: integer
+          - name: n_acum
+            type: integer
+          - name: pob2021
+            type: integer
+          - name: pct_acum
+            type: number
+        missingValues:
+          - "NA"
+          - ""
+    - path: datos/vacunas_covid_resumen.csv
+      schema:
+        fields:
+          - name: fecha_corte
+            type: date
+          - name: fecha_vacunacion
+            type: date
+          - name: fabricante
+            type: string
+          - name: dosis
+            type: integer
+          - name: flag_vacunacion_general
+            type: boolean
+          - name: n_reg
+            type: integer
+        missingValues:
+          - "NA"
+          - ""
+    - path: datos/vacunas_covid_totales_fabricante_ubigeo.csv
+      schema:
+        fields:
+          - name: fecha_corte
+            type: date
+          - name: ubigeo_persona
+            type: integer
+          - name: departamento
+            type: string
+          - name: provincia
+            type: string
+          - name: distrito
+            type: string
+          - name: macroregion_inei
+            type: string
+          - name: macroregion_minsa
+            type: string
+          - name: fabricante
+            type: string
+          - name: dosis
+            type: integer
+          - name: flag_vacunacion_general
+            type: boolean
+          - name: n_reg
+            type: integer
+        missingValues:
+          - "NA"
+          - ""
+    - path: datos/vacunas_covid_totales_por_semana.csv
+      schema:
+        fields:
+          - name: location
+            type: string
+          - name: epi_year
+            type: integer
+          - name: epi_week
+            type: integer
+          - name: last_day_of_epi_week
+            type: date
+          - name: complete_epi_week
+            type: integer
+          - name: vaccine_dose
+            type: integer
+          - name: vaccinations_epi_week
+            type: integer
+          - name: total_vaccinations
+            type: integer
+          - name: pct_total_population
+            type: number
+        missingValues:
+          - "NA"
+          - ""
