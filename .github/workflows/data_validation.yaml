@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+    paths:
+      - datos/vacunas_covid_resumen.csv
+      - datos/vacunas_covid_fabricante.csv
+      - datos/vacunas_covid_rangoedad_deciles.csv
+      - datos/vacunas_covid_rangoedad_owid.csv
+      - datos/vacunas_covid_rangoedad_quintiles.csv
+      - datos/vacunas_covid_rangoedad_veintiles.csv
+      - datos/vacunas_covid_totales_fabricante_ubigeo.csv
+      - datos/vacunas_covid_totales_por_semana.csv
 
 jobs:
   validate:
