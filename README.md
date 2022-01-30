@@ -2,6 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/342131396.svg)](https://zenodo.org/badge/latestdoi/342131396)
 [![License](https://img.shields.io/github/license/jmcastagnetto/covid-19-peru-vacunas)](LICENSE)
+[![Data_validation](https://github.com/jmcastagnetto/covid-19-peru-vacunas/actions/workflows/data_validation.yaml/badge.svg)](https://repository.frictionlessdata.io/report?user=jmcastagnetto&repo=covid-19-peru-vacunas&flow=data_validation)
 
 ## Fuente
 
@@ -168,3 +169,4 @@ Un buen artículo sobre este tema es [Get up to speed with partial clone and sha
 - 2021-10-01: A partir de hoy, estoy acumulando otro conjunto de datos, resumiendo el número de vacunados por UBIGEO (a nivel de distrito), fabricante y dosis
 - 2021-11-04: El formato de fechas ya no es mas "dd/mm/yyyy" sino "yyyymmdd"
 - 2021-12-03: OWID está usando los datos acumulados de vacunas por fabricante de este repositorio, para el Perú (ref: https://github.com/owid/covid-19-data/commit/e94d0639760d3a95f715c2d5e4db37814bd9c25b)
+- 2022-01-30: He agregado un github action para usar [Frictionless Repository](https://repository.frictionlessdata.io/) en la validación de los datos resumidos generados.
