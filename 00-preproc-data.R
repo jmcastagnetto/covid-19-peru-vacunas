@@ -3,6 +3,7 @@ library(vroom, warn.conflicts = FALSE)
 library(lubridate, warn.conflicts = FALSE)
 library(cli, warn.conflicts = FALSE)
 library(arrow, warn.conflicts = FALSE)
+library(collapse, warn.conflicts = FALSE, quietly = TRUE)
 
 options(cli.progress_show_after = 0)
 options(cli.progress_clear = FALSE)
@@ -10,7 +11,7 @@ options(cli.progress_clear = FALSE)
 cli_h1("Pre-procesando los datos")
 
 # separar datos por año y semana epi usando arrow
-cli_progress_step("Leyendo los datos originales")
+cli_progress_step("Leyendo los datos originales y agregando epi_year, epi_week, last/first day of epi_week")
 
 # vroom tiene mejor performance que readr::read_csv() o
 # que arrow::read_csv_arrow()
@@ -24,7 +25,7 @@ vac_raw <- vroom(
   progress = TRUE,
   altrep = TRUE
 ) %>%
-  mutate(
+  ftransform(
     epi_year = epiyear(fecha_vacunacion) %>% as.integer(),
     epi_week = epiweek(fecha_vacunacion) %>% as.integer(),
     first_day_of_epi_week = floor_date(fecha_vacunacion, 
@@ -32,9 +33,10 @@ vac_raw <- vroom(
                                        week_start = 7), # first dow
     last_day_of_epi_week = ceiling_date(fecha_vacunacion, 
                                         "weeks", 
-                                        week_start = 7), # last dow
+                                        week_start = 7) # last dow
   )
 
+cli_progress_step("Estructura de datos")
 str(vac_raw)
 
 cli_progress_step("Guardando datos por epi_year y epi_week como parquet files")
