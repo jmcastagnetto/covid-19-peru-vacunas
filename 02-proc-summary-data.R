@@ -21,11 +21,7 @@ vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
     epi_week,
     flag_vacunacion_general
   ) %>%
-  collect() %>%
-  mutate(
-    first_day_of_epi_week = floor_date(fecha_vacunacion, "weeks", week_start = 7), # first dow
-    last_day_of_epi_week = ceiling_date(fecha_vacunacion, "weeks", week_start = 7), # last dow
-  )
+  collect()
 
 cli_alert_info(
   glue::glue("Los datos abarcan desde el {min(vacunas$fecha_vacunacion, na.rm = TRUE)} hasta el {max(vacunas$fecha_vacunacion, na.rm = TRUE)}")

@@ -137,8 +137,6 @@ proc_week_data <- function(infn) {
       rango_edad_deciles = as.character(rango_edad_deciles),
       rango_edad_quintiles = as.character(rango_edad_quintiles),
       rango_edad_owid = as.character(rango_edad_owid),
-      #epi_week = epiweek(fecha_vacunacion),
-      #epi_year = epiyear(fecha_vacunacion),
       flag_vacunacion_general = if_else(
         (fecha_vacunacion > primer_lote_sinopharm &
            fabricante == "SINOPHARM") |

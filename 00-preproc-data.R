@@ -26,7 +26,13 @@ vac_raw <- vroom(
 ) %>%
   mutate(
     epi_year = epiyear(fecha_vacunacion) %>% as.integer(),
-    epi_week = epiweek(fecha_vacunacion) %>% as.integer()
+    epi_week = epiweek(fecha_vacunacion) %>% as.integer(),
+    first_day_of_epi_week = floor_date(fecha_vacunacion, 
+                                       "weeks", 
+                                       week_start = 7), # first dow
+    last_day_of_epi_week = ceiling_date(fecha_vacunacion, 
+                                        "weeks", 
+                                        week_start = 7), # last dow
   )
 
 str(vac_raw)
