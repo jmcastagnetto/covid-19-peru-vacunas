@@ -3,6 +3,7 @@ library(tidyverse)
 library(cli)
 library(lubridate, warn.conflicts = FALSE)
 library(arrow, warn.conflicts = FALSE)
+library(collapse)
 
 cli_h1("Generando archivos resúmen")
 
@@ -23,15 +24,17 @@ vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
   ) %>%
   collect()
 
+# not using fmin(), which gives a result that needs conversion to date
 cli_alert_info(
   glue::glue("Los datos abarcan desde el {min(vacunas$fecha_vacunacion, na.rm = TRUE)} hasta el {max(vacunas$fecha_vacunacion, na.rm = TRUE)}")
 )
 
-n_old_records <- nrow(
-  vacunas %>%
-    filter(flag_vacunacion_general == FALSE)
-)
-n_total <- nrow(vacunas)
+n_old_records <- fsubset(
+  vacunas,
+  flag_vacunacion_general == FALSE
+) %>%
+  fnrow()
+n_total <- fnrow(vacunas)
 
 cli_alert_info(
   glue::glue("Hay {format(n_old_records, big.mark = ',')} registros que no parecen ser parte de la vacunación general, de un total de {format(n_total, big.mark = ',')}. Estos corresponden a un {sprintf('%.4f%%', (n_old_records * 100 / n_total))} del total.")
@@ -39,6 +42,7 @@ cli_alert_info(
 
 current_year <- lubridate::epiyear(Sys.Date())
 
+# not using fmax(), which gives a result that needs conversion to date
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
 last_epi_week <- vacunas %>%
   select(epi_year, epi_week) %>%
@@ -65,9 +69,14 @@ vacunas <- vacunas %>%
 
 cli_progress_step("Acumulando por fecha de vacunación")
 vacunas_sumario <- vacunas %>%
-  group_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
-  tally(name = "n_reg") %>%
+  fgroup_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
+  fselect(n_reg = rango_edad_veintiles) %>%
+  fnobs() %>%
   add_column(fecha_corte = fecha_corte, .before = 1)
+#vacunas_sumario <- vacunas %>%
+#  group_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
+#  tally(name = "n_reg") %>%
+#  add_column(fecha_corte = fecha_corte, .before = 1)
 
 write_csv(
   vacunas_sumario,
@@ -79,6 +88,8 @@ saveRDS(
   vacunas_sumario,
   file = "datos/vacunas_covid_resumen.rds"
 )
+
+# ---- Code below needs change to use {collapse} functions ----
 
 cli_progress_step("Acumulando por dia y fabricante")
 
