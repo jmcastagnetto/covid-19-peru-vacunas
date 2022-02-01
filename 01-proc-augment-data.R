@@ -1,5 +1,6 @@
 library(tidyverse, warn.conflicts = FALSE)
 library(arrow, warn.conflicts = FALSE)
+library(collapse, warn.conflicts = FALSE)
 library(cli)
 
 vac_raw <- open_dataset("tmp/arrow_data/")
@@ -55,7 +56,7 @@ proc_week_data <- function(infn) {
         ),
       by = "id_centro_vacunacion"
     ) %>%
-    mutate(
+    fmutate(
       # imputar UBIGEO para los casos genéricos
       centro_vacunacion_ubigeo = if_else(
         centro_vacunacion == "MISMO ESTABLECIMIENTO DE SALUD",

@@ -9,8 +9,10 @@ cli_h1("Generando archivos resúmen")
 
 cli_progress_step("Cargando los datos procesados")
 
+# Arrow works with dplyr functions but not with collapse functions
 vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
   select(
+    id_vacunados_covid19,
     fecha_vacunacion,
     fabricante,
     dosis,
@@ -20,6 +22,8 @@ vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
     rango_edad_owid,
     epi_year,
     epi_week,
+    first_day_of_epi_week,
+    last_day_of_epi_week,
     flag_vacunacion_general
   ) %>%
   collect()
@@ -45,11 +49,11 @@ current_year <- lubridate::epiyear(Sys.Date())
 # not using fmax(), which gives a result that needs conversion to date
 fecha_corte <- max(vacunas$fecha_vacunacion, na.rm = TRUE)
 last_epi_week <- vacunas %>%
-  select(epi_year, epi_week) %>%
+  fselect(epi_year, epi_week) %>%
   distinct() %>%
-  filter(epi_year == current_year) %>%
-  filter(epi_week == max(epi_week, na.rm = TRUE)) %>%
-  select(epi_week) %>%
+  fsubset(epi_year == current_year) %>%
+  fsubset(epi_week == max(epi_week, na.rm = TRUE)) %>%
+  fselect(epi_week) %>%
   pull(epi_week)
 
 vacunas <- vacunas %>%
@@ -69,14 +73,9 @@ vacunas <- vacunas %>%
 
 cli_progress_step("Acumulando por fecha de vacunación")
 vacunas_sumario <- vacunas %>%
-  fgroup_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
-  fselect(n_reg = rango_edad_veintiles) %>%
-  fnobs() %>%
+  group_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
+  tally(name = "n_reg") %>%
   add_column(fecha_corte = fecha_corte, .before = 1)
-#vacunas_sumario <- vacunas %>%
-#  group_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
-#  tally(name = "n_reg") %>%
-#  add_column(fecha_corte = fecha_corte, .before = 1)
 
 write_csv(
   vacunas_sumario,
@@ -88,8 +87,6 @@ saveRDS(
   vacunas_sumario,
   file = "datos/vacunas_covid_resumen.rds"
 )
-
-# ---- Code below needs change to use {collapse} functions ----
 
 cli_progress_step("Acumulando por dia y fabricante")
 
@@ -137,7 +134,7 @@ saveRDS(
 cli_progress_step("Acumulando datos por semana epi, dosis y proporción de población total del Perú")
 
 pob_peru <- readRDS("datos/peru-poblacion2021-departamentos.rds") %>%
-  filter(departamento == "PERU") %>%
+  fsubset(departamento == "PERU") %>%
   pull(pob2021)
 
 vacunas_totales <- vacunas %>%
@@ -189,16 +186,19 @@ cli_progress_step("Acumulando datos por semana epi y rango de edades")
 # flag_vacunacion_general == TRUE
 
 vacunas <- vacunas %>%
-  filter(flag_vacunacion_general == TRUE) %>%
-  select(epi_year, epi_week,
-         last_day_of_epi_week,
-         complete_epi_week,
-         dosis,
-         rango_edad_veintiles,
-         rango_edad_deciles,
-         rango_edad_quintiles,
-         rango_edad_owid
-         ) %>%
+  fsubset(flag_vacunacion_general == TRUE) %>%
+  fselect(
+      id_vacunados_covid19,
+      epi_year, 
+      epi_week,
+      last_day_of_epi_week,
+      complete_epi_week,
+      dosis,
+      rango_edad_veintiles,
+      rango_edad_deciles,
+      rango_edad_quintiles,
+      rango_edad_owid
+  ) %>%
   add_column(
     fecha_corte = fecha_corte,
     .before = 1
@@ -211,7 +211,7 @@ quintiles <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
            rango_edad_quintiles, dosis) %>%
-  tally() %>%
+  tally(name = "n") %>%
   arrange(rango_edad_quintiles, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_quintiles, dosis) %>%
   mutate(
@@ -247,7 +247,7 @@ deciles <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
            rango_edad_deciles, dosis) %>%
-  tally() %>%
+  tally(name = "n") %>%
   arrange(rango_edad_deciles, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_deciles, dosis) %>%
   mutate(
@@ -277,12 +277,12 @@ write_csv(
 
 cli_inform("-> Por veintiles")
 pob_veintiles <- readRDS("datos/peru-pob2021-rango-etareo-veintiles.rds") %>%
-  select(rango, pob2021 = población)
+  fselect(rango, pob2021 = población)
 veintiles <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
            rango_edad_veintiles, dosis) %>%
-  tally() %>%
+  tally(name = "n") %>%
   arrange(rango_edad_veintiles, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_veintiles, dosis) %>%
   mutate(
@@ -317,11 +317,11 @@ owid <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
            rango_edad_owid, dosis) %>%
-  tally() %>%
+  tally(name = "n_reg") %>%
   arrange(rango_edad_owid, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_owid, dosis) %>%
   mutate(
-    n_acum = cumsum(n)
+    n_acum = cumsum(n_reg)
   ) %>%
   ungroup() %>%
   rename(rango_edad = rango_edad_owid) %>%
@@ -386,6 +386,7 @@ ubigeos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.p
 cli_progress_step("Cargando los datos procesados con UBIGEO")
 vacunas_ubiraw <- open_dataset("tmp/arrow_augmented_data/") %>%
   select(
+    id_vacunados_covid19,
     fecha_vacunacion,
     fabricante,
     dosis,
@@ -398,13 +399,14 @@ fecha_corte <- max(vacunas_ubiraw$fecha_vacunacion, na.rm = TRUE)
 
 cli_progress_step("Acumulando por UBIGEO de la persona")
 vacunas_ubigeo <- vacunas_ubiraw %>%
-  group_by(ubigeo_persona, fabricante, dosis, flag_vacunacion_general) %>%
-  tally(name = "n_reg") %>%
+  fgroup_by(ubigeo_persona, fabricante, dosis, flag_vacunacion_general) %>%
+  fselect(n_reg = id_vacunados_covid19) %>%
+  fnobs() %>%
   add_column(fecha_corte = fecha_corte, .before = 1) %>%
-  ungroup() %>%
+  fungroup() %>%
   left_join(
     ubigeos %>%
-      select(
+      fselect(
         ubigeo_persona = ubigeo_inei,
         departamento,
         provincia,
