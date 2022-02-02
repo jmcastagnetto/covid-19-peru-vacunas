@@ -18,10 +18,11 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          lfs: false
-          submodules: false
+          fetchdepth: 0
+
       - name: Validate data
         uses: frictionlessdata/repository@v1
