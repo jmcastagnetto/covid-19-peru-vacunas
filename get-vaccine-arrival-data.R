@@ -34,7 +34,8 @@ vaccine_arrivals <- tab1 %>%
     .before = 2
   ) %>%
   add_column(last_update = Sys.Date()) %>%
-  select(-ref)
+  select(-ref) %>%
+  filter(!is.na(cantidad))
 
 write_csv(
   vaccine_arrivals,
