@@ -10,5 +10,9 @@
 
     "title": "Datos de vacunación en Peru procesados, corregidos y resumidos",
 
-    "keywords": ["COVID-19", "Peru", "Vaccination"]
+    "keywords": ["COVID-19", "Peru", "Vaccination"],
+
+	"communities": [ 
+		{"identifier": "covid-19"}
+	]
 }
