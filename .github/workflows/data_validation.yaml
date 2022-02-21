@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetchdepth: 0
+          fetch-depth: 0
 
       - name: Validate data
         uses: frictionlessdata/repository@v1
