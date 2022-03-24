@@ -148,7 +148,7 @@ vacunas_totales <- vacunas %>%
   tally(name = "n_reg") %>%
   arrange(epi_year, epi_week, dosis) %>%
   group_by(
-    epi_year,
+    #epi_year, # acumlar a lo largo de los años
     dosis
   ) %>%
   mutate(
