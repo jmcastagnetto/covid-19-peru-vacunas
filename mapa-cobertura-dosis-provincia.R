@@ -17,7 +17,7 @@ peru_prov_map <- st_as_sf(peru_prov) %>%
   group_by(departamento, provincia) %>%
   summarise()
 
-pob2021 <- readRDS("datos/peru-pob2021-provincias.rds") %>%
+pob2021 <- readRDS("datos/peru-pob2022-provincias.rds") %>%
   select(
     ubigeo_prov = ubigeo,
     poblacion = total

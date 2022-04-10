@@ -133,9 +133,9 @@ saveRDS(
 
 cli_progress_step("Acumulando datos por semana epi, dosis y proporción de población total del Perú")
 
-pob_peru <- readRDS("datos/peru-poblacion2021-departamentos.rds") %>%
+pob_peru <- readRDS("datos/peru-pob2022-departamentos.rds") %>%
   fsubset(departamento == "PERU") %>%
-  pull(pob2021)
+  pull(total)
 
 vacunas_totales <- vacunas %>%
   filter(flag_vacunacion_general == TRUE) %>%
@@ -189,7 +189,7 @@ vacunas <- vacunas %>%
   fsubset(flag_vacunacion_general == TRUE) %>%
   fselect(
       id_vacunados_covid19,
-      epi_year, 
+      epi_year,
       epi_week,
       last_day_of_epi_week,
       complete_epi_week,
@@ -205,8 +205,8 @@ vacunas <- vacunas %>%
   )
 
 cli_inform("-> Por quintiles")
-pob_quintiles <- readRDS("datos/peru-pob2021-rango-etareo-quintiles.rds") %>%
-  select(rango, pob2021 = población)
+pob_quintiles <- readRDS("datos/peru-pob2022-rango-etareo-quintiles.rds") %>%
+  select(rango, pob2022 = población)
 quintiles <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
@@ -224,7 +224,7 @@ quintiles <- vacunas %>%
     by = c("rango_edad" = "rango")
   ) %>%
   mutate(
-    pct_acum = n_acum / pob2021
+    pct_acum = n_acum / pob2022
   ) %>%
   arrange(last_day_of_epi_week, rango_edad, dosis)
 
@@ -241,8 +241,8 @@ write_csv(
 
 
 cli_inform("-> Por deciles")
-pob_deciles <- readRDS("datos/peru-pob2021-rango-etareo-deciles.rds") %>%
-  select(rango, pob2021 = población)
+pob_deciles <- readRDS("datos/peru-pob2022-rango-etareo-deciles.rds") %>%
+  select(rango, pob2022 = población)
 deciles <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
@@ -260,7 +260,7 @@ deciles <- vacunas %>%
     by = c("rango_edad" = "rango")
   ) %>%
   mutate(
-    pct_acum = n_acum / pob2021
+    pct_acum = n_acum / pob2022
   ) %>%
   arrange(last_day_of_epi_week, rango_edad, dosis)
 
@@ -276,8 +276,8 @@ write_csv(
 )
 
 cli_inform("-> Por veintiles")
-pob_veintiles <- readRDS("datos/peru-pob2021-rango-etareo-veintiles.rds") %>%
-  fselect(rango, pob2021 = población)
+pob_veintiles <- readRDS("datos/peru-pob2022-rango-etareo-veintiles.rds") %>%
+  fselect(rango, pob2022 = población)
 veintiles <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
@@ -295,7 +295,7 @@ veintiles <- vacunas %>%
     by = c("rango_edad" = "rango")
   ) %>%
   mutate(
-    pct_acum = n_acum / pob2021
+    pct_acum = n_acum / pob2022
   ) %>%
   arrange(last_day_of_epi_week, rango_edad, dosis)
 
@@ -311,8 +311,8 @@ write_csv(
 )
 
 cli_inform("-> Por OWID")
-pob_owid <- readRDS("datos/peru-pob2021-rango-etareo-owid.rds") %>%
-  select(rango, pob2021 = población)
+pob_owid <- readRDS("datos/peru-pob2022-rango-etareo-owid.rds") %>%
+  select(rango, pob2022 = población)
 owid <- vacunas %>%
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
@@ -330,7 +330,7 @@ owid <- vacunas %>%
     by = c("rango_edad" = "rango")
   ) %>%
   mutate(
-    pct_acum = n_acum / pob2021
+    pct_acum = n_acum / pob2022
   ) %>%
   arrange(last_day_of_epi_week, rango_edad, dosis)
 
