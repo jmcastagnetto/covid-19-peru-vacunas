@@ -35,6 +35,9 @@ vac_raw <- vroom(
   mutate(
     last_day_of_epi_week = first_day_of_epi_week + 6 # last dow
   )
+cli_progress_step(paste0(">>> Orig. rows: ", nrow(vac_raw)))
+vac_raw <- distinct(vac_raw)
+cli_progress_step(paste0(">>> Distinct rows: ", nrow(vac_raw)))
 
 cli_progress_step("Estructura de datos")
 str(vac_raw)
@@ -44,6 +47,13 @@ write_dataset(
   vac_raw,
   path = "tmp/arrow_data/",
   partitioning = c("epi_year", "epi_week"),
+  existing_data_behavior = "overwrite"
+)
+cli_progress_step("Guardando datos por dosis y epi_year como parquet files")
+write_dataset(
+  vac_raw,
+  path = "tmp/arrow_data2/",
+  partitioning = c("dosis", "epi_year"),
   existing_data_behavior = "overwrite"
 )
 cli_progress_done()
