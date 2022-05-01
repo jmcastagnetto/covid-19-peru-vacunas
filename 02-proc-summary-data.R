@@ -71,6 +71,9 @@ vacunas <- vacunas %>%
     )
   )
 
+
+# Fecha de vacunación -----------------------------------------------------
+
 cli_progress_step("Acumulando por fecha de vacunación")
 vacunas_sumario <- vacunas %>%
   group_by(fecha_vacunacion, fabricante, dosis, flag_vacunacion_general) %>%
@@ -87,6 +90,9 @@ saveRDS(
   vacunas_sumario,
   file = "datos/vacunas_covid_resumen.rds"
 )
+
+
+# Por fabricante ----------------------------------------------------------
 
 cli_progress_step("Acumulando por dia y fabricante")
 
@@ -130,6 +136,9 @@ saveRDS(
   vacunas_fabricante,
   file = "datos/vacunas_covid_fabricante.rds"
 )
+
+# Por semana epi, dosis y % de población ----------------------------------
+
 
 cli_progress_step("Acumulando datos por semana epi, dosis y proporción de población total del Perú")
 
@@ -180,6 +189,9 @@ saveRDS(
   file = "datos/vacunas_covid_totales_por_semana.rds"
 )
 
+# Semana epi, rango de edades y % de población ----------------------------
+
+
 cli_progress_step("Acumulando datos por semana epi y rango de edades")
 
 # Sólo considerar los registros de la campaña general de vacunación
@@ -203,6 +215,9 @@ vacunas <- vacunas %>%
     fecha_corte = fecha_corte,
     .before = 1
   )
+
+# >> Quintiles ------------------------------------------------------------
+
 
 cli_inform("-> Por quintiles")
 pob_quintiles <- readRDS("datos/peru-pob2022-rango-etareo-quintiles.rds") %>%
@@ -240,6 +255,9 @@ write_csv(
 )
 
 
+# >> Deciles --------------------------------------------------------------
+
+
 cli_inform("-> Por deciles")
 pob_deciles <- readRDS("datos/peru-pob2022-rango-etareo-deciles.rds") %>%
   select(rango, pob2022 = población)
@@ -274,6 +292,9 @@ write_csv(
   file = "datos/vacunas_covid_rangoedad_deciles.csv",
   num_threads = 4
 )
+
+# >> Veintiles ------------------------------------------------------------
+
 
 cli_inform("-> Por veintiles")
 pob_veintiles <- readRDS("datos/peru-pob2022-rango-etareo-veintiles.rds") %>%
@@ -310,10 +331,13 @@ write_csv(
   num_threads = 4
 )
 
+# >> OWID -----------------------------------------------------------------
+
 cli_inform("-> Por OWID")
 pob_owid <- readRDS("datos/peru-pob2022-rango-etareo-owid.rds") %>%
   select(rango, pob2022 = población)
 owid <- vacunas %>%
+  filter(dosis <= 3) %>% # filter off dosis = 4, 5, 6, etc.
   group_by(fecha_corte, epi_year, epi_week,
            last_day_of_epi_week, complete_epi_week,
            rango_edad_owid, dosis) %>%
@@ -354,12 +378,12 @@ owid_format <- owid %>%
     into = c("age_group_min", "age_group_max"),
     sep = "-"
   ) %>%
-  filter(dosis <= 3) %>% # filter off dosis == 4,5,etc.
   mutate(
     dosis = case_when(
       dosis == 1 ~ "people_vaccinated_per_hundred",
       dosis == 2 ~ "people_fully_vaccinated_per_hundred",
-      dosis == 3 ~ "people_recieving_booster_per_hundred"
+      dosis == 3 ~ "people_recieving_booster_per_hundred",
+      TRUE ~ "WRONG"
     )
   ) %>%
   ungroup() %>%
@@ -378,6 +402,8 @@ write_csv(
   file = "datos/vacunas_covid_rangoedad_owid.csv",
   num_threads = 4
 )
+
+# Resúmen por UBIGEO ------------------------------------------------------
 
 cli_h2("Generando archivos resúmen por UBIGEO (distrito) de la persona")
 
