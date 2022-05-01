@@ -390,6 +390,10 @@ owid_format <- owid %>%
   pivot_wider(
     names_from = dosis,
     values_from = pct_acum
+  ) %>%
+  relocate(
+    people_recieving_booster_per_hundred,
+    .after = last_col()
   )
 
 saveRDS(
