@@ -39,7 +39,7 @@ main:
             type: integer
           - name: n_acum
             type: integer
-          - name: pob2021
+          - name: pob2022
             type: integer
           - name: pct_acum
             type: number
@@ -95,7 +95,7 @@ main:
             type: integer
           - name: n_acum
             type: integer
-          - name: pob2021
+          - name: pob2022
             type: number
           - name: pct_acum
             type: number
@@ -123,7 +123,7 @@ main:
             type: integer
           - name: n_acum
             type: integer
-          - name: pob2021
+          - name: pob2022
             type: integer
           - name: pct_acum
             type: number
