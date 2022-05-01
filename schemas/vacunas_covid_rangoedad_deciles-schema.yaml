@@ -17,10 +17,13 @@ fields:
     type: integer
   - name: n_acum
     type: integer
-  - name: pob2021
+  - name: pob2022
     type: integer
   - name: pct_acum
     type: number
+    constraints:
+      maximum: 100
+    description: is a percentage of the population
 missingValues:
   - "NA"
   - ""

@@ -43,6 +43,9 @@ main:
             type: integer
           - name: pct_acum
             type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
         missingValues:
           - "NA"
           - ""
@@ -67,10 +70,19 @@ main:
             type: integer
           - name: people_vaccinated_per_hundred
             type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
           - name: people_fully_vaccinated_per_hundred
             type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
           - name: people_recieving_booster_per_hundred
             type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
         missingValues:
           - "NA"
           - ""
@@ -99,6 +111,9 @@ main:
             type: number
           - name: pct_acum
             type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
         missingValues:
           - "NA"
           - ""
@@ -127,6 +142,9 @@ main:
             type: integer
           - name: pct_acum
             type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
         missingValues:
           - "NA"
           - ""
@@ -197,6 +215,9 @@ main:
             type: integer
           - name: pct_total_population
             type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
         missingValues:
           - "NA"
           - ""
