@@ -21,6 +21,11 @@ personas <- read_parquet(
 primer_lote_sinopharm <- as.Date("2021-02-07")
 primer_lote_pfizer <- as.Date("2021-03-03")
 primer_lote_astrazeneca <- as.Date("2021-04-18")
+primer_lote_moderna <- as.Date("2022-03-27")
+inicio_primera_dosis <- as.Date("2021-02-09")
+inicio_segunda_dosis <- as.Date("2021-03-02")
+inicio_tercera_dosis <- as.Date("2021-10-15")
+inicio_cuarta_dosis <- as.Date("2022-04-02")
 
 cli_progress_step("Combinando los datos de vacunación con los de referencia")
 
@@ -139,12 +144,26 @@ proc_week_data <- function(infn) {
       rango_edad_quintiles = as.character(rango_edad_quintiles),
       rango_edad_owid = as.character(rango_edad_owid),
       flag_vacunacion_general = if_else(
-        (fecha_vacunacion > primer_lote_sinopharm &
-           fabricante == "SINOPHARM") |
+        (
+          (fecha_vacunacion > primer_lote_sinopharm &
+             fabricante == "SINOPHARM") |
           (fecha_vacunacion > primer_lote_pfizer &
              fabricante == "PFIZER") |
           (fecha_vacunacion > primer_lote_astrazeneca &
-             fabricante == "ASTRAZENECA"),
+             fabricante == "ASTRAZENECA") |
+          (fecha_vacunacion > primer_lote_moderna &
+             fabricante == "MODERNA")
+        ) &
+        (
+          (fecha_vacunacion >= inicio_primera_dosis &
+             dosis == 1) |
+          (fecha_vacunacion >= inicio_segunda_dosis &
+             dosis == 2) |
+          (fecha_vacunacion >= inicio_tercera_dosis &
+             dosis == 3) |
+          (fecha_vacunacion >= inicio_cuarta_dosis &
+             dosis == 4)
+        ),
         TRUE,
         FALSE
       )
