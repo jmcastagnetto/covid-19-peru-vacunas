@@ -42,22 +42,23 @@ Los datos procesados incluyen:
 En las estructuras siguientes, el campo `flag_vacunacion_general` se define de las siguiente manera:
 
 ```
-flag_vacunacion_general = if 
+flag_vacunacion_general = IF 
   (
-    (fabricante == "SINOPHARM" & fecha_vacunacion > 2021-02-07) |
-    (fabricante == "PFIZER" & fecha_vacunacion > 2021-03-03) |
-    (fabricante == "ASTRAZENECA" & fecha_vacunacion > 2021-04-18) |
-    (fabricante == "MODERNA" & fecha_vacunacion > 2022-03-25)
-  ) &
+    (fabricante == "SINOPHARM" AND fecha_vacunacion > 2021-02-07)   OR
+    (fabricante == "PFIZER" AND fecha_vacunacion > 2021-03-03)      OR
+    (fabricante == "ASTRAZENECA" AND fecha_vacunacion > 2021-04-18) OR
+    (fabricante == "MODERNA" AND fecha_vacunacion > 2022-03-25)
+  ) 
+  AND
   (
-    (fecha_vacunacion >= 2021-02-09 & dosis == 1) |
-    (fecha_vacunacion >= 2021-03-02 & dosis == 2) |
-    (fecha_vacunacion >= 2021-10-15 & dosis == 3) |
-    (fecha_vacunacion >= 2022-04-02 & dosis == 4)
+    (fecha_vacunacion >= 2021-02-09 AND dosis == 1) OR
+    (fecha_vacunacion >= 2021-03-02 AND dosis == 2) OR
+    (fecha_vacunacion >= 2021-10-15 AND dosis == 3) OR
+    (fecha_vacunacion >= 2022-04-02 AND dosis == 4)
   )
-then
+THEN
   TRUE
-else
+ELSE
   FALSE
 ```
 
