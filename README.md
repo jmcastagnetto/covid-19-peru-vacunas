@@ -13,16 +13,24 @@ Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVI
 - La primera vacuna (Sinopharm) de la campaña general de vacunación contra el COVID-19 en Perú se puso el 2021-02-09 (el primer lote de vacunas llegó el 2021-02-07), por lo que las fechas anteriores a ese día en los datos abiertos que publica el MINSA, corresponden a un número parcial y comparativamente pequeño de registros de las dosis aplicadas durante los ensayos clínicos que se hicieron en el país, y, posiblemente, de dosis aplicadas a peruanos en el extranjero.
 
 - Para poder distinguir si los registros de fechas posteriores al 2021-02-08 puedan corresponder a vacunaciones que no son parte de la campaña general, se pueden tomar en cuenta las siguientes fechas:
-	- El primer lote de vacunas de Sinopharm (Beijing) llegó el 2021-02-07 (referencia: https://andina.pe/agencia/noticia-lote-vacunas-llega-a-los-almacenes-talma-832838.aspx)
-	- El primer lote de vacunas de Pfizer/BioNTech llegó el 2021-03-03 (referencia: https://elperuano.pe/noticia/116268-primer-lote-de-50000-vacunas-de-pfizer-llegara-manana-al-pais-anuncia-jefe-del-estado)
-	- El primer lote de vacunas de Oxford/AstraZeneca llegó el 2021-04-18 (referncia: https://www.minsa.gob.pe/newsletter/2021/edicion-64/nota2/index.html)
-  - El primer lote de vacunas de Moderna llegó el 2022-03-27 (referencia: https://andina.pe/agencia/noticia-covid19-llego-al-peru-lote-mas-12-millones-dosis-de-vacuna-moderna-886436.aspx)
+
+**Fechas de llegada de primeros lotes por fabricante**
+
+| Fabricante | Fecha de llegada del primer lote | Referencia |
+| ---------- | ----------- | ---------- |
+| Sinopharm (Beijing) | 2021-02-07 | https://andina.pe/agencia/noticia-lote-vacunas-llega-a-los-almacenes-talma-832838.aspx |
+| Pfizer/BioNTech | 2021-03-03 | https://elperuano.pe/noticia/116268-primer-lote-de-50000-vacunas-de-pfizer-llegara-manana-al-pais-anuncia-jefe-del-estado |
+| Oxford/AstraZeneca | 2021-04-18 | https://www.minsa.gob.pe/newsletter/2021/edicion-64/nota2/index.html |
+| Moderna | 2022-03-27 | https://andina.pe/agencia/noticia-covid19-llego-al-peru-lote-mas-12-millones-dosis-de-vacuna-moderna-886436.aspx |
 
 - Adicionalmente, los inicios de cada campaña de vacunación por número de dosis han sido:
-  - Primera dosis: 2021-02-09 (referencia: https://gestion.pe/peru/vacuna-covid-19-peru-presidente-sagasti-recibio-dosis-de-vacuna-sinopharm-contra-covid-19-coronavirus-segunda-ola-nndc-noticia/) 
-  - Segunda dosis: 2021-03-02 (referencia: https://andina.pe/agencia/noticia-presidente-sagasti-recibe-segunda-dosis-de-vacuna-contra-covid19-835719.aspx)
-  - Tercera dosis (Primera de refuerzo): 2021-10-15 (referencia: https://elcomercio.pe/lima/sucesos/tercera-dosis-en-peru-hoy-se-inicia-la-inmunizacion-a-personal-de-salud-y-esto-es-todo-lo-que-tienes-que-saber-covid-19-tercera-ola-coronavirus-nndc-noticia/)
-  - Cuarta dosis (Segunda de refuerzo): 2022-04-02 (referencia: https://www.swissinfo.ch/spa/coronavirus-per%C3%BA_per%C3%BA-aplicar%C3%A1-una-cuarta-dosis-de-la-vacuna-contra-la-covid-19/47484482)
+
+| Dosis | Fecha de inicio | Referencia |
+| ----- | --------------- | ---------- |
+| Primera | 2021-02-09 | https://gestion.pe/peru/vacuna-covid-19-peru-presidente-sagasti-recibio-dosis-de-vacuna-sinopharm-contra-covid-19-coronavirus-segunda-ola-nndc-noticia/ |
+| Segunda | 2021-03-02 | https://andina.pe/agencia/noticia-presidente-sagasti-recibe-segunda-dosis-de-vacuna-contra-covid19-835719.aspx |
+| Tercera (Primer refuerzo) | 2021-10-15 | https://elcomercio.pe/lima/sucesos/tercera-dosis-en-peru-hoy-se-inicia-la-inmunizacion-a-personal-de-salud-y-esto-es-todo-lo-que-tienes-que-saber-covid-19-tercera-ola-coronavirus-nndc-noticia/ |
+| Cuarta (Segundo refuerzo) | 2022-04-02 | https://www.swissinfo.ch/spa/coronavirus-per%C3%BA_per%C3%BA-aplicar%C3%A1-una-cuarta-dosis-de-la-vacuna-contra-la-covid-19/47484482 |
 
 ## Contenido y estructura de los datos
 
@@ -35,9 +43,18 @@ En las estructuras siguientes, el campo `flag_vacunacion_general` se define de l
 
 ```
 flag_vacunacion_general = if 
-  (fabricante == "SINOPHARM" & fecha_vacunacion > 2021-02-07) |
-  (fabricante == "PFIZER" & fecha_vacunacion > 2021-03-03) |
-  (fabricante == "ASTRAZENECA" & fecha_vacunacion > 2021-04-18) 
+  (
+    (fabricante == "SINOPHARM" & fecha_vacunacion > 2021-02-07) |
+    (fabricante == "PFIZER" & fecha_vacunacion > 2021-03-03) |
+    (fabricante == "ASTRAZENECA" & fecha_vacunacion > 2021-04-18) |
+    (fabricante == "MODERNA" & fecha_vacunacion > 2022-03-25)
+  ) &
+  (
+    (fecha_vacunacion >= 2021-02-09 & dosis == 1) |
+    (fecha_vacunacion >= 2021-03-02 & dosis == 2) |
+    (fecha_vacunacion >= 2021-10-15 & dosis == 3) |
+    (fecha_vacunacion >= 2022-04-02 & dosis == 4)
+  )
 then
   TRUE
 else
