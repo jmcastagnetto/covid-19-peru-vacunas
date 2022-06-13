@@ -197,3 +197,4 @@ Un buen artículo sobre este tema es [Get up to speed with partial clone and sha
 - 2021-11-04: El formato de fechas ya no es mas "dd/mm/yyyy" sino "yyyymmdd"
 - 2021-12-03: OWID está usando los datos acumulados de vacunas por fabricante de este repositorio, para el Perú (ref: https://github.com/owid/covid-19-data/commit/e94d0639760d3a95f715c2d5e4db37814bd9c25b)
 - 2022-01-30: He agregado un github action para usar [Frictionless Repository](https://repository.frictionlessdata.io/) en la validación de los datos resumidos generados.
+- 2022-06-13: En Junio del 2022, los datos estan siendo geo-bloqueados para cualquiera con IP que no esté en Perú. Además, la estructura de datos a cambiado, perdiéndose la información de ubigeos que se tenía antes.
