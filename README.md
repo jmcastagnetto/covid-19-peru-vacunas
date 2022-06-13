@@ -8,6 +8,8 @@
 
 Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVID-19 en Perú: https://www.datosabiertos.gob.pe/dataset/vacunacion
 
+**Desde inicios de Junio del 2022, los datos publicados ya no son "abiertos" en sentido estricto, pues ahora estan siendo geo-bloqueados desde cualquier sitio que no corresponda a una dirección de IP de Perú**
+
 **Notas importantes**:
 
 - La primera vacuna (Sinopharm) de la campaña general de vacunación contra el COVID-19 en Perú se puso el 2021-02-09 (el primer lote de vacunas llegó el 2021-02-07), por lo que las fechas anteriores a ese día en los datos abiertos que publica el MINSA, corresponden a un número parcial y comparativamente pequeño de registros de las dosis aplicadas durante los ensayos clínicos que se hicieron en el país, y, posiblemente, de dosis aplicadas a peruanos en el extranjero.
