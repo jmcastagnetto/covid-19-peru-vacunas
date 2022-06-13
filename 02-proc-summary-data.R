@@ -12,7 +12,7 @@ cli_progress_step("Cargando los datos procesados")
 # Arrow works with dplyr functions but not with collapse functions
 vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
   select(
-    id_vacunados_covid19,
+    uuid,
     fecha_vacunacion,
     fabricante,
     dosis,
@@ -200,7 +200,7 @@ cli_progress_step("Acumulando datos por semana epi y rango de edades")
 vacunas <- vacunas %>%
   fsubset(flag_vacunacion_general == TRUE) %>%
   fselect(
-      id_vacunados_covid19,
+      uuid,
       epi_year,
       epi_week,
       last_day_of_epi_week,
@@ -409,62 +409,62 @@ write_csv(
 
 # Resúmen por UBIGEO ------------------------------------------------------
 
-cli_h2("Generando archivos resúmen por UBIGEO (distrito) de la persona")
-
-ubigeos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.parquet")
-
-cli_progress_step("Cargando los datos procesados con UBIGEO")
-vacunas_ubiraw <- open_dataset("tmp/arrow_augmented_data/") %>%
-  select(
-    id_vacunados_covid19,
-    fecha_vacunacion,
-    fabricante,
-    dosis,
-    ubigeo_persona,
-    flag_vacunacion_general
-  ) %>%
-  collect()
-
-fecha_corte <- max(vacunas_ubiraw$fecha_vacunacion, na.rm = TRUE)
-
-cli_progress_step("Acumulando por UBIGEO de la persona")
-vacunas_ubigeo <- vacunas_ubiraw %>%
-  fgroup_by(ubigeo_persona, fabricante, dosis, flag_vacunacion_general) %>%
-  fselect(n_reg = id_vacunados_covid19) %>%
-  fnobs() %>%
-  add_column(fecha_corte = fecha_corte, .before = 1) %>%
-  fungroup() %>%
-  left_join(
-    ubigeos %>%
-      fselect(
-        ubigeo_persona = ubigeo_inei,
-        departamento,
-        provincia,
-        distrito,
-        macroregion_inei,
-        macroregion_minsa
-      ),
-    by = "ubigeo_persona"
-  ) %>%
-  relocate(
-    departamento,
-    provincia,
-    distrito,
-    macroregion_inei,
-    macroregion_minsa,
-    .before = fabricante
-  )
-
-write_csv(
-  vacunas_ubigeo,
-  file = "datos/vacunas_covid_totales_fabricante_ubigeo.csv",
-  num_threads = 4
-)
-
-saveRDS(
-  vacunas_ubigeo,
-  file = "datos/vacunas_covid_totales_fabricante_ubigeo.rds"
-)
+# cli_h2("Generando archivos resúmen por UBIGEO (distrito) de la persona")
+#
+# ubigeos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.parquet")
+#
+# cli_progress_step("Cargando los datos procesados con UBIGEO")
+# vacunas_ubiraw <- open_dataset("tmp/arrow_augmented_data/") %>%
+#   select(
+#     uuid,
+#     fecha_vacunacion,
+#     fabricante,
+#     dosis,
+#     ubigeo_persona,
+#     flag_vacunacion_general
+#   ) %>%
+#   collect()
+#
+# fecha_corte <- max(vacunas_ubiraw$fecha_vacunacion, na.rm = TRUE)
+#
+# cli_progress_step("Acumulando por UBIGEO de la persona")
+# vacunas_ubigeo <- vacunas_ubiraw %>%
+#   fgroup_by(ubigeo_persona, fabricante, dosis, flag_vacunacion_general) %>%
+#   fselect(n_reg = id_vacunados_covid19) %>%
+#   fnobs() %>%
+#   add_column(fecha_corte = fecha_corte, .before = 1) %>%
+#   fungroup() %>%
+#   left_join(
+#     ubigeos %>%
+#       fselect(
+#         ubigeo_persona = ubigeo_inei,
+#         departamento,
+#         provincia,
+#         distrito,
+#         macroregion_inei,
+#         macroregion_minsa
+#       ),
+#     by = "ubigeo_persona"
+#   ) %>%
+#   relocate(
+#     departamento,
+#     provincia,
+#     distrito,
+#     macroregion_inei,
+#     macroregion_minsa,
+#     .before = fabricante
+#   )
+#
+# write_csv(
+#   vacunas_ubigeo,
+#   file = "datos/vacunas_covid_totales_fabricante_ubigeo.csv",
+#   num_threads = 4
+# )
+#
+# saveRDS(
+#   vacunas_ubigeo,
+#   file = "datos/vacunas_covid_totales_fabricante_ubigeo.rds"
+# )
 
 cli_process_done()
 

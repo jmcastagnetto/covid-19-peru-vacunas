@@ -6,17 +6,8 @@ library(cli)
 vac_raw <- open_dataset("tmp/arrow_data/")
 
 cli_progress_step("Leyendo los datos de referencia")
-eess <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/eess.parquet")
-vacs <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/vacunas.parquet")
-centros <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/centro_vacunacion.parquet")
-grupos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/grupo_riesgo.parquet")
-ubigeos <- read_parquet("~/devel/local/datos-accessorios-vacunas/datos/ubigeos.parquet")
 
 cli_progress_step("Leyendo los datos de personas")
-personas <- read_parquet(
-  "~/devel/local/datos-accessorios-vacunas/datos/personas.parquet",
-  col_select = c("id_persona", "sexo", "ubigeo")
-) %>% rename(ubigeo_persona = ubigeo)
 
 primer_lote_sinopharm <- as.Date("2021-02-07")
 primer_lote_pfizer <- as.Date("2021-03-03")
@@ -34,40 +25,7 @@ proc_week_data <- function(infn) {
   wkdata <- read_parquet(infn)
   vacunas <- wkdata %>%
     collect() %>%
-    rename(id_gruporiesgo = id_grupo_riesgo) %>%
-    left_join(personas, by = "id_persona") %>%
-    left_join(grupos %>%
-                rename(grupo_riesgo = desc_gruporiesgo),
-              by = "id_gruporiesgo")  %>%
-    left_join(vacs %>% rename(fabricante_pais = pais), by = "id_vacuna") %>%
-    left_join(
-      eess %>%
-        select(
-          id_eess,
-          eess = nombre,
-          eess_diresa = diresa,
-          eess_categoria = categoria,
-          eess_ubigeo = ubigeo
-        ),
-      by = "id_eess"
-    ) %>%
-    left_join(
-      centros %>%
-        select(
-          id_centro_vacunacion,
-          centro_vacunacion = nombre,
-          centro_vacunacion_entidad_admin = entidad_administra,
-          centro_vacunacion_ubigeo = ubigeo
-        ),
-      by = "id_centro_vacunacion"
-    ) %>%
     fmutate(
-      # imputar UBIGEO para los casos genéricos
-      centro_vacunacion_ubigeo = if_else(
-        centro_vacunacion == "MISMO ESTABLECIMIENTO DE SALUD",
-        eess_ubigeo,
-        centro_vacunacion_ubigeo
-      ),
       rango_edad = cut(
         edad,
         c(seq(0, 80, 20), 130),
@@ -167,12 +125,7 @@ proc_week_data <- function(infn) {
         TRUE,
         FALSE
       )
-    ) %>%
-    relocate(id_vacunados_covid19, .before = 1) %>%
-    relocate(id_vacuna, .before = fabricante) %>%
-    relocate(id_gruporiesgo, .before = grupo_riesgo) %>%
-    relocate(id_eess, .before = eess) %>%
-    relocate(id_centro_vacunacion, .before = centro_vacunacion)
+    )
 
   outfn <- str_replace(infn, "arrow_data", "arrow_augmented_data")
   base_dir <- dirname(outfn)
