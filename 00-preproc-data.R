@@ -24,9 +24,9 @@ vac_raw <- read_csv_arrow(
                                        week_start = 7), # first dow
     last_day_of_epi_week = first_day_of_epi_week + 6 # last dow
   )
-#cli_progress_step(paste0(">>> Orig. rows: ", nrow(vac_raw)))
-#vac_raw <- distinct(vac_raw)
-#cli_progress_step(paste0(">>> Distinct rows: ", nrow(vac_raw)))
+cli_progress_step(paste0(">>> Orig. rows: ", nrow(vac_raw)))
+vac_raw <- distinct(vac_raw)
+cli_progress_step(paste0(">>> Distinct rows: ", nrow(vac_raw)))
 
 cli_progress_step("Estructura de datos")
 str(vac_raw)
