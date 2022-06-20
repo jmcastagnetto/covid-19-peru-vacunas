@@ -28,7 +28,7 @@ vac_raw <- read_csv_arrow(
 #vac_raw <- distinct(vac_raw)
 #cli_progress_step(paste0(">>> Distinct rows: ", nrow(vac_raw)))
 
-cli_information("Estructura de datos")
+cli_inform("Estructura de datos")
 str(vac_raw)
 
 cli_progress_step("Guardando datos por epi_year y epi_week como parquet files")
