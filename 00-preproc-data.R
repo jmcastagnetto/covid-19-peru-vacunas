@@ -30,6 +30,7 @@ vac_raw <- read_csv_arrow(
 
 cli_inform("Estructura de datos")
 str(vac_raw)
+gc()
 
 cli_progress_step("Guardando datos por epi_year y epi_week como parquet files")
 write_dataset(
@@ -38,13 +39,13 @@ write_dataset(
   partitioning = c("epi_year", "epi_week"),
   existing_data_behavior = "overwrite"
 )
-cli_progress_step("Guardando datos por dosis y epi_year como parquet files")
-write_dataset(
-  vac_raw,
-  path = "tmp/arrow_data2/",
-  partitioning = c("dosis", "epi_year"),
-  existing_data_behavior = "overwrite"
-)
-cli_progress_done()
-
+#cli_progress_step("Guardando datos por dosis y epi_year como parquet files")
+#write_dataset(
+#  vac_raw,
+#  path = "tmp/arrow_data2/",
+#  partitioning = c("dosis", "epi_year"),
+#  existing_data_behavior = "overwrite"
+#)
+#cli_progress_done()
+#
 cli_alert_success("Pre-proceso de datos finalizado")
