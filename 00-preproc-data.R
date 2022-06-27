@@ -39,6 +39,7 @@ write_dataset(
   partitioning = c("epi_year", "epi_week"),
   existing_data_behavior = "overwrite"
 )
+#gc()
 #cli_progress_step("Guardando datos por dosis y epi_year como parquet files")
 #write_dataset(
 #  vac_raw,
@@ -46,6 +47,6 @@ write_dataset(
 #  partitioning = c("dosis", "epi_year"),
 #  existing_data_behavior = "overwrite"
 #)
-#cli_progress_done()
-#
+cli_progress_done()
+
 cli_alert_success("Pre-proceso de datos finalizado")
