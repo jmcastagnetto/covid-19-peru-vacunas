@@ -18,6 +18,8 @@ add-commit-push-weekly-csv.sh
 tmp/*
 actualizar-datos-local.sh
 actualizar-datos-manual.sh
+getdata.sh
+pushdata.sh
 
 # local full data files
 datos/vacunas_covid_aumentada*.rds
