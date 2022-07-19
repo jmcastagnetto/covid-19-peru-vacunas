@@ -105,7 +105,7 @@ vacunas_fabricante <- vacunas_sumario %>%
   arrange(fabricante, fecha_vacunacion) %>%
   group_by(fabricante, flag_vacunacion_general) %>%
   mutate(
-    total_vaccinations = cumsum(n_reg_day),
+    total_vaccinations = cumsum(replace_na(n_reg_day, 0)),
     fabricante = str_replace_all(
       fabricante,
       c(
@@ -143,8 +143,10 @@ saveRDS(
 cli_progress_step("Acumulando datos por semana epi, dosis y proporción de población total del Perú")
 
 pob_peru <- readRDS("datos/peru-pob2022-departamentos.rds") %>%
-  fsubset(departamento == "PERU") %>%
+  filter(departamento == "PERU") %>%
   pull(total)
+
+gc()
 
 vacunas_totales <- vacunas %>%
   filter(flag_vacunacion_general == TRUE) %>%
@@ -157,11 +159,11 @@ vacunas_totales <- vacunas %>%
   tally(name = "n_reg") %>%
   arrange(epi_year, epi_week, dosis) %>%
   group_by(
-    #epi_year, # acumlar a lo largo de los años
+    #epi_year, # acumular a lo largo de los años
     dosis
   ) %>%
   mutate(
-    total_vaccinations = cumsum(n_reg),
+    total_vaccinations = cumsum(replace_na(n_reg, 0)),
     pct_total_population = 100 * total_vaccinations / pob_peru
   ) %>%
   add_column(location = "Peru", .before = 1) %>%
@@ -230,7 +232,7 @@ quintiles <- vacunas %>%
   arrange(rango_edad_quintiles, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_quintiles, dosis) %>%
   mutate(
-    n_acum = cumsum(n)
+    n_acum = cumsum(replace_na(n, 0)) # avoid NAs affecting cummulative sum
   ) %>%
   ungroup() %>%
   rename(rango_edad = rango_edad_quintiles) %>%
@@ -269,7 +271,7 @@ deciles <- vacunas %>%
   arrange(rango_edad_deciles, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_deciles, dosis) %>%
   mutate(
-    n_acum = cumsum(n)
+    n_acum = cumsum(replace_na(n, 0)) # avoid NAs affecting cummulative sum
   ) %>%
   ungroup() %>%
   rename(rango_edad = rango_edad_deciles) %>%
@@ -307,7 +309,7 @@ veintiles <- vacunas %>%
   arrange(rango_edad_veintiles, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_veintiles, dosis) %>%
   mutate(
-    n_acum = cumsum(n)
+    n_acum = cumsum(replace_na(n, 0)) # avoid NAs affecting cummulative sum
   ) %>%
   ungroup() %>%
   rename(rango_edad = rango_edad_veintiles) %>%
@@ -345,7 +347,7 @@ owid <- vacunas %>%
   arrange(rango_edad_owid, dosis, last_day_of_epi_week) %>%
   group_by(rango_edad_owid, dosis) %>%
   mutate(
-    n_acum = cumsum(n_reg)
+    n_acum = cumsum(replace_na(n_reg, 0)) # avoid NAs affecting cummulative sum
   ) %>%
   ungroup() %>%
   rename(rango_edad = rango_edad_owid) %>%
