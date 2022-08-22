@@ -8,7 +8,7 @@
 
 Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVID-19 en Perú: https://www.datosabiertos.gob.pe/dataset/vacunacion
 
-**Desde inicios de Junio del 2022, los datos publicados ya no son "abiertos" en sentido estricto, pues ahora estan siendo geo-bloqueados desde cualquier sitio que no corresponda a una dirección de IP de Perú**
+**Desde inicios de Junio del 2022, los datos publicados ya no son "abiertos" en sentido estricto, pues ahora están siendo geo-bloqueados desde cualquier sitio que no corresponda a una dirección de IP de Perú**
 
 **Notas importantes**:
 
@@ -110,25 +110,6 @@ ELSE
 | `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
 
 
-### Estructura de datos acumulados por UBIGEO, fabricante y dosis
-
-- [datos/vacunas_covid_totales_fabricante_ubigeo.csv](datos/vacunas_covid_totales_fabricante_ubigeo.csv)
-
-| Campo               | Contenido                                                   |
-| :------------------ | :---------------------------------------------------------- |
-| `fecha_corte`       | Fecha de corte para los datos (YYYY-MM-DD)                  |
-| `ubigeo_persona`    | UBIGEO de la persona                                        |
-| `departamento`      | Departamento correspondiente al UBIGEO                      |
-| `provincia`         | Provincia correspondiente al UBIGEO                         |
-| `distrito`          | Distrito correspondiente al UBIGEO                          |
-| `macroregion_inei`  | Macroregión según INEI                                      |
-| `macroregion_minsa` | Macroregión según MINSA                                     |
-| `fabricante`        | Fabricante de la vacuna                                     |
-| `dosis`             | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
-| `n_reg`             | Número de vacunaciones (registros)                          |
-| `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
-
-
 ### Estructura de datos por semana epidemiológica y rango de edades:
 
 _Nota_: Estos datos contemplan solamente los registros para los cuales `flag_vacunacion_general == TRUE`
@@ -175,6 +156,31 @@ _Notas_: Estos datos contemplan solamente los registros para los cuales `flag_va
 | `people_recieving_booster_per_hundred` | Personas por cada cien que han recibido refuerzo (dosis = 3)            |
 
 
+
+
+## Datos que no se están actualizando
+
+Debido al cambio en la estructura de los datos originales, ya no es simple el enlazar la información con datos como el UBIGEO, macroregiones, etc., de manera que los datos listados a continuación ya no van a actualizar.
+
+### Estructura de datos acumulados por UBIGEO, fabricante y dosis
+
+- [datos/vacunas_covid_totales_fabricante_ubigeo.csv](datos/vacunas_covid_totales_fabricante_ubigeo.csv)
+
+| Campo               | Contenido                                                   |
+| :------------------ | :---------------------------------------------------------- |
+| `fecha_corte`       | Fecha de corte para los datos (YYYY-MM-DD)                  |
+| `ubigeo_persona`    | UBIGEO de la persona                                        |
+| `departamento`      | Departamento correspondiente al UBIGEO                      |
+| `provincia`         | Provincia correspondiente al UBIGEO                         |
+| `distrito`          | Distrito correspondiente al UBIGEO                          |
+| `macroregion_inei`  | Macroregión según INEI                                      |
+| `macroregion_minsa` | Macroregión según MINSA                                     |
+| `fabricante`        | Fabricante de la vacuna                                     |
+| `dosis`             | Dosis de la vacuna (1 = primera, 2 = segunda, 3 = refuerzo) |
+| `n_reg`             | Número de vacunaciones (registros)                          |
+| `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
+
+
 ## Acerca de clonar este repositorio
 
 Si quieres hacer un clon de este repositorio, cuya historia contiene muchos archivos grandes (blobs), te sugiero que hagas un "blob-less" clone, de manera que sólo descargas lo mas reciente y si lo requieres puedes obtener los anteriores, algo como:
@@ -198,3 +204,4 @@ Un buen artículo sobre este tema es [Get up to speed with partial clone and sha
 - 2021-12-03: OWID está usando los datos acumulados de vacunas por fabricante de este repositorio, para el Perú (ref: https://github.com/owid/covid-19-data/commit/e94d0639760d3a95f715c2d5e4db37814bd9c25b)
 - 2022-01-30: He agregado un github action para usar [Frictionless Repository](https://repository.frictionlessdata.io/) en la validación de los datos resumidos generados.
 - 2022-06-13: En Junio del 2022, los datos estan siendo geo-bloqueados para cualquiera con IP que no esté en Perú. Además, la estructura de datos a cambiado, perdiéndose la información de ubigeos que se tenía antes.
+- 2022-08-28: A partir de la actualización de esta fecha, los resultados intermedios ya no se almacenan en formato Parquet de Arrow, sino en una base de datos de duckdb (https://duckdb.org)
