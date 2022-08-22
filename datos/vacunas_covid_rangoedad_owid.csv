@@ -1,4 +1,4 @@
-location,fecha_corte,epi_year,epi_week,last_day_of_epi_week,complete_epi_week,age_group_min,age_group_max,people_vaccinated_per_hundred,people_fully_vaccinated_per_hundred,people_recieving_booster_per_hundred,people_recieving_second_booster_per_hundred
+location,fecha_corte,epi_year,epi_week,last_day_of_epi_week,complete_epi_week,age_group_min,age_group_max,people_vaccinated_per_hundred,people_fully_vaccinated_per_hundred,people_receiving_booster_per_hundred,people_receiving_second_booster_per_hundred
 Peru,2022-08-21,2021,6,2021-02-13,1,0,17,0,NA,NA,NA
 Peru,2022-08-21,2021,6,2021-02-13,1,18,24,0.0417,NA,NA,NA
 Peru,2022-08-21,2021,6,2021-02-13,1,25,49,0.6128,NA,NA,NA

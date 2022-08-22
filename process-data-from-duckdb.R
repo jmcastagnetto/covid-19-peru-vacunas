@@ -591,8 +591,8 @@ owid_format <- vacunas_owid %>%
     dosis = case_when(
       dosis == 1 ~ "people_vaccinated_per_hundred",
       dosis == 2 ~ "people_fully_vaccinated_per_hundred",
-      dosis == 3 ~ "people_recieving_booster_per_hundred",
-      dosis == 4 ~ "people_recieving_second_booster_per_hundred",
+      dosis == 3 ~ "people_receiving_booster_per_hundred",
+      dosis == 4 ~ "people_receiving_second_booster_per_hundred",
       TRUE ~ "WRONG"
     )
   ) %>%
@@ -603,8 +603,8 @@ owid_format <- vacunas_owid %>%
     values_from = pct_acum
   ) %>%
   relocate(
-    people_recieving_booster_per_hundred,
-    people_recieving_second_booster_per_hundred,
+    people_receiving_booster_per_hundred,
+    people_receiving_second_booster_per_hundred,
     .after = last_col()
   )
 

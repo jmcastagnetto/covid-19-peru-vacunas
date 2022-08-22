@@ -25,12 +25,12 @@ fields:
     constraints:
       maximum: 100
     description: is a percentage of the population
-  - name: people_recieving_booster_per_hundred
+  - name: people_receiving_booster_per_hundred
     type: number
     constraints:
       maximum: 100
     description: is a percentage of the population
-  - name: people_recieving_second_booster_per_hundred
+  - name: people_receiving_second_booster_per_hundred
     type: number
     constraints:
       maximum: 100
