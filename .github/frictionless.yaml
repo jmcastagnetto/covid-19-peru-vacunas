@@ -83,6 +83,12 @@ main:
             constraints:
               maximum: 100
             description: is a percentage of the population
+          - name: people_recieving_second_booster_per_hundred
+            type: number
+            constraints:
+              maximum: 100
+            description: is a percentage of the population
+        missingValues:
         missingValues:
           - "NA"
           - ""
@@ -155,34 +161,6 @@ main:
             type: date
           - name: fecha_vacunacion
             type: date
-          - name: fabricante
-            type: string
-          - name: dosis
-            type: integer
-          - name: flag_vacunacion_general
-            type: boolean
-          - name: n_reg
-            type: integer
-        missingValues:
-          - "NA"
-          - ""
-    - path: datos/vacunas_covid_totales_fabricante_ubigeo.csv
-      schema:
-        fields:
-          - name: fecha_corte
-            type: date
-          - name: ubigeo_persona
-            type: integer
-          - name: departamento
-            type: string
-          - name: provincia
-            type: string
-          - name: distrito
-            type: string
-          - name: macroregion_inei
-            type: string
-          - name: macroregion_minsa
-            type: string
           - name: fabricante
             type: string
           - name: dosis
