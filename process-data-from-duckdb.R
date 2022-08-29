@@ -15,13 +15,13 @@ dbExecute(con, "SET memory_limit='6GB';")
 cli_h1("Generando tablas accesorias")
 
 cli_progress_step(">> epidates")
+
 # Rebuild the epidates table
 epidates <- dbGetQuery(
   con,
   "select distinct FECHA_VACUNACION from vacunas order by FECHA_VACUNACION;"
 ) %>%
   mutate(
-    FECHA_VACUNACION = ymd(FECHA_VACUNACION),
     epi_year = epiyear(FECHA_VACUNACION) %>% as.integer(),
     epi_week = epiweek(FECHA_VACUNACION) %>% as.integer(),
     first_day_of_epi_week = floor_date(FECHA_VACUNACION,
@@ -170,9 +170,7 @@ vacunas_sumario <- dbGetQuery(
     count(*) as n_reg
   from vacunas
   group by all
---    FECHA_VACUNACION, FABRICANTE, DOSIS, flag_vacunacion_general
   order by all
---    FECHA_VACUNACION, FABRICANTE, DOSIS, flag_vacunacion_general
 "
 ) %>%
   add_column(
@@ -254,7 +252,7 @@ vacunas_totales <- dbGetQuery(
     b.last_day_of_epi_week,
     b.complete_epi_week,
     a.DOSIS,
-    count(a.id_row) as n_reg
+    count(*) as n_reg
   from
     vacunas as a
     left join
@@ -263,15 +261,7 @@ vacunas_totales <- dbGetQuery(
   where
     flag_vacunacion_general = TRUE
   group by all
-    -- epi_year,
-    -- epi_week,
-    -- last_day_of_epi_week,
-    -- complete_epi_week,
-    -- dosis
   order by all
-    -- epi_year,
-    -- epi_week,
-    -- dosis
 "
 ) %>%
   janitor::clean_names() %>%
@@ -329,7 +319,7 @@ vacunas_veintiles <- dbGetQuery(
     b.complete_epi_week,
     c.rango_edad_veintiles as rango_edad,
     a.DOSIS,
-    count(a.id_row) as n
+    count(*) as n
   from
     vacunas as a
     left join
@@ -395,7 +385,7 @@ vacunas_deciles <- dbGetQuery(
     b.complete_epi_week,
     c.rango_edad_deciles as rango_edad,
     a.DOSIS,
-    count(a.id_row) as n
+    count(*) as n
   from
     vacunas as a
     left join
@@ -461,7 +451,7 @@ vacunas_quintiles <- dbGetQuery(
     b.complete_epi_week,
     c.rango_edad_quintiles as rango_edad,
     a.DOSIS,
-    count(a.id_row) as n
+    count(*) as n
   from
     vacunas as a
     left join
@@ -528,7 +518,7 @@ vacunas_owid <- dbGetQuery(
     b.complete_epi_week,
     c.rango_edad_owid as rango_edad,
     a.DOSIS,
-    count(a.id_row) as n
+    count(*) as n
   from
     vacunas as a
     left join
