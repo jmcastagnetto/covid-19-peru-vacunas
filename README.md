@@ -153,7 +153,8 @@ _Notas_: Estos datos contemplan solamente los registros para los cuales `flag_va
 | `age_group_max`                        | Edad máxima del rango de edades                                         |
 | `people_vaccinated_per_hundred`        | Personas por cada cien que han recibido al menos una dosis (dosis = 1)  |
 | `people_fully_vaccinated_per_hundred`  | Personas por cada cien completamente vacunadas (dosis = 2)              |
-| `people_recieving_booster_per_hundred` | Personas por cada cien que han recibido refuerzo (dosis = 3)            |
+| `people_receiving_booster_per_hundred` | Personas por cada cien que han recibido refuerzo (dosis = 3)            |
+| `people_receiving_second_booster_per_hundred` | Personas por cada cien que han recibido un segundo refuerzo (dosis = 4)            |
 
 
 
