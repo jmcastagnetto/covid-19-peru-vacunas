@@ -89,7 +89,6 @@ main:
               maximum: 100
             description: is a percentage of the population
         missingValues:
-        missingValues:
           - "NA"
           - ""
     - path: datos/vacunas_covid_rangoedad_quintiles.csv
