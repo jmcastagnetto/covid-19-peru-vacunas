@@ -78,4 +78,89 @@ CREATE OR REPLACE TABLE agegroups(
 
 dbExecute(con, ddl_agegroups)
 
+# views per dose
+ddl_dosis1 <- "
+create or replace view vacunas_dosis_1 as (
+  select * from vacunas where flag_vacunacion_general and DOSIS = 1
+);
+"
+dbExecute(con, ddl_dosis1)
+
+ddl_dosis2 <- "
+create or replace view vacunas_dosis_2 as (
+  select * from vacunas where flag_vacunacion_general and DOSIS = 2
+);
+"
+dbExecute(con, ddl_dosis2)
+
+ddl_dosis3 <- "
+create or replace view vacunas_dosis_3 as (
+  select * from vacunas where flag_vacunacion_general and DOSIS = 3
+);
+"
+dbExecute(con, ddl_dosis3)
+
+ddl_dosis4 <- "
+create or replace view vacunas_dosis_4 as (
+  select * from vacunas where flag_vacunacion_general and DOSIS = 4
+);
+"
+dbExecute(con, ddl_dosis4)
+
+dosis_1_2_ddl <- "
+create or replace view vacunas_dosis_1_2 as (
+SELECT
+  d1.UUID,
+  d1.SEXO,
+  d1.EDAD as EDAD_1,
+  d1.GRUPO_RIESGO as GRUPO_RIESGO_1,
+  d1.FECHA_VACUNACION as FECHA_VACUNACION_1,
+  d1.FABRICANTE as FABRICANTE_1,
+  d1.DIRESA as DIRESA_1,
+  d1.DEPARTAMENTO as DEPARTAMENTO_1,
+  d1.PROVINCIA as PROVINCIA_1,
+  d1.DISTRITO as DISTRITO_1,
+  d2.EDAD as EDAD_2,
+  d2.GRUPO_RIESGO as GRUPO_RIESGO_2,
+  d2.FECHA_VACUNACION as FECHA_VACUNACION_2,
+  d2.FABRICANTE as FABRICANTE_2,
+  d2.DIRESA as DIRESA_2,
+  d2.DEPARTAMENTO as DEPARTAMENTO_2,
+  d2.PROVINCIA as PROVINCIA_2,
+  d2.DISTRITO as DISTRITO_2
+FROM
+  vacunas_dosis_1 as d1
+  left join vacunas_dosis_2 as d2
+    on d1.UUID = d2.UUID
+);
+"
+
+dbExecute(con, dosis_1_2_ddl)
+
+multidosis_fabricante_ddl <- "
+create or replace view multidosis_fabricantes as (
+SELECT
+  d1.FABRICANTE as FABRICANTE_1,
+  d2.FABRICANTE as FABRICANTE_2,
+  d3.FABRICANTE as FABRICANTE_3,
+  d4.FABRICANTE as FABRICANTE_4,
+  count(*) as CANTIDAD
+FROM
+  vacunas_dosis_1 as d1
+  left join vacunas_dosis_2 as d2
+    on d1.UUID = d2.UUID
+  left join vacunas_dosis_3 as d3
+    on d1.UUID = d3.UUID
+  left join vacunas_dosis_4 as d4
+    on d1.UUID = d4.UUID
+GROUP BY
+  d1.FABRICANTE,
+  d2.FABRICANTE,
+  d3.FABRICANTE,
+  d4.FABRICANTE
+);
+"
+
+dbExecute(con, multidosis_fabricante_ddl)
+
 dbDisconnect(con, shutdown = TRUE)

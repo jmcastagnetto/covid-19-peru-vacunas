@@ -1,5 +1,13 @@
 library(tidyverse)
-library(arrow)
+library(DBI)
+library(duckdb)
+library(lubridate)
+
+# Open the duckdb database file
+con = dbConnect(duckdb(),
+                dbdir = "tmp/ddb/peru-vacunas-covid19.duckdb",
+                read_only = FALSE)
+dbExecute(con, "SET memory_limit='6GB';")
 
 vacunas <- open_dataset("tmp/arrow_augmented_data/") %>%
   select(
