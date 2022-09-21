@@ -8,7 +8,7 @@
 
 Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVID-19 en Perú: https://www.datosabiertos.gob.pe/dataset/vacunacion
 
---Desde inicios de Junio del 2022, los datos publicados ya no son "abiertos" en sentido estricto, pues ahora están siendo geo-bloqueados desde cualquier sitio que no corresponda a una dirección de IP de PerúC-- (esto ha cambiado ~2022-09-17)
+~~Desde inicios de Junio del 2022, los datos publicados ya no son "abiertos" en sentido estricto, pues ahora están siendo geo-bloqueados desde cualquier sitio que no corresponda a una dirección de IP de PerúC~~ (esto ha cambiado ~2022-09-17)
 
 **Notas importantes**:
 
