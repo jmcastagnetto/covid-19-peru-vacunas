@@ -208,3 +208,4 @@ Un buen artículo sobre este tema es [Get up to speed with partial clone and sha
 - 2022-08-28: A partir de la actualización de esta fecha, los resultados intermedios ya no se almacenan en formato Parquet de Arrow, sino en una base de datos de duckdb (https://duckdb.org)
 - 2022-09-12: Con ayuda de https://twitter.com/Nest0R, quien proveyó una solución, he podido procesar los datos aún estando (por trabajo) fuera del país. Los datos siguen geo-bloqueados en el repositorio del MINSA, lo cual es una gran pena y nunca debió ocurrir.
 - 2022-09-20: En algún momento luego del 2022-09-16, el URL de los datos de vacunación cambió otra vez (ahora es: https://cloud.minsa.gob.pe/s/To2QtqoNjKqobfw/download), y ya no están geobloqueados. Ojalá se mantenga así en el futuro.
+- 2022-09-25: La estructura de datos ha cambiado nuevamente, ahora se tiene una columna extra: `TIPO_EDAD`

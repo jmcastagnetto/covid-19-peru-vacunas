@@ -12,6 +12,8 @@ con = dbConnect(duckdb(),
                 read_only = FALSE)
 tmp <- dbExecute(con, "SET memory_limit='6GB';")
 
+FECHA_CORTE,UUID,GRUPO_RIESGO,EDAD,SEXO,FECHA_VACUNACION,DOSIS,FABRICANTE,DIRESA,DEPARTAMENTO,PROVINCIA,DISTRITO,TIPO_EDAD
+
 # vacunas
 ddl_vacunas <- "
 CREATE OR REPLACE TABLE vacunas (
@@ -27,6 +29,7 @@ CREATE OR REPLACE TABLE vacunas (
   DEPARTAMENTO      VARCHAR,
   PROVINCIA         VARCHAR,
   DISTRITO          VARCHAR,
+  TIPO_EDAD         VARCHAR,
   flag_vacunacion_general BOOLEAN GENERATED ALWAYS AS (
     (
       (FABRICANTE = 'SINOPHARM' AND

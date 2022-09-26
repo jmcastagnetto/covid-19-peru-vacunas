@@ -32,7 +32,7 @@ epidates <- dbGetQuery(
 current_year <- epiyear(Sys.Date())
 last_epi_week <- epidates %>%
   filter(epi_year == current_year) %>%
-  filter(epi_week == max(epi_week)) %>%
+  filter(epi_week == max(epi_week, na.rm = TRUE)) %>%
   pull(epi_week)
 last_vaccination_date <- max(epidates$FECHA_VACUNACION, na.rm = TRUE)
 
