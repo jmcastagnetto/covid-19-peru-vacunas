@@ -21,7 +21,7 @@ actualizar-datos-manual.sh
 getdata.sh
 pushdata.sh
 download-arrow-data.sh
-update-duckdb.sh
+#update-duckdb.sh
 
 # local full data files
 datos/vacunas_covid_aumentada*.rds
