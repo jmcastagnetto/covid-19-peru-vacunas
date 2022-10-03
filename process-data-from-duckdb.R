@@ -19,7 +19,7 @@ cli_progress_step(">> epidates")
 # Rebuild the epidates table
 epidates <- dbGetQuery(
   con,
-  "select distinct FECHA_VACUNACION from vacunas order by FECHA_VACUNACION;"
+  "select distinct FECHA_VACUNACION FROM vacunas_proc order by FECHA_VACUNACION;"
 ) %>%
   mutate(
     epi_year = epiyear(FECHA_VACUNACION) %>% as.integer(),
@@ -57,11 +57,11 @@ dbWriteTable(con, "epidates", epidates, overwrite = TRUE)
 cli_progress_step(">> agegroups")
 agegroups <- dbGetQuery(
   con,
-  "select distinct EDAD from vacunas order by EDAD;"
+  "select distinct edad_años FROM vacunas_proc order by edad_años;"
 ) %>%
   mutate(
     rango_edad_veintiles = cut(
-      EDAD,
+      edad_años,
       c(seq(0, 80, 20), 130),
       include.lowest = TRUE,
       right = FALSE,
@@ -72,7 +72,7 @@ agegroups <- dbGetQuery(
                  "80+")
     ),
     rango_edad_deciles = cut(
-      EDAD,
+      edad_años,
       c(seq(0, 80, 10), 130),
       include.lowest = TRUE,
       right = FALSE,
@@ -89,7 +89,7 @@ agegroups <- dbGetQuery(
       )
     ),
     rango_edad_quintiles = cut(
-      EDAD,
+      edad_años,
       c(seq(0, 80, 5), 130),
       include.lowest = TRUE,
       right = FALSE,
@@ -114,7 +114,7 @@ agegroups <- dbGetQuery(
       )
     ),
     rango_edad_owid = cut(
-      EDAD,
+      edad_años,
       c(0, 18, 25, 50, 60, 70, 80, 130),
       include.lowest = TRUE,
       right = FALSE,
@@ -142,7 +142,7 @@ dbWriteTable(con, "agegroups", agegroups, overwrite = TRUE)
 # Create the summaries
 cli_h1("Generando archivos resúmen")
 
-range_dates <- dbGetQuery(con, "select min(FECHA_VACUNACION) as min_date, max(FECHA_VACUNACION) as max_date from vacunas;") %>% as.list()
+range_dates <- dbGetQuery(con, "select min(FECHA_VACUNACION) as min_date, max(FECHA_VACUNACION) as max_date FROM vacunas_proc;") %>% as.list()
 
 cli_alert_info(
   glue::glue("Los datos abarcan desde el {range_dates$min_date} hasta el {range_dates$max_date}")
@@ -151,7 +151,7 @@ cli_alert_info(
 vac_grl <- dbGetQuery(
   con,
   "select flag_vacunacion_general, count(*) as n
-   from vacunas group by flag_vacunacion_general;")
+   FROM vacunas_proc group by flag_vacunacion_general;")
 
 novac_gral <- vac_grl %>% filter(!flag_vacunacion_general) %>% pull(n)
 vac_total <- sum(vac_grl$n)
@@ -168,7 +168,7 @@ vacunas_sumario <- dbGetQuery(
   select
     FECHA_VACUNACION, FABRICANTE, DOSIS, flag_vacunacion_general,
     count(*) as n_reg
-  from vacunas
+  FROM vacunas_proc
   group by all
   order by all
 "
@@ -321,13 +321,13 @@ vacunas_veintiles <- dbGetQuery(
     a.DOSIS,
     count(*) as n
   from
-    vacunas as a
+    vacunas_proc as a
     left join
       epidates as b
       on (a.FECHA_VACUNACION = b.FECHA_VACUNACION)
     left join
       agegroups as c
-      on (a.EDAD = c.EDAD)
+      on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
   group by all
@@ -387,13 +387,13 @@ vacunas_deciles <- dbGetQuery(
     a.DOSIS,
     count(*) as n
   from
-    vacunas as a
+    vacunas_proc as a
     left join
       epidates as b
       on (a.FECHA_VACUNACION = b.FECHA_VACUNACION)
     left join
       agegroups as c
-      on (a.EDAD = c.EDAD)
+      on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
   group by all
@@ -453,13 +453,13 @@ vacunas_quintiles <- dbGetQuery(
     a.DOSIS,
     count(*) as n
   from
-    vacunas as a
+    vacunas_proc as a
     left join
       epidates as b
       on (a.FECHA_VACUNACION = b.FECHA_VACUNACION)
     left join
       agegroups as c
-      on (a.EDAD = c.EDAD)
+      on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
   group by all
@@ -520,13 +520,13 @@ vacunas_owid <- dbGetQuery(
     a.DOSIS,
     count(*) as n
   from
-    vacunas as a
+    vacunas_proc as a
     left join
       epidates as b
       on (a.FECHA_VACUNACION = b.FECHA_VACUNACION)
     left join
       agegroups as c
-      on (a.EDAD = c.EDAD)
+      on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
   group by all

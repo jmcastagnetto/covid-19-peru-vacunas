@@ -12,8 +12,6 @@ con = dbConnect(duckdb(),
                 read_only = FALSE)
 tmp <- dbExecute(con, "SET memory_limit='6GB';")
 
-FECHA_CORTE,UUID,GRUPO_RIESGO,EDAD,SEXO,FECHA_VACUNACION,DOSIS,FABRICANTE,DIRESA,DEPARTAMENTO,PROVINCIA,DISTRITO,TIPO_EDAD
-
 # vacunas
 ddl_vacunas <- "
 CREATE OR REPLACE TABLE vacunas (
@@ -30,6 +28,14 @@ CREATE OR REPLACE TABLE vacunas (
   PROVINCIA         VARCHAR,
   DISTRITO          VARCHAR,
   TIPO_EDAD         VARCHAR,
+  -- convertir edades a años
+  edad_años         INTEGER GENERATED ALWAYS AS (
+    CASE WHEN TIPO_EDAD = 'M'
+      THEN 0 -- FLOOR(CAST(EDAD AS DOUBLE)/12)
+      ELSE EDAD
+    END
+  ),
+  -- generar un flag para vacunacion general
   flag_vacunacion_general BOOLEAN GENERATED ALWAYS AS (
     (
       (FABRICANTE = 'SINOPHARM' AND
@@ -53,6 +59,36 @@ CREATE OR REPLACE TABLE vacunas (
 "
 
 dbExecute(con, ddl_vacunas)
+
+# Almacenar los datos procesados, incluyendo los campos
+# dinámicamente calculados para evitar "out of memory" en duckdb
+# vacunas_proc
+ddl_vacunas_proc <- "
+CREATE OR REPLACE TABLE vacunas_proc (
+  FECHA_CORTE       DATE,
+  UUID              VARCHAR,
+  GRUPO_RIESGO      VARCHAR,
+  EDAD              INTEGER,
+  SEXO              VARCHAR,
+  FECHA_VACUNACION  DATE,
+  DOSIS             INTEGER,
+  FABRICANTE        VARCHAR,
+  DIRESA            VARCHAR,
+  DEPARTAMENTO      VARCHAR,
+  PROVINCIA         VARCHAR,
+  DISTRITO          VARCHAR,
+  TIPO_EDAD         VARCHAR,
+  edad_años         INTEGER,
+  flag_vacunacion_general BOOLEAN
+);
+"
+
+dbExecute(con, ddl_vacunas_proc)
+
+# Populate vacunas_proc
+# pop_data_vacunas_proc <- "INSERT INTO vacunas_proc SELECT * from vacunas;"
+# dbExecute(con, pop_data_vacunas_proc)
+
 
 # epidates
 ddl_epidates <- "
@@ -167,3 +203,4 @@ GROUP BY
 dbExecute(con, multidosis_fabricante_ddl)
 
 dbDisconnect(con, shutdown = TRUE)
+
