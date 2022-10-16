@@ -3,23 +3,31 @@
 # --------
 
 fields:
-  - name: id_persona
-    type: integer
-  - name: id_vacunados_covid19
-    type: integer
-  - name: fecha_vacunacion
+  - name: FECHA_CORTE
     type: date
     format: "%Y%m%d"
-  - name: id_centro_vacunacion
+  - name: UUID
+    type: string
+  - name: GRUPO_RIESGO
+    type: string
+  - name: EDAD
     type: integer
-  - name: id_vacuna
+  - name: SEXO
+    type: string
+  - name: FECHA_VACUNACION
+    type: date
+    format: "%Y%m%d"
+  - name: DOSIS
     type: integer
-  - name: id_grupo_riesgo
-    type: integer
-  - name: dosis
-    type: integer
-  - name: id_eess
-    type: integer
-  - name: edad
-    type: integer
-
+  - name: FABRICANTE
+    type: string
+  - name: DIRESA
+    type: string
+  - name: DEPARTAMENTO
+    type: string
+  - name: PROVINCIA
+    type: string
+  - name: DISTRITO
+    type: string
+  - name: TIPO_EDAD
+    type: string

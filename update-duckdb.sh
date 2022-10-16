@@ -5,6 +5,13 @@ echo "Datos del $dataurl"
 echo ""
 mv datos/orig/vacunas_covid.7z datos/orig/vacunas_covid-prev.7z
 aria2c -c -x8 -d datos/orig --force-save -o vacunas_covid.7z --file-allocation=falloc $dataurl
+dwnlstat=$?
+if [ $dwnlstat -ne 0 ];
+then
+	echo "** Error descargando los datos, intentar luego"
+	exit $dwnlstat
+fi
+
 ls -lh datos/orig/vacunas_covid.7z
 sha256sum --status -c sha256sum.txt
 
@@ -28,6 +35,10 @@ else
   Rscript process-data-from-duckdb.R
   echo "Validando datos"
   ./validate-output.sh
+  if [ $? -ne 0 ];
+  then
+	  echo "** Validación de los datos ha fallado, revisar antes de publicar **"
+  fi
   echo "Estado del repo"
   git status
   tail datos/vacunas_covid_resumen.csv
