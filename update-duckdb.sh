@@ -8,7 +8,7 @@ aria2c -c -x8 -d datos/orig --force-save -o vacunas_covid.7z --file-allocation=f
 dwnlstat=$?
 if [ $dwnlstat -ne 0 ];
 then
-	echo "** Error descargando los datos, intentar luego"
+	echo "** Error descargando los datos, intentar luego **"
 	exit $dwnlstat
 fi
 
@@ -25,9 +25,19 @@ else
   7z e -aoa -odatos/orig/ datos/orig/vacunas_covid.7z
   ls -lh datos/orig/
   head -5 datos/orig/vacunas_covid.csv
-  echo "Backup de bd previa"
+  echo "Validando datos de entrada"
+  ./validate-input-data.sh
+  invalstat=$?
+  if [ $invalstat -ne 0 ];
+  then
+	  echo "** Error: Datos de entrada no tienen el formato esperado **"
+	  exit $invalstat
+  else
+	  echo ">> Muestra de 1M de datos de entrada validados"
+  fi
+  echo "Backup de BD previa"
   mv tmp/ddb/peru-vacunas-covid19.duckdb tmp/ddb/peru-vacunas-covid19-backup.duckdb
-  echo "Init duckdb"
+  echo "Inicializando duckdb"
   Rscript create-duckdb-tables.R
   echo "Cargando en duckdb"
   duckdb -init tmp/ddb/duckdb-config.sql tmp/ddb/peru-vacunas-covid19.duckdb < tmp/ddb/duckdb-load-csv.sql
@@ -35,7 +45,8 @@ else
   Rscript process-data-from-duckdb.R
   echo "Validando datos"
   ./validate-output.sh
-  if [ $? -ne 0 ];
+  outvalstat=$?
+  if [ $outvalstat -ne 0 ];
   then
 	  echo "** Validación de los datos ha fallado, revisar antes de publicar **"
   fi
