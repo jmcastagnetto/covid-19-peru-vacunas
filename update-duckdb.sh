@@ -28,7 +28,7 @@ else
   echo "Validando datos de entrada"
   ./validate-input-data.sh
   invalstat=$?
-  if [ $invalstat -ne 0 ];
+  if [ $invalstat -ne 0 ]
   then
 	  echo "** Error: Datos de entrada no tienen el formato esperado **"
 	  exit $invalstat
