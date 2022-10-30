@@ -4,7 +4,8 @@ dataurl=`curl -s 'https://www.datosabiertos.gob.pe/api/3/action/package_show?id=
 echo "Datos del $dataurl"
 echo ""
 mv datos/orig/vacunas_covid.7z datos/orig/vacunas_covid-prev.7z
-aria2c -c -x8 -d datos/orig --force-save -o vacunas_covid.7z --file-allocation=falloc $dataurl
+# aria2c -c -x4 -d datos/orig --force-save -o vacunas_covid.7z --file-allocation=falloc $dataurl
+wget -c -O datos/orig/vacunas_covid.7z $dataurl
 dwnlstat=$?
 if [ $dwnlstat -ne 0 ];
 then
