@@ -5,7 +5,7 @@ echo "Datos del $dataurl"
 echo ""
 mv datos/orig/vacunas_covid.7z datos/orig/vacunas_covid-prev.7z
 # aria2c -c -x4 -d datos/orig --force-save -o vacunas_covid.7z --file-allocation=falloc $dataurl
-wget -c -O datos/orig/vacunas_covid.7z $dataurl
+curl -o datos/orig/vacunas_covid.7z -A "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0" --referer 'https://www.datosabiertos.gob.pe/dataset/vacunaci%C3%B3n-contra-covid-19-ministerio-de-salud-minsa' $dataurl
 dwnlstat=$?
 if [ $dwnlstat -ne 0 ];
 then
