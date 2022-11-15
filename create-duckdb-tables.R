@@ -6,9 +6,14 @@ library(cli)
 
 # Conectar a duckdb y generar tablas accesorias ---------------------------
 
+ddb_fn <- "tmp/ddb/peru-vacunas-covid19.duckdb"
+
+if (file.exists(ddb_fn)) {
+  unlink(ddb_fn) # make sure we start from a newly created db file
+}
 # Open the duckdb database file
 con = dbConnect(duckdb(),
-                dbdir = "tmp/ddb/peru-vacunas-covid19.duckdb",
+                dbdir = ddb_fn,
                 read_only = FALSE)
 tmp <- dbExecute(con, "SET memory_limit='6GB';")
 
@@ -120,28 +125,28 @@ dbExecute(con, ddl_agegroups)
 # views per dose
 ddl_dosis1 <- "
 create or replace view vacunas_dosis_1 as (
-  select * from vacunas where flag_vacunacion_general and DOSIS = 1
+  select * from vacunas_proc where flag_vacunacion_general and DOSIS = 1
 );
 "
 dbExecute(con, ddl_dosis1)
 
 ddl_dosis2 <- "
 create or replace view vacunas_dosis_2 as (
-  select * from vacunas where flag_vacunacion_general and DOSIS = 2
+  select * from vacunas_proc where flag_vacunacion_general and DOSIS = 2
 );
 "
 dbExecute(con, ddl_dosis2)
 
 ddl_dosis3 <- "
 create or replace view vacunas_dosis_3 as (
-  select * from vacunas where flag_vacunacion_general and DOSIS = 3
+  select * from vacunas_proc where flag_vacunacion_general and DOSIS = 3
 );
 "
 dbExecute(con, ddl_dosis3)
 
 ddl_dosis4 <- "
 create or replace view vacunas_dosis_4 as (
-  select * from vacunas where flag_vacunacion_general and DOSIS = 4
+  select * from vacunas_proc where flag_vacunacion_general and DOSIS = 4
 );
 "
 dbExecute(con, ddl_dosis4)
