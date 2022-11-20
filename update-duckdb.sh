@@ -1,4 +1,5 @@
 #! /bin/bash
+eval $(keychain --agents gpg)
 
 dataurl=`curl -s 'https://www.datosabiertos.gob.pe/api/3/action/package_show?id=24af4ff4-226d-4e3d-90cb-d26a1849796e' |  jq '.result| map(.resources)| .[] | .[] | .url' | head -1 | tr -d '"'`
 echo "Datos del $dataurl"
@@ -20,6 +21,7 @@ if [ $? -eq 0 ]
 then
   echo "Los datos no han cambiado"
 else
+  today=`date +%Y-%m-%d`
   echo "Datos han cambiado"
   sha256sum datos/orig/vacunas_covid.7z > sha256sum.txt
   echo "Extrayendo el CSV"
@@ -54,4 +56,6 @@ else
   echo "Estado del repo"
   git status
   tail datos/vacunas_covid_resumen.csv
+  git commit -a -m "Datos al $today (automated processing)"
+  git push origin main
 fi
