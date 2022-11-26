@@ -1,4 +1,5 @@
 #! /bin/bash
+export PATH=/home/ubuntu/.local/bin:$PATH
 
 # sample 1M entries to validate
 

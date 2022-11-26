@@ -1,4 +1,5 @@
 #! /bin/bash
+export PATH=/home/ubuntu/.local/bin:$PATH
 
 ( frictionless validate --schema schemas/vacunas_covid_fabricante-schema.yaml datos/vacunas_covid_fabricante.csv && \
 frictionless validate --schema schemas/vacunas_covid_rangoedad_deciles-schema.yaml datos/vacunas_covid_rangoedad_deciles.csv && \

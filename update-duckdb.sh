@@ -1,4 +1,6 @@
 #! /bin/bash
+
+export PATH=/home/ubuntu/.local/bin:$PATH
 eval $(keychain --agents gpg)
 
 dataurl=`curl -s 'https://www.datosabiertos.gob.pe/api/3/action/package_show?id=24af4ff4-226d-4e3d-90cb-d26a1849796e' |  jq '.result| map(.resources)| .[] | .[] | .url' | head -1 | tr -d '"'`
@@ -29,15 +31,20 @@ else
   ls -lh datos/orig/
   head -5 datos/orig/vacunas_covid.csv
   echo "Validando datos de entrada"
-  ./validate-input-data.sh
-  invalstat=$?
-  if [ $invalstat -ne 0 ]
+  # Validate input data
+  # sample 1M entries to validate
+  xsv sample 1000000 datos/orig/vacunas_covid.csv > tmp/sample_vacunas.csv
+  frictionless validate --type resource --schema schemas/vacunas_covid-orig-schema.yaml tmp/sample_vacunas.csv
+  fstatus=$?
+  if [ $fstatus -eq 0 ]
   then
-	  echo "** Error: Datos de entrada no tienen el formato esperado **"
-	  exit $invalstat
-  else
-	  echo ">> Muestra de 1M de datos de entrada validados"
+	rm tmp/sample_vacunas.csv
+	echo ">> Muestra de 1M de datos de entrada validados"
+  esl
+	echo "** Error: Datos de entrada no tienen el formato esperado **"
+	exit $fstatus
   fi
+  # Load data into duckdb
   echo "Backup de BD previa"
   mv tmp/ddb/peru-vacunas-covid19.duckdb tmp/ddb/peru-vacunas-covid19-backup.duckdb
   echo "Inicializando duckdb"
@@ -46,16 +53,25 @@ else
   duckdb -init tmp/ddb/duckdb-config.sql tmp/ddb/peru-vacunas-covid19.duckdb < tmp/ddb/duckdb-load-csv.sql
   echo "Generando los resúmenes"
   Rscript process-data-from-duckdb.R
+  # Validate output data
   echo "Validando datos"
-  ./validate-output.sh
+  ( frictionless validate --schema schemas/vacunas_covid_fabricante-schema.yaml datos/vacunas_covid_fabricante.csv && \
+  frictionless validate --schema schemas/vacunas_covid_rangoedad_deciles-schema.yaml datos/vacunas_covid_rangoedad_deciles.csv && \
+  frictionless validate --schema schemas/vacunas_covid_rangoedad_owid-schema.yaml datos/vacunas_covid_rangoedad_owid.csv && \
+  frictionless validate --schema schemas/vacunas_covid_rangoedad_quintiles-schema.yaml datos/vacunas_covid_rangoedad_quintiles.csv && \
+  frictionless validate --schema schemas/vacunas_covid_rangoedad_veintiles-schema.yaml datos/vacunas_covid_rangoedad_veintiles.csv && \
+  frictionless validate --schema schemas/vacunas_covid_resumen-schema.yaml datos/vacunas_covid_resumen.csv && \
+  frictionless validate --schema schemas/vacunas_covid_totales_por_semana-schema.yaml datos/vacunas_covid_totales_por_semana.csv )
   outvalstat=$?
-  if [ $outvalstat -ne 0 ];
+  if [ $outvalstat -ne 0 ]
   then
-	  echo "** Validación de los datos ha fallado, revisar antes de publicar **"
+  	echo "** Validación de los datos ha fallado, revisar antes de publicar **"
+  	exit $outvalstat
+  else
+  	echo "Estado del repo"
+  	git status
+  	tail datos/vacunas_covid_resumen.csv
+  	git commit -a -m "Datos al $today (automated processing)"
+  	git push origin main
   fi
-  echo "Estado del repo"
-  git status
-  tail datos/vacunas_covid_resumen.csv
-  git commit -a -m "Datos al $today (automated processing)"
-  git push origin main
 fi
