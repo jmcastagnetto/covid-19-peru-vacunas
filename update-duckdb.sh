@@ -1,6 +1,5 @@
 #! /bin/bash
 
-export PATH=/home/ubuntu/.local/bin:$PATH
 eval $(keychain --agents gpg)
 
 dataurl=`curl -s 'https://www.datosabiertos.gob.pe/api/3/action/package_show?id=24af4ff4-226d-4e3d-90cb-d26a1849796e' |  jq '.result| map(.resources)| .[] | .[] | .url' | head -1 | tr -d '"'`
