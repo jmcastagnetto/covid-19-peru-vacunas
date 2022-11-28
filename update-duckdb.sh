@@ -39,7 +39,7 @@ else
   then
 	rm tmp/sample_vacunas.csv
 	echo ">> Muestra de 1M de datos de entrada validados"
-  esl
+  else
 	echo "** Error: Datos de entrada no tienen el formato esperado **"
 	exit $fstatus
   fi
