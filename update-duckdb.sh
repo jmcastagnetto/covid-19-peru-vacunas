@@ -54,6 +54,8 @@ else
   duckdb -init tmp/ddb/duckdb-config.sql tmp/ddb/peru-vacunas-covid19.duckdb < tmp/ddb/duckdb-load-csv.sql
   echo "Generando los resúmenes"
   Rscript process-data-from-duckdb.R
+  # Get the cut-off date
+  fcorte=`duckdb -ascii -noheader -c "SELECT FECHA_CORTE FROM vacunas_proc LIMIT 1;" tmp/ddb/peru-vacunas-covid19.duckdb`
   # Validate output data
   echo "Validando datos"
   ( frictionless validate --schema schemas/vacunas_covid_fabricante-schema.yaml datos/vacunas_covid_fabricante.csv && \
@@ -72,7 +74,7 @@ else
     echo "Estado del repo"
     git status
     tail datos/vacunas_covid_resumen.csv
-    git commit -a -m "Datos al $today (automated processing)"
+	git commit -a -m "Datos al $fcorte, procesados automáticamente el $today"
     git push origin main
   fi
   exit 0
