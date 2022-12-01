@@ -5,4 +5,4 @@
   - [X] modify code to use new estimates (data structure has changed somewhat) 
 - [X] re-check the Wikipedia source for vaccine arrival data
 - [X] see if it is possible to extract also info from the special vaccination campaings
-- [ ] change doses summary scripts to use duckdb
+- [x] change doses summary scripts to use duckdb
