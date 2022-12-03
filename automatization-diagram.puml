@@ -1,0 +1,36 @@
+@startuml
+
+!theme vibrant
+
+title Peru's COVID-19 Vaccination Data Processing
+footer Jesus M. Castagnetto
+header https://github.com/jmcastagnetto/covid-19-peru-vacunas
+
+control "Event Bridge\nScheduler" as eventb
+participant "Start EC2 Instance\n(Lambda)" as startEC2
+participant "Stop EC2 Instance\n(Lambda)" as stopEC2
+participant "EC2 Instance" as ec2inst
+participant "COVID-19\nVaccination\nData" as opendata
+participant "Github\nRepository" as github
+database "S3 bucket" as s3
+
+eventb --> startEC2: Run function to\n**start** EC2 instance\non Mo, We, Fr, Su
+startEC2 --> ec2inst: Start EC2 Instance\n(~ 0.5s - 1s)
+activate ec2inst #darkblue
+ec2inst --> ec2inst: Crontab job
+ec2inst --> opendata: Request latest vaccination data
+opendata --> ec2inst: Receive latest vaccination data
+ec2inst --> ec2inst: Process vaccination data
+note left #lemonchiffon
+  Instance runs
+  for about 1h.
+  Processing takes
+  about 20 min.
+end note
+ec2inst --> github: Push processed data
+ec2inst --> s3: Store duckdb copy into S3 bucket
+deactivate ec2inst
+eventb --> stopEC2: Run function to\n**stop** EC2 instance\non Mo, We, Fr, Su
+stopEC2 --> ec2inst: Stop EC2 Instance\n(~ 0.5s - 1s)
+
+@enduml

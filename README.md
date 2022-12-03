@@ -182,6 +182,13 @@ Debido al cambio en la estructura de los datos originales, ya no es simple el en
 | `flag_vacunacion_general` | Si los datos parecen corresponder al proceso general de vacunación |
 
 
+## Automatización del proceso de datos
+
+Usando una combinación de servicios en AWS, estoy automatizando el proceso de datos en la forma esquematizada en el siguiente diagrama:
+
+![Automatización del proceso de datos Vacunación contra COVID-19 (Perú)](automatization-diagram.png)
+
+
 ## Acerca de clonar este repositorio
 
 Si quieres hacer un clon de este repositorio, cuya historia contiene muchos archivos grandes (blobs), te sugiero que hagas un "blob-less" clone, de manera que sólo descargas lo mas reciente y si lo requieres puedes obtener los anteriores, algo como:
@@ -210,3 +217,4 @@ Un buen artículo sobre este tema es [Get up to speed with partial clone and sha
 - 2022-09-20: En algún momento luego del 2022-09-16, el URL de los datos de vacunación cambió otra vez (ahora es: https://cloud.minsa.gob.pe/s/To2QtqoNjKqobfw/download), y ya no están geobloqueados. Ojalá se mantenga así en el futuro.
 - 2022-09-25: La estructura de datos ha cambiado nuevamente, ahora se tiene una columna extra: `TIPO_EDAD`
 - 2022-10-02: Han comenzado a aparecer datos de vacunación de los menores entre 6 meses a 5 años de edad, esta campaña comenzó el 2022-09-25, por lo ahora hay edades en meses (`TIPO_EDAD = 'M'`). El código ha sido ajustado para hacer la transformación para aquellos con edades menores a 1 año (Ref: https://www.gob.pe/institucion/minsa/noticias/654007-ninas-y-ninos-menores-de-5-anos-de-lima-metropolitana-reciben-su-primera-dosis-contra-la-covid-19)
+
