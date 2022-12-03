@@ -54,8 +54,10 @@ else
   duckdb -init tmp/ddb/duckdb-config.sql tmp/ddb/peru-vacunas-covid19.duckdb < tmp/ddb/duckdb-load-csv.sql
   echo "Generando los resúmenes"
   Rscript process-data-from-duckdb.R
-  # Get the cut-off date
-  fcorte=`duckdb -ascii -noheader -c "SELECT FECHA_CORTE FROM vacunas_proc LIMIT 1;" tmp/ddb/peru-vacunas-covid19.duckdb`
+  # Get the cut-off date using the "-list" option as "-ascii" produces an RS (0x1e) char
+  fcorte=`duckdb -list -noheader -c "SELECT FECHA_CORTE FROM vacunas_proc LIMIT 1;" tmp/ddb/peru-vacunas-covid19.duckdb`
+  # Just in case, there is a need to remove RS 0x1e in the future
+  # fcorte=$(echo $fcorte | sed 's/[\x1e]//g')
   # Validate output data
   echo "Validando datos"
   ( frictionless validate --schema schemas/vacunas_covid_fabricante-schema.yaml datos/vacunas_covid_fabricante.csv && \
