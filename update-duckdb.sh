@@ -31,11 +31,20 @@ else
   7z e -aoa -odatos/orig/ datos/orig/vacunas_covid.7z
   if [ $? -eq 0 ]
   then
+    # check quickly if is not empty or only headers
+    # nlines should be 10, if it is only headers it will be 1
+    nlines=`head -10 datos/orig/vacunas_covid.csv | wc -l`
+    if [ $nlines -eq 10 ]
+    then
+      echo "Archivo CSV parece OK"
+    else
+      echo "** Error **: archivo de vacunas incompleto -- revisar"
+      exit 1
+    fi
     ls -lh datos/orig/
     head -5 datos/orig/vacunas_covid.csv
     echo "Validando datos de entrada"
-    # Validate input data
-    # sample 1M entries to validate
+    # Validate input data by sampling 1M entries and running frictionless validation
     xsv sample 1000000 datos/orig/vacunas_covid.csv > tmp/sample_vacunas.csv
     frictionless validate --type resource --schema schemas/vacunas_covid-orig-schema.yaml tmp/sample_vacunas.csv
     fstatus=$?
