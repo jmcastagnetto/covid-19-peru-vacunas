@@ -8,7 +8,7 @@ echo "Datos del $dataurl"
 echo ""
 mv datos/orig/vacunas_covid.7z datos/orig/vacunas_covid-prev.7z
 # get the data including the appropriate headers to it lowers the risk of been blocked
-curl -o datos/orig/vacunas_covid.7z -A "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0" --referer 'https://www.datosabiertos.gob.pe/dataset/vacunaci%C3%B3n-contra-covid-19-ministerio-de-salud-minsa' $dataurl
+curl --silent -o datos/orig/vacunas_covid.7z -A "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0" --referer 'https://www.datosabiertos.gob.pe/dataset/vacunaci%C3%B3n-contra-covid-19-ministerio-de-salud-minsa' $dataurl
 dwnlstat=$?
 if [ $dwnlstat -ne 0 ];
 then
