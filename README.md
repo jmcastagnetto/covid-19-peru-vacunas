@@ -188,6 +188,7 @@ Usando una combinación de servicios en AWS, estoy automatizando el proceso de d
 
 ![Automatización del proceso de datos Vacunación contra COVID-19 (Perú)](automatization-diagram.png)
 
+Este proceso automatizado se ejecuta todos los: Domingos, Lunes, Miércoles y Viernes, y genera datos acumulados siempre que los datos de origen cambien.
 
 ## Acerca de clonar este repositorio
 
