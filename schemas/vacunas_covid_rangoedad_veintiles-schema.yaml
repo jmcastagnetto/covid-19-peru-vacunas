@@ -17,7 +17,7 @@ fields:
     type: integer
   - name: n_acum
     type: integer
-  - name: pob2022
+  - name: pob2023
     type: integer
   - name: pct_acum
     type: number
