@@ -17,24 +17,24 @@ fields:
     type: integer
   - name: people_vaccinated_per_hundred
     type: number
-    constraints:
-      maximum: 100
-    description: is a percentage of the population
+ #   constraints:
+ #     maximum: 100
+ #   description: is a percentage of the population
   - name: people_fully_vaccinated_per_hundred
     type: number
-    constraints:
-      maximum: 100
-    description: is a percentage of the population
+ #   constraints:
+ #     maximum: 100
+ #   description: is a percentage of the population
   - name: people_receiving_booster_per_hundred
     type: number
-    constraints:
-      maximum: 100
-    description: is a percentage of the population
+ #   constraints:
+ #     maximum: 100
+ #   description: is a percentage of the population
   - name: people_receiving_second_booster_per_hundred
     type: number
-    constraints:
-      maximum: 100
-    description: is a percentage of the population
+ #   constraints:
+ #     maximum: 100
+ #   description: is a percentage of the population
 missingValues:
   - "NA"
   - ""

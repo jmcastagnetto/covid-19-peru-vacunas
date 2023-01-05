@@ -17,9 +17,9 @@ fields:
     type: integer
   - name: pct_total_population
     type: number
-    constraints:
-      maximum: 100
-    description: is a percentage of the population
+#    constraints:
+#      maximum: 100
+#    description: is a percentage of the population
 missingValues:
   - "NA"
   - ""
