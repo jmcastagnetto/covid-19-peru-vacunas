@@ -6,3 +6,4 @@
 - [X] re-check the Wikipedia source for vaccine arrival data
 - [X] see if it is possible to extract also info from the special vaccination campaings
 - [x] change doses summary scripts to use duckdb
+- [ ] include bivalent dosis (dosis #5, PFIZER, started 2023-01-01)
