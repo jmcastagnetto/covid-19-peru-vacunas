@@ -222,4 +222,4 @@ Un buen artículo sobre este tema es [Get up to speed with partial clone and sha
 - 2023-02-08: Desde al menos el 2023-02-06, los datos de vacunación del MINSA están inaccesibles, desde los dos URLs que solían tener esta información (https://www.datosabiertos.gob.pe/dataset/vacunaci%C3%B3n-contra-covid-19-ministerio-de-salud-minsa o https://www.datosabiertos.gob.pe/dataset/vacunacion). Cuando se intenta acceder, se obtiene el error que se ve a continuación:
 
 ![2023-02-08 Error al acceder a datos abiertos de vacunación COVID-19 del MINSA](https://user-images.githubusercontent.com/364668/217707501-823ec448-c3f0-4d7b-b65a-1ef24bea8b4e.png)
-
+- 2023-02-18: Los datos nuevamente se empezaron a publicar hace como una semana atrás, y recién he tenido oportunidad de ver los cambios que se han hecho. Antes se publicaba un archivo comprimido en formato 7Zip (`.7z`), ahora se publica un archivo en formato ZIP (`.zip`), el cual contiene internamente un archivo en formato 7Zip (`.7z`). No hay una ganancia en compresión ni en portabilidad al hacer esto último. He cambiado el código para tomar en cuenta este cambio en formatos.
