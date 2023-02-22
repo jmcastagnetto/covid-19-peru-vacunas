@@ -33,6 +33,7 @@ Datos procesados y aumentados, usando los datos abiertos sobre vacunaciones COVI
 | Segunda | 2021-03-02 | https://andina.pe/agencia/noticia-presidente-sagasti-recibe-segunda-dosis-de-vacuna-contra-covid19-835719.aspx |
 | Tercera (Primer refuerzo) | 2021-10-15 | https://elcomercio.pe/lima/sucesos/tercera-dosis-en-peru-hoy-se-inicia-la-inmunizacion-a-personal-de-salud-y-esto-es-todo-lo-que-tienes-que-saber-covid-19-tercera-ola-coronavirus-nndc-noticia/ |
 | Cuarta (Segundo refuerzo) | 2022-04-02 | https://www.swissinfo.ch/spa/coronavirus-per%C3%BA_per%C3%BA-aplicar%C3%A1-una-cuarta-dosis-de-la-vacuna-contra-la-covid-19/47484482 |
+| Vacuna bivalente | 2023-01-01 | https://www.tvperu.gob.pe/noticias/locales/minsa-hoy-se-inicia-la-aplicacion-de-la-vacuna-bivalente-en-lima-metropolitana,  https://twitter.com/Minsa_Peru/status/1609606002290163713 |
 
 ## Contenido y estructura de los datos
 
