@@ -152,6 +152,13 @@ create or replace view vacunas_dosis_4 as (
 "
 dbExecute(con, ddl_dosis4)
 
+ddl_dosis5 <- "
+create or replace view vacunas_dosis_4 as (
+  select * from vacunas_proc where flag_vacunacion_general and DOSIS = 5
+);
+"
+dbExecute(con, ddl_dosis5)
+
 #dosis_1_2_ddl <- "
 #create or replace view vacunas_dosis_1_2 as (
 #SELECT
@@ -189,6 +196,7 @@ SELECT
   d2.FABRICANTE as FABRICANTE_2,
   d3.FABRICANTE as FABRICANTE_3,
   d4.FABRICANTE as FABRICANTE_4,
+  d5.FABRICANTE as FABRICANTE_5,
   count(*) as CANTIDAD
 FROM
   vacunas_dosis_1 as d1
@@ -198,11 +206,14 @@ FROM
     on d1.UUID = d3.UUID
   left join vacunas_dosis_4 as d4
     on d1.UUID = d4.UUID
+  left join vacunas_dosis_5 as d5
+    on d1.UUID = d5.UUID
 GROUP BY
   d1.FABRICANTE,
   d2.FABRICANTE,
   d3.FABRICANTE,
-  d4.FABRICANTE
+  d4.FABRICANTE,
+  d5.FABRICANTE
 );
 "
 
