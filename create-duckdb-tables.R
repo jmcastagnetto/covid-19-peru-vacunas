@@ -153,7 +153,7 @@ create or replace view vacunas_dosis_4 as (
 dbExecute(con, ddl_dosis4)
 
 ddl_dosis5 <- "
-create or replace view vacunas_dosis_4 as (
+create or replace view vacunas_dosis_5 as (
   select * from vacunas_proc where flag_vacunacion_general and DOSIS = 5
 );
 "

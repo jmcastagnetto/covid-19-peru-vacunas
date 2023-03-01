@@ -169,6 +169,7 @@ vacunas_sumario <- dbGetQuery(
     FECHA_VACUNACION, FABRICANTE, DOSIS, flag_vacunacion_general,
     count(*) as n_reg
   FROM vacunas_proc
+  where DOSIS <= 5
   group by all
   order by all
 "
@@ -260,6 +261,7 @@ vacunas_totales <- dbGetQuery(
     on (a.FECHA_VACUNACION = b.FECHA_VACUNACION)
   where
     flag_vacunacion_general = TRUE
+    AND DOSIS <= 5
   group by all
   order by all
 "
@@ -330,6 +332,7 @@ vacunas_veintiles <- dbGetQuery(
       on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
+    AND DOSIS <= 5
   group by all
   order by
     c.rango_edad_veintiles,
@@ -396,6 +399,7 @@ vacunas_deciles <- dbGetQuery(
       on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
+    AND DOSIS <= 5
   group by all
   order by
     c.rango_edad_deciles,
@@ -462,6 +466,7 @@ vacunas_quintiles <- dbGetQuery(
       on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
+    AND DOSIS <= 5
   group by all
   order by
     c.rango_edad_quintiles,
@@ -529,6 +534,7 @@ vacunas_owid <- dbGetQuery(
       on (a.edad_años = c.edad_años)
   where
     flag_vacunacion_general = TRUE
+    AND DOSIS <= 5
   group by all
   order by
     c.rango_edad_owid,
@@ -583,6 +589,7 @@ owid_format <- vacunas_owid %>%
       dosis == 2 ~ "people_fully_vaccinated_per_hundred",
       dosis == 3 ~ "people_receiving_booster_per_hundred",
       dosis == 4 ~ "people_receiving_second_booster_per_hundred",
+      dosis == 5 ~ "people_receiving_third_booster_per_hundred",
       TRUE ~ "WRONG"
     )
   ) %>%
@@ -595,6 +602,7 @@ owid_format <- vacunas_owid %>%
   relocate(
     people_receiving_booster_per_hundred,
     people_receiving_second_booster_per_hundred,
+    people_receiving_third_booster_per_hundred,
     .after = last_col()
   )
 
