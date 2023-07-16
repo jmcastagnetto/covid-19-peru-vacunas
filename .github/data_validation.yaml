@@ -1,0 +1,28 @@
+#name: data_validation
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - datos/vacunas_covid_resumen.csv
+#      - datos/vacunas_covid_fabricante.csv
+#      - datos/vacunas_covid_rangoedad_deciles.csv
+#      - datos/vacunas_covid_rangoedad_owid.csv
+#      - datos/vacunas_covid_rangoedad_quintiles.csv
+#      - datos/vacunas_covid_rangoedad_veintiles.csv
+#      - datos/vacunas_covid_totales_fabricante_ubigeo.csv
+#      - datos/vacunas_covid_totales_por_semana.csv
+#
+#jobs:
+#  validate:
+#    runs-on: ubuntu-latest
+#    steps:
+#
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#
+#      - name: Validate data (Frictionless Repository)
+#        uses: frictionlessdata/repository@v2.0.2
