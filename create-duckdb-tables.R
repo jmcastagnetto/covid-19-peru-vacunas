@@ -32,6 +32,7 @@ CREATE OR REPLACE TABLE vacunas (
   DEPARTAMENTO      VARCHAR,
   PROVINCIA         VARCHAR,
   DISTRITO          VARCHAR,
+  CLASIFICACION_VACUNA          VARCHAR,
   TIPO_EDAD         VARCHAR,
   -- convertir edades a años
   edad_años         INTEGER GENERATED ALWAYS AS (
@@ -83,6 +84,7 @@ CREATE OR REPLACE TABLE vacunas_proc (
   DEPARTAMENTO      VARCHAR,
   PROVINCIA         VARCHAR,
   DISTRITO          VARCHAR,
+  CLASIFICACION_VACUNA          VARCHAR,
   TIPO_EDAD         VARCHAR,
   edad_años         INTEGER,
   flag_vacunacion_general BOOLEAN

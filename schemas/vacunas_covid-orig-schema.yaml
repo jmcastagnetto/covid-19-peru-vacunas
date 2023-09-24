@@ -29,5 +29,7 @@ fields:
     type: string
   - name: DISTRITO
     type: string
+  - name: CLASIFICACION_VACUNA
+    type: string
   - name: TIPO_EDAD
     type: string
