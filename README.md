@@ -230,3 +230,5 @@ Un buen artículo sobre este tema es [Get up to speed with partial clone and sha
 - 2023-03-01: He agregado el campo de tercer booster en OWID, pues desde Enero del 2023, se está aplicando la vacuna COVID-19 bivalente, que para algunos es la 4ta dosis (segundo booster), y para otros la 5ta dosis (tercer booster).
 - 2023-07-06: En AWS hay ocasionalmente problemas con el inicio de la instancia EC2 debido a falta de recursos en la AZ (Availability Zone). Estoy desactivando el proceso automático por ahora y voy a ejecturarlo manualmente una o dos veces por semana.
 - 2023-09-24: Se ha detectado un cambio en la estructura del CSV de vacunas, incluye ahora un campo de tipo de vacunas. No he modificado mucho el código aún para tomar ese campo en cuenta.
+
+- 2024-01-16: MINSA no ha actualizado los datos abiertos en https://www.datosabiertos.gob.pe/dataset/vacunacion desde el 2023-12-10
